@@ -1,0 +1,70 @@
+.nt-tile {
+  display: inline-block;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 58px;
+  vertical-align: bottom;
+  line-height: 0;
+  border-radius: 4px;
+  filter: drop-shadow(0 1px 1px rgb(16 45 35 / 18%));
+  user-select: none;
+}
+
+.nt-tile-compact {
+  flex-basis: 31px;
+  width: 31px;
+  height: 43px;
+}
+
+.nt-tile > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.nt-tile-edge {
+  fill: #397965;
+  stroke: #245744;
+  stroke-width: 1;
+}
+
+.nt-tile-face {
+  fill: #fffaf0;
+  stroke: #d8cfb9;
+  stroke-width: 1;
+}
+
+.nt-tile-ink {
+  color: #252a27;
+}
+
+.nt-tile-red {
+  color: #b3312f;
+}
+
+.nt-tile-green {
+  color: #237350;
+}
+
+.nt-tile-blue {
+  color: #224d72;
+}
+
+.nt-tile-back .nt-tile-face {
+  fill: #367962;
+  stroke: #245744;
+}
+
+.nt-tile-back-panel {
+  fill: #43896f;
+  stroke: #72a68c;
+  stroke-width: 0.8;
+}
+
+.nt-tile-back-detail {
+  fill: none;
+  stroke: #a5c3a4;
+  stroke-width: 0.55;
+  opacity: 0.55;
+}

@@ -49,9 +49,9 @@ function Hand({ problem }: { problem: Problem }) {
             <div
               className="meld"
               key={index}
-              style={{ flexGrow: meld.tiles.length }}
+              style={{ flexGrow: meld.tiles.length + (meld.kind === "kan" ? 0 : 16 / 42) }}
             >
-              <div className="meld-tiles">
+              <div className="meld-tiles" data-called={meld.kind !== "kan" ? "" : undefined}>
                 {meld.tiles.map((tile, tileIndex) => (
                   <Tile
                     key={tileIndex}
@@ -137,7 +137,7 @@ function HandSolution({ problem }: { problem: Problem }) {
         ))}
         {problem.melds.map((meld, index) => (
           <div className="solution-group" key={`meld-${index}`}>
-            <div className="solution-tiles">
+            <div className="solution-tiles" data-called={meld.kind !== "kan" ? "" : undefined}>
               {meld.tiles.map((tile, tileIndex) => (
                 <Tile key={tileIndex} code={tile} compact back={!meld.open && meld.kind === "kan" && (tileIndex === 0 || tileIndex === 3)} />
               ))}

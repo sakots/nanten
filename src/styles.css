@@ -1338,3 +1338,42 @@ p {
     animation: none !important;
   }
 }
+
+[data-called] {
+  align-items: flex-end;
+}
+[data-called] > .nt-tile:first-child {
+  position: relative;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 42px;
+}
+[data-called] > .nt-tile-compact:first-child {
+  flex-basis: 43px;
+  width: 43px;
+  height: 31px;
+}
+[data-called] > .nt-tile:first-child > svg {
+  position: absolute;
+  width: 72.414%;
+  height: 138.095%;
+  left: 13.793%;
+  top: -19.048%;
+  transform: rotate(-90deg);
+}
+@media (min-width: 1050px) {
+  .meld-tiles[data-called] > .nt-tile:first-child {
+    flex-basis: 53px;
+    width: 53px;
+    height: 37px;
+  }
+}
+@media (max-width: 820px) {
+  .meld-tiles[data-called] > .nt-tile:first-child {
+    flex: 1.381 1 0;
+    width: 0;
+    max-width: 58px;
+    height: auto;
+    aspect-ratio: 58 / 42;
+  }
+}

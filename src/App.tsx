@@ -5,6 +5,7 @@ import { createSession } from "./game/problems";
 import { calculateScore } from "./game/scoring";
 import { createGame, gameReducer } from "./game/session";
 import type { Level, Problem, Score } from "./game/types";
+import { version } from "../package.json";
 
 const levels: { value: Level; label: string; detail: string }[] = [
   { value: "all", label: "すべて", detail: "いろいろな点数に挑戦" },
@@ -589,7 +590,13 @@ export default function App() {
         <footer className="site-footer">
           <span>nanten</span>
           <p>積み重ねた一問が、自信になる。</p>
-          <small>四人リーチ麻雀 · 点数計算の練習帳</small>
+          <div className="footer-meta">
+            <small>四人リーチ麻雀 · 点数計算の練習帳</small>
+            <span aria-label={`バージョン ${version}`}>v{version}</span>
+            <a href="https://github.com/sakots/nanten" target="_blank" rel="noopener noreferrer">
+              GitHub<span className="sr-only">（新しいタブで開く）</span>
+            </a>
+          </div>
         </footer>
       </main>
     </>

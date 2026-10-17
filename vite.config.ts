@@ -73,7 +73,7 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         registerType: "prompt",
-        injectRegister: "script",
+        injectRegister: false,
         includeAssets: ["favicon.svg", "icons/*.png"],
         manifest: {
           id: "./",

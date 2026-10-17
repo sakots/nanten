@@ -197,6 +197,9 @@ importers:
       vitest:
         specifier: ^3.2.0
         version: 3.2.7(@types/node@24.19.2)(terser@5.51.2)
+      workbox-window:
+        specifier: ^7.4.1
+        version: 7.4.1
 
 packages:
 

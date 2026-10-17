@@ -1377,3 +1377,32 @@ p {
     aspect-ratio: 58 / 42;
   }
 }
+
+.pwa-update {
+  max-width: 1180px;
+  margin: 16px auto;
+  padding: 0 16px calc(96px + env(safe-area-inset-bottom, 0px));
+  font-size: 12px;
+  line-height: 1.7;
+}
+.pwa-update > button:not(.primary-button) {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: #fffefa;
+}
+.pwa-update-ready {
+  position: fixed;
+  z-index: 30;
+  top: max(16px, env(safe-area-inset-top, 0px));
+  right: 16px;
+  width: min(360px, calc(100% - 32px));
+  margin: 0;
+  padding: 18px;
+  border: 1px solid #d9bd63;
+  border-radius: 12px;
+  background: #fffefa;
+  box-shadow: 0 8px 32px #174f4333;
+}
+.pwa-update-ready p {
+  margin: 0 0 10px;
+}

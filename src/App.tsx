@@ -238,7 +238,13 @@ function Breakdown({
 
 export default function App() {
   const [level, setLevel] = useState<Level>("all");
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem("nanten-theme") === "dark";
+    } catch {
+      return false;
+    }
+  });
   const [state, dispatch] = useReducer(gameReducer, undefined, () =>
     createGame(createSession("all")),
   );
@@ -254,7 +260,13 @@ export default function App() {
   const hintCount = state.attempts.filter((item) => item.hinted).length;
 
   useEffect(() => {
-    document.documentElement.dataset.theme = darkMode ? "dark" : "light";
+    const theme = darkMode ? "dark" : "light";
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("nanten-theme", theme);
+    } catch {
+      // Storage restrictions must not prevent switching the current page's theme.
+    }
   }, [darkMode]);
 
   useEffect(() => {

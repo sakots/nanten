@@ -320,6 +320,7 @@ export default function App() {
             </h1>
             <p className="intro-copy">
               その手、何点？ 一日10問、点数計算を自分のものに。
+              ※AIを使ってコーディングしています。
             </p>
           </div>
           <div className="intro-stamp" aria-hidden="true">

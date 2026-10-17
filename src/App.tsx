@@ -245,7 +245,7 @@ export default function App() {
           <div>
             <p className="eyebrow">MAHJONG SCORING PRACTICE</p>
             <h1>
-              牌を読む。<span>点をつかむ。</span>
+              牌を読む。<span>運値を育てる。</span>
             </h1>
             <p className="intro-copy">
               その手、何点？ 一日10問、点数計算を自分のものに。

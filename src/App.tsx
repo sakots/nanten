@@ -46,7 +46,11 @@ function Hand({ problem }: { problem: Problem }) {
             <Tile key={index} code={tile} />
           ))}
           {problem.melds.map((meld, index) => (
-            <div className="meld" key={index}>
+            <div
+              className="meld"
+              key={index}
+              style={{ flexGrow: meld.tiles.length }}
+            >
               <div className="meld-tiles">
                 {meld.tiles.map((tile, tileIndex) => (
                   <Tile
@@ -593,7 +597,11 @@ export default function App() {
           <div className="footer-meta">
             <small>四人リーチ麻雀 · 点数計算の練習帳</small>
             <span aria-label={`バージョン ${version}`}>v{version}</span>
-            <a href="https://github.com/sakots/nanten" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://github.com/sakots/nanten"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               GitHub<span className="sr-only">（新しいタブで開く）</span>
             </a>
           </div>

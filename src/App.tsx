@@ -238,6 +238,7 @@ function Breakdown({
 
 export default function App() {
   const [level, setLevel] = useState<Level>("all");
+  const [darkMode, setDarkMode] = useState(false);
   const [state, dispatch] = useReducer(gameReducer, undefined, () =>
     createGame(createSession("all")),
   );
@@ -251,6 +252,10 @@ export default function App() {
   const attempt = state.attempts[state.index];
   const correctCount = state.attempts.filter((item) => item.correct).length;
   const hintCount = state.attempts.filter((item) => item.hinted).length;
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = darkMode ? "dark" : "light";
+  }, [darkMode]);
 
   useEffect(() => {
     if (state.finished) resultRef.current?.focus();
@@ -307,9 +312,23 @@ export default function App() {
               nanten<span className="brand-sub">麻雀点数トレーニング</span>
             </span>
           </a>
-          <a className="header-help" href="#rules">
-            遊び方・ルール <span aria-hidden="true">↗</span>
-          </a>
+          <div className="header-actions">
+            <button
+              type="button"
+              className="theme-toggle"
+              role="switch"
+              aria-checked={darkMode}
+              onClick={() => setDarkMode((current) => !current)}
+            >
+              <span>ダークモード</span>
+              <span className="theme-toggle-track" aria-hidden="true">
+                <span />
+              </span>
+            </button>
+            <a className="header-help" href="#rules">
+              遊び方・ルール <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </header>
       <main className={`page-shell${attempt && !state.finished ? " has-feedback" : ""}`}>

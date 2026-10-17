@@ -9,6 +9,7 @@
   --green: #195443;
   --muted: #737b71;
   --border: #e3e6dc;
+  color-scheme: light;
 }
 * {
   box-sizing: border-box;
@@ -122,6 +123,49 @@ p {
 }
 .header-help span {
   margin-left: 8px;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px 20px;
+}
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.theme-toggle-track {
+  display: inline-flex;
+  align-items: center;
+  width: 40px;
+  height: 24px;
+  padding: 3px;
+  border: 1px solid #737b71;
+  border-radius: 20px;
+  background: #e3e6dc;
+}
+.theme-toggle-track > span {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #52675b;
+  transition: transform 150ms ease;
+}
+.theme-toggle[aria-checked="true"] .theme-toggle-track {
+  border-color: #88d4b3;
+  background: #195443;
+}
+.theme-toggle[aria-checked="true"] .theme-toggle-track > span {
+  transform: translateX(14px);
+  background: #e7f6ee;
 }
 .page-shell {
   max-width: 1180px;
@@ -1172,6 +1216,8 @@ p {
   .header-inner {
     padding: 15px 20px;
     min-height: 77px;
+    flex-wrap: wrap;
+    gap: 8px 16px;
   }
   .brand {
     font-size: 24px;
@@ -1406,4 +1452,107 @@ p {
 }
 .pwa-update-ready p {
   margin: 0 0 10px;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  color: #e0e9e2;
+  background: #141d19;
+  --green: #94d9b6;
+  --muted: #afbaad;
+  --border: #3b4c40;
+}
+:root[data-theme="dark"] :is(
+  .site-header, .game-panel, .feedback-actions, .skip-link,
+  .pwa-update-ready, .pwa-update > button:not(.primary-button)
+) {
+  background: #1d2922;
+}
+:root[data-theme="dark"] :is(
+  .level-options, .note-card, .hand-solution, .calculation
+) {
+  background: #27352b;
+}
+:root[data-theme="dark"] :is(
+  .note-card, .tip-card, .tip-icon, .rule-chips,
+  .input-with-unit, .hint-box, .text-button span
+) {
+  border-color: var(--border);
+}
+:root[data-theme="dark"] :is(
+  .header-help, .eyebrow, .intro-copy, .level-options button, .level-note,
+  .question-total, .score-counter, .context-row, .context-row > span:last-child,
+  .answer-guide, .answer-inputs label > span, .input-with-unit > span,
+  .note-card li > span, .note-card li p, .rule-chips span,
+  .tip-card > p:not(.eyebrow), .tip-card details, .tip-icon,
+  .payment-summary > div > span, .breakdown h4, .breakdown dt,
+  .solution-note, .solution-group > span, .explanation,
+  .calculation > span, .calculation small, .result-number > span,
+  .result-stats, .results > p:not(.eyebrow), .site-footer,
+  .site-footer > span, .footer-meta
+) {
+  color: #afbaad;
+}
+:root[data-theme="dark"] :is(
+  .score-counter strong, .context-row strong, .tip-card strong,
+  .breakdown-title > strong, .calculation code, .result-stats strong
+) {
+  color: #b6dfc4;
+}
+:root[data-theme="dark"] :is(
+  .text-button, .hint-box > .eyebrow, .review-body > p, .intro-stamp
+) {
+  color: #e4c888;
+}
+:root[data-theme="dark"] .brand-mark {
+  background: #27352b;
+  border-color: #526b58;
+  border-bottom-color: var(--green);
+}
+:root[data-theme="dark"] .level-options button[aria-pressed="true"] {
+  color: var(--green);
+  background: #3b5041;
+}
+:root[data-theme="dark"] .level-options button:hover {
+  color: var(--green);
+}
+:root[data-theme="dark"] :is(.progress-track, .rule-chips span) {
+  background: #36483b;
+}
+:root[data-theme="dark"] .progress-track > div {
+  background: var(--green);
+}
+:root[data-theme="dark"] .win-badge {
+  color: #b6dfc4;
+  background: #2a4031;
+  border-color: #4d7157;
+}
+:root[data-theme="dark"] .win-badge.dealer {
+  color: #ebcf94;
+  background: #403721;
+  border-color: #79673e;
+}
+:root[data-theme="dark"] .input-with-unit {
+  background: #17201b;
+}
+:root[data-theme="dark"] .input-with-unit:focus-within {
+  border-color: var(--green);
+}
+:root[data-theme="dark"] .input-with-unit input::placeholder {
+  color: #99a696;
+}
+:root[data-theme="dark"] .primary-button {
+  background: #94d9b6;
+  border-color: #94d9b6;
+  color: #14271b;
+}
+:root[data-theme="dark"] .primary-button:hover {
+  background: #b2e9cb;
+  border-color: #b2e9cb;
+}
+:root[data-theme="dark"] .form-error {
+  color: #ffb4a5;
+}
+:root[data-theme="dark"] .hint-box {
+  background: #332f20;
 }

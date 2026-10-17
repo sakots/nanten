@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import type { HtmlTagDescriptor } from "vite";
 import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => {
   const configuredUrl = loadEnv(
@@ -70,6 +71,45 @@ export default defineConfig(({ mode }) => {
     base: "./",
     plugins: [
       react(),
+      VitePWA({
+        registerType: "prompt",
+        injectRegister: "script",
+        includeAssets: ["favicon.svg", "icons/*.png"],
+        manifest: {
+          id: "./",
+          name: "nanten — 麻雀点数トレーニング",
+          short_name: "nanten",
+          description: "牌姿を見て点数を答える、麻雀の点数計算ゲーム。",
+          lang: "ja",
+          start_url: "./",
+          scope: "./",
+          display: "standalone",
+          theme_color: "#174f43",
+          background_color: "#f5f4ee",
+          icons: [
+            {
+              src: "icons/icon-192.png",
+              sizes: "192x192",
+              type: "image/png",
+              purpose: "any maskable",
+            },
+            {
+              src: "icons/icon-512.png",
+              sizes: "512x512",
+              type: "image/png",
+              purpose: "any maskable",
+            },
+          ],
+        },
+        workbox: {
+          globPatterns: ["**/*.{js,css,html,svg}"],
+          navigateFallback: "index.html",
+          cleanupOutdatedCaches: true,
+          // 新版は全画面を閉じてから有効化し、練習中の再読み込みを避ける。
+          skipWaiting: false,
+          clientsClaim: false,
+        },
+      }),
       { name: "social-metadata", transformIndexHtml: () => tags },
     ],
   };

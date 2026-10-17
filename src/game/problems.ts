@@ -162,7 +162,7 @@ const templates: HandTemplate[] = [
   {
     key: "open-chinitsu",
     title: "副露した清一色",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("3m 4m 5m 6m 7m 8m 7m 8m 5m 5m"),
     winningTile: "9m",
     solution: {
@@ -186,7 +186,7 @@ const templates: HandTemplate[] = [
   {
     key: "honitsu-ittsu",
     title: "混一色・一気通貫とドラ",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1s 2s 3s 4s 5s 6s 7s 8s north north"),
     winningTile: "9s",
     solution: {
@@ -215,7 +215,7 @@ const templates: HandTemplate[] = [
   {
     key: "sanankou",
     title: "対々和と三暗刻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2m 2m 2m 5p 5p 5p 8s 8s north north"),
     winningTile: "8s",
     solution: {
@@ -245,7 +245,7 @@ const templates: HandTemplate[] = [
   {
     key: "closed-chinitsu",
     title: "門前清一色の倍満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1m 2m 3m 3m 4m 5m 6m 7m 8m 7m 8m 5m 5m"),
     winningTile: "9m",
     solution: {
@@ -270,7 +270,7 @@ const templates: HandTemplate[] = [
   {
     key: "daisangen",
     title: "三元牌をそろえた大三元",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2m 3m 5p 5p"),
     winningTile: "4m",
     solution: {
@@ -298,7 +298,7 @@ const templates: HandTemplate[] = [
   {
     key: "honitsu-chiitoi",
     title: "混一色の七対子ツモ",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1s 1s 2s 2s 4s 4s 5s 5s 7s 7s east east north"),
     winningTile: "north",
     solution: {
@@ -319,6 +319,144 @@ const templates: HandTemplate[] = [
     fuDetails: [{ label: "七対子の固定符", fu: 25 }],
     explanation:
       "索子と字牌による混一色3翻に七対子2翻、門前清自摸和1翻で跳満。風牌は対子なので役牌は付きません。七対子はツモでも25符固定です。",
+  },
+  {
+    key: "sanbaiman-ittsu-tsumo",
+    title: "清一色・一気通貫の三倍満",
+    level: "advanced",
+    concealed: tiles("1m 2m 3m 4m 5m 6m 7m 8m 2m 3m 4m 5m 5m"),
+    winningTile: "9m",
+    solution: {
+      groups: [tiles("1m 2m 3m"), tiles("4m 5m 6m"), tiles("7m 8m 9m"), tiles("2m 3m 4m"), tiles("5m 5m")],
+      winningGroup: 2, wait: "両面",
+    },
+    melds: [],
+    win: "tsumo",
+    roundWind: "東",
+    doraIndicators: ["7m"],
+    han: 11,
+    fu: 20,
+    yaku: [
+      { name: "清一色", han: 6 },
+      { name: "一気通貫", han: 2 },
+      { name: "平和", han: 1 },
+      { name: "門前清自摸和", han: 1 },
+      { name: "ドラ", han: 1 },
+    ],
+    fuDetails: [{ label: "平和ツモの固定符（ツモ符を加算しない）", fu: 20 }],
+    explanation:
+      "萬子の清一色に123・456・789の一気通貫、平和、門前清自摸和が複合。表示牌の七萬に対して八萬1枚がドラです。6＋2＋1＋1＋1＝11翻の三倍満。平和ツモは20符固定です。",
+  },
+  {
+    key: "sanbaiman-tanyao-ron",
+    title: "断么九・清一色とドラ4の三倍満",
+    level: "advanced",
+    concealed: tiles("2m 3m 4m 4m 5m 6m 5m 6m 7m 6m 7m 5m 5m"),
+    winningTile: "8m",
+    solution: {
+      groups: [tiles("2m 3m 4m"), tiles("4m 5m 6m"), tiles("5m 6m 7m"), tiles("6m 7m 8m"), tiles("5m 5m")],
+      winningGroup: 3, wait: "両面",
+    },
+    melds: [],
+    win: "ron",
+    roundWind: "東",
+    doraIndicators: ["4m"],
+    han: 12,
+    fu: 30,
+    yaku: [
+      { name: "清一色", han: 6 },
+      { name: "断么九", han: 1 },
+      { name: "平和", han: 1 },
+      { name: "ドラ", han: 4 },
+    ],
+    fuDetails: [
+      { label: "副底", fu: 20 },
+      { label: "門前ロン", fu: 10 },
+    ],
+    explanation:
+      "2〜8の萬子だけなので清一色と断么九。678萬の両面待ちで平和も成立します。表示牌の四萬に対して五萬4枚がドラ。6＋1＋1＋4＝12翻で、数え役満には届かず三倍満です。門前ロンは30符です。",
+  },
+  {
+    key: "sanbaiman-chiitoi",
+    title: "清一色の七対子とドラ",
+    level: "advanced",
+    concealed: tiles("1m 1m 2m 2m 3m 3m 5m 5m 6m 6m 8m 8m 9m"),
+    winningTile: "9m",
+    solution: {
+      groups: [tiles("1m 1m"), tiles("2m 2m"), tiles("3m 3m"), tiles("5m 5m"), tiles("6m 6m"), tiles("8m 8m"), tiles("9m 9m")],
+      winningGroup: 6, wait: "単騎",
+    },
+    melds: [],
+    win: "tsumo",
+    roundWind: "東",
+    doraIndicators: ["4m"],
+    han: 11,
+    fu: 25,
+    yaku: [
+      { name: "清一色", han: 6 },
+      { name: "七対子", han: 2 },
+      { name: "門前清自摸和", han: 1 },
+      { name: "ドラ", han: 2 },
+    ],
+    fuDetails: [{ label: "七対子の固定符", fu: 25 }],
+    explanation:
+      "萬子だけの七対子で清一色6翻・七対子2翻。門前清自摸和1翻と、表示牌の四萬に対する五萬のドラ2翻を加えて11翻の三倍満です。七対子はツモ・単騎待ちでも25符固定です。",
+  },
+  {
+    key: "kazoe-tanyao-tsumo",
+    title: "ツモを加えて13翻の数え役満",
+    level: "advanced",
+    concealed: tiles("2m 3m 4m 4m 5m 6m 5m 6m 7m 6m 7m 5m 5m"),
+    winningTile: "8m",
+    solution: {
+      groups: [tiles("2m 3m 4m"), tiles("4m 5m 6m"), tiles("5m 6m 7m"), tiles("6m 7m 8m"), tiles("5m 5m")],
+      winningGroup: 3, wait: "両面",
+    },
+    melds: [],
+    win: "tsumo",
+    roundWind: "東",
+    doraIndicators: ["4m"],
+    han: 13,
+    fu: 20,
+    yaku: [
+      { name: "清一色", han: 6 },
+      { name: "断么九", han: 1 },
+      { name: "平和", han: 1 },
+      { name: "門前清自摸和", han: 1 },
+      { name: "ドラ", han: 4 },
+    ],
+    fuDetails: [{ label: "平和ツモの固定符（ツモ符を加算しない）", fu: 20 }],
+    explanation:
+      "清一色6翻・断么九1翻・平和1翻・門前清自摸和1翻に、五萬4枚のドラ4翻を加えて13翻の数え役満。通常の役満役ではなく、役とドラの合計で成立します。平和ツモの20符ですが、支払いは符に関係なく役満です。",
+  },
+  {
+    key: "kazoe-ittsu-ron",
+    title: "一気通貫とドラ4の数え役満",
+    level: "advanced",
+    concealed: tiles("1m 2m 3m 4m 5m 6m 7m 8m 3m 4m 5m 5m 5m"),
+    winningTile: "9m",
+    solution: {
+      groups: [tiles("1m 2m 3m"), tiles("4m 5m 6m"), tiles("7m 8m 9m"), tiles("3m 4m 5m"), tiles("5m 5m")],
+      winningGroup: 2, wait: "両面",
+    },
+    melds: [],
+    win: "ron",
+    roundWind: "東",
+    doraIndicators: ["4m"],
+    han: 13,
+    fu: 30,
+    yaku: [
+      { name: "清一色", han: 6 },
+      { name: "一気通貫", han: 2 },
+      { name: "平和", han: 1 },
+      { name: "ドラ", han: 4 },
+    ],
+    fuDetails: [
+      { label: "副底", fu: 20 },
+      { label: "門前ロン", fu: 10 },
+    ],
+    explanation:
+      "清一色6翻に123・456・789の一気通貫2翻と平和1翻。表示牌の四萬に対して五萬4枚がドラで、6＋2＋1＋4＝13翻の数え役満です。門前ロンは30符ですが、支払いは符に関係なく役満です。",
   },
 ];
 

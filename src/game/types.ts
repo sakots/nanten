@@ -8,7 +8,7 @@ export type TileCode =
   | "white"
   | "green"
   | "red";
-export type Level = "all" | "basic" | "advanced";
+export type Level = "all" | "basic" | "intermediate" | "advanced";
 export type Win = "ron" | "tsumo";
 export type Wind = "東" | "南" | "西" | "北";
 

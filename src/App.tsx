@@ -10,7 +10,8 @@ import { version } from "../package.json";
 const levels: { value: Level; label: string; detail: string }[] = [
   { value: "all", label: "すべて", detail: "いろいろな点数に挑戦" },
   { value: "basic", label: "初級", detail: "満貫未満" },
-  { value: "advanced", label: "中上級", detail: "満貫以上" },
+  { value: "intermediate", label: "中級", detail: "満貫〜倍満・通常の役満" },
+  { value: "advanced", label: "上級", detail: "三倍満・数え役満" },
 ];
 const number = (value: number) => value.toLocaleString("ja-JP");
 

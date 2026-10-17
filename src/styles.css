@@ -1223,6 +1223,7 @@ p {
   }
   .level-bar {
     gap: 8px;
+    flex-wrap: wrap;
   }
   .section-label {
     font-size: 11px;

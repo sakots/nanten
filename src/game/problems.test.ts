@@ -242,13 +242,13 @@ describe("curated hands", () => {
     }
   });
 
-  it("provides ten or more problems on either side of mangan", () => {
-    expect(
-      problems.filter((p) => p.level === "basic").length,
-    ).toBeGreaterThanOrEqual(10);
-    expect(
-      problems.filter((p) => p.level === "advanced").length,
-    ).toBeGreaterThanOrEqual(10);
+  it("provides at least ten problems per difficulty", () => {
+    for (const level of ["basic", "intermediate", "advanced"]) {
+      expect(
+        problems.filter((p) => p.level === level).length,
+        level,
+      ).toBeGreaterThanOrEqual(10);
+    }
     expect(new Set(problems.map((p) => p.id)).size).toBe(problems.length);
   });
 
@@ -311,15 +311,34 @@ describe("curated hands", () => {
           : Math.max(30, Math.ceil(raw / 10) * 10),
         p.id,
       ).toBe(p.fu);
-      expect(calculateScore(p).basePoints >= 2000, p.id).toBe(
-        p.level === "advanced",
-      );
+      const expectedLevel = calculateScore(p).basePoints < 2000
+        ? "basic"
+        : p.han >= 11 && !p.yaku.some((y) => y.han === 13)
+          ? "advanced"
+          : "intermediate";
+      expect(p.level, p.id).toBe(expectedLevel);
     }
   });
 });
 
 describe("ten-question sessions", () => {
-  it.each(["all", "basic", "advanced"] as const)(
+  it("includes sanbaiman and counted yakuman, but not ordinary yakuman, in advanced practice", () => {
+    const session = createSession("advanced", () => 0.375);
+    expect(new Set(session.map((p) => p.han))).toEqual(new Set([11, 12, 13]));
+    expect(session.every((p) => p.yaku.every((y) => y.han < 13))).toBe(true);
+    for (const win of ["ron", "tsumo"]) {
+      for (const dealer of [false, true]) {
+        const limits = session
+          .filter((p) => p.win === win && p.dealer === dealer)
+          .map((p) => calculateScore(p).limit);
+        expect([...new Set(limits)].sort(), `${win}, dealer=${dealer}`).toEqual(
+          ["三倍満", "役満"],
+        );
+      }
+    }
+  });
+
+  it.each(["all", "basic", "intermediate", "advanced"] as const)(
     "selects ten unique %s problems deterministically without mutation",
     (level) => {
       const ids = problems.map((p) => p.id);

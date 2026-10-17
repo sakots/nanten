@@ -480,21 +480,51 @@ export default function App() {
                     className={`feedback ${attempt.correct ? "correct" : "incorrect"}`}
                     aria-label="回答結果"
                   >
-                    <div className="feedback-heading" role="status">
+                    <div
+                      className="feedback-heading"
+                      role="status"
+                      aria-atomic="true"
+                    >
+                      {attempt.correct && (
+                        <svg
+                          className="feedback-confetti"
+                          viewBox="0 0 600 180"
+                          preserveAspectRatio="xMidYMid slice"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <g>
+                            <path d="M30 30h10v18H30z M190 18l12 6-10 10z M420 46h16v7h-16z M540 100l12 8-13 7z" />
+                            <circle cx="320" cy="26" r="5" />
+                          </g>
+                          <g>
+                            <path d="M90 120l12-8 5 14z M255 45h7v16h-7z M460 20l12 10-15 4z M570 48h8v18h-8z" />
+                            <circle cx="365" cy="135" r="4" />
+                          </g>
+                          <g>
+                            <path d="M65 70h16v6H65z M220 145l10-10 5 14z M380 60l12-8 3 15z M495 140h8v16h-8z" />
+                            <circle cx="145" cy="28" r="4" />
+                          </g>
+                        </svg>
+                      )}
                       <span className="feedback-symbol" aria-hidden="true">
                         {attempt.correct ? "○" : "×"}
                       </span>
-                      <div>
-                        <h3>
-                          {attempt.correct
-                            ? "正解です！"
-                            : "惜しい！ 正解を確認しましょう。"}
-                        </h3>
+                      <div className="feedback-copy">
+                        <p className="feedback-kicker" aria-hidden="true">
+                          {attempt.correct ? "NICE ANSWER!" : "KEEP TRYING!"}
+                        </p>
+                        <h3>{attempt.correct ? "正解！" : "不正解"}</h3>
                         <p>
                           {attempt.correct
                             ? "点数をしっかりつかめています。"
                             : `あなたの回答：${attempt.answers.map(number).join(" / ")}点`}
                           {attempt.hinted ? "（ヒント利用）" : ""}
+                          {!attempt.correct && (
+                            <span className="feedback-guidance">
+                              正しい点数をチェック！
+                            </span>
+                          )}
                         </p>
                       </div>
                     </div>

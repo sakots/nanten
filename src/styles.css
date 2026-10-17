@@ -636,34 +636,146 @@ p {
   margin-top: 24px;
 }
 .feedback-heading {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: #eef5e8;
-  border: 1px solid #dce8d3;
-  border-radius: 8px;
-  padding: 16px;
+  gap: 24px;
+  min-height: 180px;
+  padding: 28px;
+  color: #fffdf4;
+  background:
+    radial-gradient(ellipse at top right, #438e63 0, transparent 65%),
+    linear-gradient(125deg, #103d34, #1d6951);
+  border: 2px solid #d9bd63;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px #174f4326, inset 0 0 0 4px #fff3ac0d;
+  animation: feedback-reveal 450ms ease-out both;
+}
+.feedback-heading::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -24px;
+  top: calc(50% - 100px);
+  width: 200px;
+  height: 200px;
+  border: 1px solid #fff3ac45;
+  border-radius: 50%;
+  box-shadow: 0 0 0 24px #fff3ac12, 0 0 0 48px #fff3ac09;
+  pointer-events: none;
+  animation: feedback-ring 850ms ease-out both;
 }
 .incorrect .feedback-heading {
-  background: #fff5e8;
-  border-color: #eedcc0;
+  background:
+    radial-gradient(ellipse at top right, #df7253 0, transparent 65%),
+    linear-gradient(125deg, #862f38, #b44342);
+  border-color: #f0a58c;
+  box-shadow: 0 8px 24px #862f3826, inset 0 0 0 4px #fffdf40d;
+  animation-name: feedback-shake;
+}
+.incorrect .feedback-heading::before {
+  border-color: #fffdf433;
+  box-shadow: 0 0 0 24px #fffdf410, 0 0 0 48px #fffdf408;
+  animation: none;
 }
 .feedback-symbol {
-  font-size: 30px;
-  color: #4a8054;
+  display: grid;
+  place-items: center;
+  flex: 0 0 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #fffdf410;
+  color: #fff0a4;
+  font-family: sans-serif;
+  font-size: 96px;
+  font-weight: 800;
   line-height: 1;
+  text-shadow: 0 0 24px #f5d77570;
+  animation: feedback-pop 650ms cubic-bezier(0.2, 0.8, 0.3, 1.2) both;
 }
 .incorrect .feedback-symbol {
-  color: #ae7846;
+  color: #fffdf4;
+  text-shadow: none;
+  animation-duration: 400ms;
+}
+.feedback-copy {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.feedback-heading .feedback-kicker {
+  margin: 0 0 6px;
+  color: #ffe79b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  line-height: 1.4;
+}
+.incorrect .feedback-heading .feedback-kicker {
+  color: #ffdbcb;
 }
 .feedback-heading h3 {
-  font-size: 14px;
+  font-size: 32px;
+  font-weight: 850;
+  letter-spacing: 2px;
+  line-height: 1.2;
 }
 .feedback-heading p {
-  font-size: 11px;
-  color: #727e66;
-  margin-top: 6px;
+  font-size: 12px;
+  color: #fffdf4;
+  margin-top: 10px;
   line-height: 1.7;
+}
+.feedback-guidance {
+  display: block;
+}
+.feedback-confetti {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.feedback-confetti g {
+  fill: #ffe28c;
+  opacity: 0;
+  animation: feedback-confetti 1300ms ease-out both;
+}
+.feedback-confetti g:nth-child(2) {
+  fill: #fffdf4;
+  animation-delay: 80ms;
+}
+.feedback-confetti g:nth-child(3) {
+  fill: #8ee3bc;
+  animation-delay: 160ms;
+}
+@keyframes feedback-reveal {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes feedback-pop {
+  0% { opacity: 0; transform: scale(0.3) rotate(-18deg); }
+  55% { opacity: 1; transform: scale(1.18) rotate(5deg); }
+  78% { transform: scale(0.94) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes feedback-ring {
+  from { opacity: 0; transform: scale(0.45); }
+  45% { opacity: 1; }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes feedback-confetti {
+  0% { opacity: 0; transform: translateY(35px) scale(0.85); }
+  20% { opacity: 1; }
+  65% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-45px) scale(1.1); }
+}
+@keyframes feedback-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
 }
 .payment-summary {
   display: flex;
@@ -1097,11 +1209,24 @@ p {
     padding: 24px;
   }
   .feedback-heading {
-    padding: 13px;
-    gap: 10px;
+    min-height: 156px;
+    padding: 20px 14px;
+    gap: 14px;
+  }
+  .feedback-symbol {
+    flex-basis: 72px;
+    height: 72px;
+    font-size: 76px;
   }
   .feedback-heading h3 {
-    font-size: 12px;
+    font-size: 26px;
+  }
+  .feedback-heading p {
+    font-size: 11px;
+  }
+  .feedback-heading .feedback-kicker {
+    font-size: 8px;
+    letter-spacing: 1.3px;
   }
   .payment-summary {
     gap: 12px;
@@ -1134,5 +1259,6 @@ p {
   *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+    animation: none !important;
   }
 }

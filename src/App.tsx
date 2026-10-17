@@ -245,7 +245,7 @@ export default function App() {
           </a>
         </div>
       </header>
-      <main className="page-shell">
+      <main className={`page-shell${attempt && !state.finished ? " has-feedback" : ""}`}>
         <section className="intro">
           <div>
             <p className="eyebrow">MAHJONG SCORING PRACTICE</p>
@@ -530,16 +530,18 @@ export default function App() {
                     </div>
                     <PaymentSummary score={score} />
                     <Breakdown problem={problem} score={score} />
-                    <button
-                      className="primary-button"
-                      ref={nextRef}
-                      onClick={next}
-                    >
-                      {state.index === state.problems.length - 1
-                        ? "結果を見る"
-                        : "次の問題へ"}{" "}
-                      <span aria-hidden="true">→</span>
-                    </button>
+                    <div className="feedback-actions">
+                      <button
+                        className="primary-button"
+                        ref={nextRef}
+                        onClick={next}
+                      >
+                        {state.index === state.problems.length - 1
+                          ? "結果を見る"
+                          : "次の問題へ"}{" "}
+                        <span aria-hidden="true">→</span>
+                      </button>
+                    </div>
                   </section>
                 )}
                 {!attempt && state.hintVisible && (

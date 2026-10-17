@@ -635,6 +635,24 @@ p {
 .feedback {
   margin-top: 24px;
 }
+.page-shell.has-feedback {
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+}
+.feedback-actions {
+  position: fixed;
+  z-index: 20;
+  inset: auto 0 0;
+  padding: 12px max(16px, env(safe-area-inset-right, 0px))
+    calc(12px + env(safe-area-inset-bottom, 0px))
+    max(16px, env(safe-area-inset-left, 0px));
+  background: #fffefa;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 20px #233c3114;
+}
+.feedback-actions .primary-button {
+  max-width: 720px;
+  margin: 0 auto;
+}
 .feedback-heading {
   position: relative;
   isolation: isolate;

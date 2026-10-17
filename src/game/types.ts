@@ -19,6 +19,11 @@ export interface Problem {
   concealed: TileCode[];
   winningTile: TileCode;
   melds: { tiles: TileCode[]; kind: "chi" | "pon" | "kan"; open: boolean }[];
+  solution: {
+    groups: TileCode[][];
+    winningGroup: number;
+    wait: "両面" | "嵌張" | "辺張" | "シャンポン" | "単騎";
+  };
   win: Win;
   dealer: boolean;
   roundWind: Wind;

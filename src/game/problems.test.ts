@@ -198,6 +198,50 @@ function interpretations(
 }
 
 describe("curated hands", () => {
+  it("explains the actual completed hand and winning wait without losing or adding tiles", () => {
+    for (const p of problems) {
+      const { groups, winningGroup, wait } = p.solution;
+      expect([...groups.flat()].sort(), p.id).toEqual(
+        [...p.concealed, p.winningTile].sort(),
+      );
+      const pairs = groups.filter((g) => g.length === 2);
+      const sevenPairs = p.yaku.some((y) => y.name === "七対子");
+      expect(pairs.length, p.id).toBe(sevenPairs ? 7 : 1);
+      expect(groups.length + p.melds.length, p.id).toBe(sevenPairs ? 7 : 5);
+      for (const group of groups) {
+        if (group.length === 2 || group[0] === group[1]) {
+          expect(new Set(group).size, p.id).toBe(1);
+        } else {
+          expect(group.length, p.id).toBe(3);
+          expect(new Set(group.map((t) => t[1])).size, p.id).toBe(1);
+          expect(group.map(number), p.id).toEqual([
+            number(group[0]), number(group[0]) + 1, number(group[0]) + 2,
+          ]);
+        }
+      }
+      const winning = groups[winningGroup];
+      expect(winning, p.id).toContain(p.winningTile);
+      const expectedWait = winning.length === 2 ? "単騎"
+        : winning[0] === winning[1] ? "シャンポン"
+        : winning[1] === p.winningTile ? "嵌張"
+        : (number(winning[0]) === 1 && number(p.winningTile) === 3) ||
+          (number(winning[0]) === 7 && number(p.winningTile) === 7) ? "辺張"
+        : "両面";
+      expect(wait, p.id).toBe(expectedWait);
+    }
+  });
+
+  it("keeps every concealed hand in suit and honor order", () => {
+    const order = [
+      ...["m", "p", "s"].flatMap((s) => Array.from({ length: 9 }, (_, i) => `${i + 1}${s}`)),
+      ...honors,
+    ];
+    for (const p of problems) {
+      const ranks = p.concealed.map((t) => order.indexOf(t));
+      expect(ranks, p.id).toEqual([...ranks].sort((a, b) => a - b));
+    }
+  });
+
   it("provides ten or more problems on either side of mangan", () => {
     expect(
       problems.filter((p) => p.level === "basic").length,

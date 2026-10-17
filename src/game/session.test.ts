@@ -22,6 +22,11 @@ const problem: Problem = {
     "5p",
   ],
   winningTile: "8s",
+  solution: {
+    groups: [["1m", "2m", "3m"], ["4m", "5m", "6m"], ["2p", "3p", "4p"], ["6s", "7s", "8s"], ["5p", "5p"]],
+    winningGroup: 3,
+    wait: "両面",
+  },
   melds: [],
   win: "ron",
   dealer: false,

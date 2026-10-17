@@ -101,6 +101,71 @@ function Hand({ problem }: { problem: Problem }) {
   );
 }
 
+function HandSolution({ problem }: { problem: Problem }) {
+  const { groups, winningGroup, wait } = problem.solution;
+  const completed = groups[winningGroup];
+  const winningIndex = completed.lastIndexOf(problem.winningTile);
+  const waiting = completed.filter((_, index) => index !== winningIndex);
+  const otherPair = wait === "シャンポン"
+    ? groups.find((group, index) => index !== winningGroup && group.length === 2)
+    : undefined;
+
+  return (
+    <section className="hand-solution" aria-label="メンツ分け・待ち">
+      <h3>メンツ分け・待ち</h3>
+      <p className="solution-note">この点数計算で採用した分け方 · 金枠は和了牌</p>
+      <div className="solution-groups">
+        {groups.map((group, groupIndex) => (
+          <div className="solution-group" key={groupIndex}>
+            <div className="solution-tiles">
+              {group.map((tile, tileIndex) => {
+                const winning = groupIndex === winningGroup && tileIndex === winningIndex;
+                return (
+                  <span
+                    key={tileIndex}
+                    className={winning ? "solution-winning" : undefined}
+                    role={winning ? "group" : undefined}
+                    aria-label={winning ? "和了牌" : undefined}
+                  >
+                    <Tile code={tile} compact />
+                  </span>
+                );
+              })}
+            </div>
+            <span>{group.length === 2 ? groups.length === 7 ? "対子" : "雀頭" : group[0] === group[1] ? "刻子" : "順子"}</span>
+          </div>
+        ))}
+        {problem.melds.map((meld, index) => (
+          <div className="solution-group" key={`meld-${index}`}>
+            <div className="solution-tiles">
+              {meld.tiles.map((tile, tileIndex) => (
+                <Tile key={tileIndex} code={tile} compact back={!meld.open && meld.kind === "kan" && (tileIndex === 0 || tileIndex === 3)} />
+              ))}
+            </div>
+            <span>{meld.kind === "kan" ? meld.open ? "明槓" : "暗槓" : meld.kind === "pon" ? "刻子（ポン）" : "順子（チー）"}</span>
+          </div>
+        ))}
+      </div>
+      <div className="solution-wait">
+        <strong>{wait}待ち</strong>
+        <span className="solution-note">和了前の形</span>
+        <div className="solution-tiles" role="group" aria-label="和了前の待ちの形">
+          {waiting.map((tile, index) => <Tile key={index} code={tile} compact />)}
+        </div>
+        {otherPair && (
+          <div className="solution-tiles">
+            {otherPair.map((tile, index) => <Tile key={index} code={tile} compact />)}
+          </div>
+        )}
+        <span aria-hidden="true">→</span>
+        <div className="solution-tiles" role="group" aria-label="和了牌">
+          <Tile code={problem.winningTile} compact />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Breakdown({
   problem,
   score,
@@ -144,6 +209,7 @@ function Breakdown({
       </div>
       {!hint && (
         <>
+          <HandSolution problem={problem} />
           <p className="explanation">{problem.explanation}</p>
           <div className="calculation">
             <span>基本点</span>

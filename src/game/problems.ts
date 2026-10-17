@@ -1,4 +1,5 @@
 import type { Level, Problem, TileCode } from "./types";
+import { sortTiles } from "./tiles";
 
 type HandTemplate = Omit<Problem, "id" | "dealer" | "seatWind"> & {
   key: string;
@@ -16,6 +17,10 @@ const templates: HandTemplate[] = [
     level: "basic",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 8s 7s 8s 5p 5p"),
     winningTile: "9s",
+    solution: {
+      groups: [tiles("2m 3m 4m"), tiles("4p 5p 6p"), tiles("6s 7s 8s"), tiles("7s 8s 9s"), tiles("5p 5p")],
+      winningGroup: 3, wait: "両面",
+    },
     melds: [],
     win: "ron",
     roundWind: "東",
@@ -36,6 +41,10 @@ const templates: HandTemplate[] = [
     level: "basic",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 8s 7s 8s 5p 5p"),
     winningTile: "9s",
+    solution: {
+      groups: [tiles("2m 3m 4m"), tiles("4p 5p 6p"), tiles("6s 7s 8s"), tiles("7s 8s 9s"), tiles("5p 5p")],
+      winningGroup: 3, wait: "両面",
+    },
     melds: [],
     win: "tsumo",
     roundWind: "東",
@@ -56,6 +65,10 @@ const templates: HandTemplate[] = [
     level: "basic",
     concealed: tiles("4p 5p 6p 6s 7s 8s 2p 2p 3s 4s"),
     winningTile: "5s",
+    solution: {
+      groups: [tiles("4p 5p 6p"), tiles("6s 7s 8s"), tiles("3s 4s 5s"), tiles("2p 2p")],
+      winningGroup: 2, wait: "両面",
+    },
     melds: [{ tiles: tiles("2m 3m 4m"), kind: "chi", open: true }],
     win: "ron",
     roundWind: "東",
@@ -76,6 +89,10 @@ const templates: HandTemplate[] = [
     level: "basic",
     concealed: tiles("1m 2m 3m 4p 5p 6p 7s 8s 2p 2p"),
     winningTile: "9s",
+    solution: {
+      groups: [tiles("1m 2m 3m"), tiles("4p 5p 6p"), tiles("7s 8s 9s"), tiles("2p 2p")],
+      winningGroup: 2, wait: "両面",
+    },
     melds: [{ tiles: tiles("white white white"), kind: "pon", open: true }],
     win: "ron",
     roundWind: "東",
@@ -96,6 +113,10 @@ const templates: HandTemplate[] = [
     level: "basic",
     concealed: tiles("1m 1m 3m 3m 5p 5p 7p 7p 2s 2s 4s 4s west"),
     winningTile: "west",
+    solution: {
+      groups: [tiles("1m 1m"), tiles("3m 3m"), tiles("5p 5p"), tiles("7p 7p"), tiles("2s 2s"), tiles("4s 4s"), tiles("west west")],
+      winningGroup: 6, wait: "単騎",
+    },
     melds: [],
     win: "ron",
     roundWind: "東",
@@ -113,6 +134,10 @@ const templates: HandTemplate[] = [
     level: "basic",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 2p 2p"),
     winningTile: "8s",
+    solution: {
+      groups: [tiles("2m 3m 4m"), tiles("4p 5p 6p"), tiles("6s 7s 8s"), tiles("2p 2p")],
+      winningGroup: 2, wait: "両面",
+    },
     melds: [
       { tiles: tiles("white white white white"), kind: "kan", open: false },
     ],
@@ -140,6 +165,10 @@ const templates: HandTemplate[] = [
     level: "advanced",
     concealed: tiles("3m 4m 5m 6m 7m 8m 7m 8m 5m 5m"),
     winningTile: "9m",
+    solution: {
+      groups: [tiles("3m 4m 5m"), tiles("6m 7m 8m"), tiles("7m 8m 9m"), tiles("5m 5m")],
+      winningGroup: 2, wait: "両面",
+    },
     melds: [{ tiles: tiles("1m 2m 3m"), kind: "chi", open: true }],
     win: "ron",
     roundWind: "東",
@@ -160,6 +189,10 @@ const templates: HandTemplate[] = [
     level: "advanced",
     concealed: tiles("1s 2s 3s 4s 5s 6s 7s 8s north north"),
     winningTile: "9s",
+    solution: {
+      groups: [tiles("1s 2s 3s"), tiles("4s 5s 6s"), tiles("7s 8s 9s"), tiles("north north")],
+      winningGroup: 2, wait: "両面",
+    },
     melds: [{ tiles: tiles("white white white"), kind: "pon", open: true }],
     win: "ron",
     roundWind: "東",
@@ -185,6 +218,10 @@ const templates: HandTemplate[] = [
     level: "advanced",
     concealed: tiles("2m 2m 2m 5p 5p 5p 8s 8s north north"),
     winningTile: "8s",
+    solution: {
+      groups: [tiles("2m 2m 2m"), tiles("5p 5p 5p"), tiles("8s 8s 8s"), tiles("north north")],
+      winningGroup: 2, wait: "シャンポン",
+    },
     melds: [{ tiles: tiles("white white white"), kind: "pon", open: true }],
     win: "tsumo",
     roundWind: "東",
@@ -211,6 +248,10 @@ const templates: HandTemplate[] = [
     level: "advanced",
     concealed: tiles("1m 2m 3m 3m 4m 5m 6m 7m 8m 7m 8m 5m 5m"),
     winningTile: "9m",
+    solution: {
+      groups: [tiles("1m 2m 3m"), tiles("3m 4m 5m"), tiles("6m 7m 8m"), tiles("7m 8m 9m"), tiles("5m 5m")],
+      winningGroup: 3, wait: "両面",
+    },
     melds: [],
     win: "tsumo",
     roundWind: "東",
@@ -232,6 +273,10 @@ const templates: HandTemplate[] = [
     level: "advanced",
     concealed: tiles("2m 3m 5p 5p"),
     winningTile: "4m",
+    solution: {
+      groups: [tiles("2m 3m 4m"), tiles("5p 5p")],
+      winningGroup: 0, wait: "両面",
+    },
     melds: [
       { tiles: tiles("white white white"), kind: "pon", open: true },
       { tiles: tiles("green green green"), kind: "pon", open: true },
@@ -256,6 +301,10 @@ const templates: HandTemplate[] = [
     level: "advanced",
     concealed: tiles("1s 1s 2s 2s 4s 4s 5s 5s 7s 7s east east north"),
     winningTile: "north",
+    solution: {
+      groups: [tiles("1s 1s"), tiles("2s 2s"), tiles("4s 4s"), tiles("5s 5s"), tiles("7s 7s"), tiles("east east"), tiles("north north")],
+      winningGroup: 6, wait: "単騎",
+    },
     melds: [],
     win: "tsumo",
     roundWind: "東",
@@ -275,10 +324,13 @@ const templates: HandTemplate[] = [
 
 // Each shape is practiced once as a child and once as dealer. Winds are shown explicitly;
 // no template has a wind triplet or value-wind pair that changes its fu with the seat.
-export const problems: Problem[] = templates.flatMap(({ key, ...template }) => [
-  { ...template, id: `${key}-child`, dealer: false, seatWind: "南" as const },
-  { ...template, id: `${key}-dealer`, dealer: true, seatWind: "東" as const },
-]);
+export const problems: Problem[] = templates.flatMap(({ key, ...template }) => {
+  const concealed = sortTiles(template.concealed);
+  return [
+    { ...template, concealed, id: `${key}-child`, dealer: false, seatWind: "南" as const },
+    { ...template, concealed, id: `${key}-dealer`, dealer: true, seatWind: "東" as const },
+  ];
+});
 
 export function createSession(
   level: Level,

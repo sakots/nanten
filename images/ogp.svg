@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#195443" stroke-opacity=".035"/></pattern>
+    <filter id="shadow" x="-40%" y="-30%" width="180%" height="180%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#163e32" flood-opacity=".15"/></filter>
+    <g id="tile"><rect width="135" height="188" rx="14" fill="#c28a30"/><rect y="7" width="135" height="176" rx="12" fill="#f5f5ef" stroke="#d1d3c8" stroke-width="2"/></g>
+    <g id="bamboo" fill="#1f704a"><path d="M-6-26Q-11-26-8-21L-5-5Q-10 0-5 5L-6 21Q-11 26-5 26H5Q11 26 6 21L5 5Q10 0 5-5L8-21Q11-26 6-26Z"/><path d="M0-20V20" stroke="#f5f5ef" stroke-width="3.4"/><path d="M-7 0H7" stroke="#1f704a" stroke-width="4"/></g>
+  </defs>
+  <rect width="1200" height="630" fill="#f5f4ee"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1010" cy="235" r="195" fill="#e8ecdf"/>
+  <circle cx="1010" cy="235" r="155" fill="none" stroke="#d5decb"/>
+  <g font-family="'Noto Sans CJK JP', sans-serif">
+    <g transform="translate(76 48)"><rect width="45" height="57" rx="6" fill="#195443"/><rect width="45" height="50" rx="6" fill="#fffdf4" stroke="#d0d8c6"/><text x="22.5" y="37" text-anchor="middle" font-family="'Noto Serif CJK JP',serif" font-size="33" fill="#195443">南</text></g>
+    <text x="137" y="94" font-family="sans-serif" font-size="51" font-weight="750" letter-spacing="-2" fill="#195443">nanten</text>
+    <text x="79" y="159" font-size="14" font-weight="600" letter-spacing="3" fill="#72816d">MAHJONG SCORING PRACTICE</text>
+    <text x="73" y="274" font-family="'Noto Serif CJK JP',serif" font-size="72" font-weight="700" letter-spacing="1" fill="#193f32">その手、何点？</text>
+    <text x="79" y="342" font-size="29" font-weight="600" letter-spacing="2" fill="#315a46">麻雀点数トレーニング</text>
+    <text x="79" y="397" font-size="21" fill="#727c6b">牌姿を見て答えて、点数感覚を磨こう。</text>
+  </g>
+  <g transform="translate(754 150) rotate(-12 67 94)" filter="url(#shadow)">
+    <use href="#tile"/>
+    <path d="M25 44H109 M39 61H95V99H39Z M40 80H94 M67 27V151 M65 100Q45 130 22 143 M69 100Q91 130 114 143" fill="none" stroke="#20231f" stroke-width="6" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(900 103) rotate(7 67 94)" filter="url(#shadow)">
+    <use href="#tile"/>
+    <g transform="translate(67 97)">
+      <use href="#bamboo" transform="translate(-40 -36)"/><use href="#bamboo" transform="translate(40 -36)"/>
+      <use href="#bamboo" transform="translate(-20 -23) rotate(55) scale(.7)"/><use href="#bamboo" transform="translate(20 -23) rotate(-55) scale(.7)"/>
+      <use href="#bamboo" transform="translate(-40 36)"/><use href="#bamboo" transform="translate(40 36)"/>
+      <use href="#bamboo" transform="translate(-20 23) rotate(-55) scale(.7)"/><use href="#bamboo" transform="translate(20 23) rotate(55) scale(.7)"/>
+    </g>
+  </g>
+  <g transform="translate(1012 254) rotate(13 67 94)" filter="url(#shadow)">
+    <use href="#tile"/>
+    <path d="M28 61H107V114H28Z M67 32V154" fill="none" stroke="#ad282c" stroke-width="8" stroke-linejoin="round"/>
+  </g>
+  <path d="M0 492H1200V630H0Z" fill="#195443"/>
+  <g font-family="'Noto Sans CJK JP', sans-serif" font-size="23" fill="#f5f4ee">
+    <text x="79" y="572">10問ずつ練習</text><path d="M294 540V580" stroke="#ffffff" stroke-opacity=".25"/>
+    <text x="334" y="572">役・符の解説</text><path d="M550 540V580" stroke="#ffffff" stroke-opacity=".25"/>
+    <text x="590" y="572">時間制限なし</text>
+  </g>
+  <text x="1104" y="575" text-anchor="end" font-family="serif" font-size="33" fill="#c8d6b9" letter-spacing="9">南天</text>
+</svg>

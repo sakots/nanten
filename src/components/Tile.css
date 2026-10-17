@@ -1,4 +1,5 @@
 .nt-tile {
+  --nt-tile-paper: #f5f5ef;
   display: inline-block;
   flex: 0 0 42px;
   width: 42px;
@@ -24,31 +25,35 @@
 }
 
 .nt-tile-edge {
-  fill: #397965;
-  stroke: #245744;
+  fill: #c28a30;
+  stroke: #a97629;
   stroke-width: 1;
 }
 
 .nt-tile-face {
-  fill: #fffaf0;
-  stroke: #d8cfb9;
+  fill: var(--nt-tile-paper);
+  stroke: #c8c9c4;
   stroke-width: 1;
 }
 
 .nt-tile-ink {
-  color: #252a27;
+  color: #20231f;
 }
 
 .nt-tile-red {
-  color: #b3312f;
+  color: #ad282c;
 }
 
 .nt-tile-green {
-  color: #237350;
+  color: #1f704a;
 }
 
-.nt-tile-blue {
-  color: #224d72;
+.nt-tile-paper {
+  color: var(--nt-tile-paper);
+}
+
+.nt-tile-bird-body {
+  fill: var(--nt-tile-paper);
 }
 
 .nt-tile-back .nt-tile-face {

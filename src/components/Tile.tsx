@@ -49,7 +49,7 @@ const glyphs = {
 } as const;
 
 type GlyphName = keyof typeof glyphs;
-type Color = "ink" | "red" | "green" | "blue";
+type Color = "ink" | "red" | "green";
 type Point = readonly [number, number];
 
 function Glyph({
@@ -150,30 +150,29 @@ const dotLayouts: readonly (readonly Point[])[] = [
 ];
 
 function dotColor(rank: number, index: number): Color {
-  if (rank === 2) return index === 0 ? "green" : "red";
-  if (rank === 3) return index === 0 ? "blue" : index === 1 ? "red" : "green";
-  if (rank === 5) return index === 2 ? "red" : "blue";
-  if (rank === 6) return index < 2 ? "green" : "red";
-  if (rank === 7) return index < 3 ? "green" : "red";
-  if (rank === 9) return index < 3 ? "green" : index < 6 ? "blue" : "red";
-  return "blue";
+  if (rank === 3) return index === 1 ? "red" : "ink";
+  if (rank === 5) return index === 2 ? "red" : "ink";
+  if (rank === 6) return index < 2 ? "ink" : "red";
+  if (rank === 7) return index < 3 ? "ink" : "red";
+  if (rank === 9) return index >= 3 && index < 6 ? "red" : "ink";
+  return "ink";
 }
 
 function Circles({ rank }: { rank: number }) {
   if (rank === 1) {
     return (
       <g transform="translate(21 27)" fill="none" strokeWidth="1.5">
-        <circle r="12.4" className="nt-tile-blue" stroke="currentColor" />
-        <circle r="9.8" className="nt-tile-green" stroke="currentColor" />
+        <circle r="15" className="nt-tile-ink" stroke="currentColor" />
+        <circle r="12.5" className="nt-tile-ink" stroke="currentColor" />
         <circle
-          r="7.1"
-          className="nt-tile-blue"
+          r="10"
+          className="nt-tile-ink"
           stroke="currentColor"
           strokeDasharray="2.4 1.5"
         />
-        <circle r="3.7" className="nt-tile-red" stroke="currentColor" />
+        <circle r="7" className="nt-tile-red" stroke="currentColor" />
         <circle
-          r="1.2"
+          r="3.5"
           className="nt-tile-red"
           fill="currentColor"
           stroke="none"
@@ -181,7 +180,7 @@ function Circles({ rank }: { rank: number }) {
       </g>
     );
   }
-  const radius = rank >= 7 ? 4.3 : 5.2;
+  const radius = rank === 2 ? 9 : rank <= 5 ? 6.5 : rank === 6 ? 6 : 5;
   return (
     <g>
       {dotLayouts[rank].map(([x, y], index) => (
@@ -209,12 +208,19 @@ function Circles({ rank }: { rank: number }) {
   );
 }
 
-const bambooLayouts: readonly (readonly Point[])[] = [
+type BambooMark = readonly [
+  x: number,
+  y: number,
+  rotation?: number,
+  height?: number,
+];
+
+const bambooLayouts: readonly (readonly BambooMark[])[] = [
   [],
   [],
   [
-    [13, 27],
-    [29, 27],
+    [21, 16],
+    [21, 39],
   ],
   [
     [21, 15],
@@ -235,31 +241,31 @@ const bambooLayouts: readonly (readonly Point[])[] = [
     [31, 41],
   ],
   [
-    [12, 12],
-    [30, 12],
-    [12, 27],
-    [30, 27],
-    [12, 42],
-    [30, 42],
+    [10, 16],
+    [21, 16],
+    [32, 16],
+    [10, 39],
+    [21, 39],
+    [32, 39],
   ],
   [
-    [10, 12],
-    [21, 12],
-    [32, 12],
-    [12, 29],
-    [30, 29],
-    [12, 43],
-    [30, 43],
+    [21, 10],
+    [10, 27],
+    [21, 27],
+    [32, 27],
+    [10, 43],
+    [21, 43],
+    [32, 43],
   ],
   [
-    [12, 9],
-    [30, 9],
-    [12, 21],
-    [30, 21],
-    [12, 33],
-    [30, 33],
-    [12, 45],
-    [30, 45],
+    [9, 16],
+    [15, 21, 55, 14],
+    [27, 21, -55, 14],
+    [33, 16],
+    [9, 40],
+    [15, 35, -55, 14],
+    [27, 35, 55, 14],
+    [33, 40],
   ],
   [
     [10, 12],
@@ -274,95 +280,102 @@ const bambooLayouts: readonly (readonly Point[])[] = [
   ],
 ];
 
+const peacockEyes: readonly Point[] = [
+  [18, 12],
+  [24, 12],
+  [15, 17],
+  [21, 17],
+  [27, 17],
+  [12, 22],
+  [18, 22],
+  [24, 22],
+  [30, 22],
+  [15, 27],
+  [21, 27],
+  [27, 27],
+];
+
 function Bamboo({ rank }: { rank: number }) {
   if (rank === 1) {
     return (
       <g strokeLinejoin="round" strokeLinecap="round">
         <path
-          d="M21 28Q8 33 10 44Q13 40 16 37Q13 47 17 49L23 32 M23 29Q32 33 33 45Q27 42 23 34"
+          d="M8 27Q10 17 15 11Q21 5 27 11Q32 17 34 27Q21 33 8 27Z"
           className="nt-tile-green"
           fill="currentColor"
         />
-        <path
-          d="M22 32Q14 28 17 20Q19 16 25 17L27 14L30 17L26 20Q29 27 22 32Z"
-          className="nt-tile-green"
-          fill="currentColor"
-        />
-        <path
-          d="M18 24Q22 21 25 25L22 30Z"
-          className="nt-tile-red"
-          fill="currentColor"
-        />
-        <path
-          d="M19 35L17 45 M23 36L24 46 M14 47H19 M22 48H27"
-          className="nt-tile-blue"
+        <g
+          className="nt-tile-paper"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.1"
-        />
-        <path
-          d="M27 17L32 18L27 20 M22 15L20 11 M24 14L25 10"
-          className="nt-tile-red"
-          stroke="currentColor"
-          fill="none"
-          strokeWidth="1.3"
-        />
-        <circle cx="25" cy="19" r="0.8" fill="#fffaf0" />
-        <path
-          d="M12 36L16 33 M12 40L16 36 M27 36L30 39"
-          fill="none"
-          stroke="#fffaf0"
           strokeWidth="0.8"
+        >
+          {peacockEyes.map(([x, y], index) => (
+            <circle key={index} cx={x} cy={y} r="1.3" />
+          ))}
+        </g>
+        <g
+          className="nt-tile-ink"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.8"
+        >
+          <path d="M7 31L20 42L6 42Z M27 30L36 40L23 42Z M9 32L8 40 M12 34L11 41 M15 37L14 41 M29 32L27 40 M32 35L30 41 M8 36L15 40 M29 35L33 39" />
+          <path d="M15 31L26 42 M18 30L29 40 M21 30L32 38 M24 31L16 38 M28 32L20 40" />
+        </g>
+        <path
+          d="M13 33Q9 29 8 34L9 39Q10 45 21 43Q29 43 30 39Q27 37 23 38L15 39Z"
+          className="nt-tile-ink nt-tile-bird-body"
+          stroke="currentColor"
+          strokeWidth="0.9"
+        />
+        <circle
+          cx="10"
+          cy="34"
+          r="0.7"
+          className="nt-tile-ink"
+          fill="currentColor"
+        />
+        <path
+          d="M8 35L5 36L8 37 M16 44L15 48H13 M23 44L23 48H21"
+          className="nt-tile-red"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
         />
       </g>
     );
   }
-  const height = rank === 2 ? 30 : rank <= 4 ? 17 : rank === 8 ? 9 : 11;
+  const height = rank <= 6 ? 18 : rank === 8 ? 20 : 12;
   return (
     <g>
-      {bambooLayouts[rank].map(([x, y], index) => (
-        <g
-          key={index}
-          transform={`translate(${x} ${y})`}
-          className={`nt-tile-${rank === 7 && index < 3 ? "red" : "green"}`}
-        >
-          <path
-            d={`M-1.7 ${-height / 2}Q0 ${-height / 2 - 1} 1.7 ${-height / 2}L1.3 ${height / 2}Q0 ${height / 2 + 1} -1.3 ${height / 2}Z`}
-            fill="currentColor"
-          />
-          <path
-            d={`M-2.6 ${-height / 2 + 1}H2.6 M-2.5 0H2.5 M-2.5 ${height / 2 - 1}H2.5`}
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-          <path
-            d={`M-0.4 ${-height / 2 + 2}V-1.4 M-0.4 1.4V${height / 2 - 2}`}
-            stroke="#fffaf0"
-            strokeWidth="0.55"
-          />
-        </g>
-      ))}
+      {bambooLayouts[rank].map(
+        ([x, y, rotation = 0, length = height], index) => (
+          <g
+            key={index}
+            transform={`translate(${x} ${y}) rotate(${rotation})`}
+            className={`nt-tile-${(rank === 5 && index === 2) || (rank === 7 && index === 0) || (rank === 9 && index % 3 === 1) ? "red" : "green"}`}
+          >
+            <path
+              d={`M-2 ${-length / 2}Q-4 ${-length / 2} -3 ${-length / 2 + 2}L-2 -1.8Q-3.7 0 -2 1.8L-2.5 ${length / 2 - 2}Q-4 ${length / 2} -2 ${length / 2}H2Q4 ${length / 2} 2.5 ${length / 2 - 2}L2 1.8Q3.7 0 2 -1.8L3 ${-length / 2 + 2}Q4 ${-length / 2} 2 ${-length / 2}Z`}
+              fill="currentColor"
+            />
+            <path
+              d={`M0 ${-length / 2 + 2}V${length / 2 - 2}`}
+              className="nt-tile-paper"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            />
+            <path d="M-2.8 0H2.8" stroke="currentColor" strokeWidth="1.5" />
+          </g>
+        ),
+      )}
     </g>
   );
 }
 
 function Face({ code }: { code: TileCode }) {
-  if (code === "white") {
-    return (
-      <rect
-        x="9"
-        y="10"
-        width="24"
-        height="34"
-        rx="1.3"
-        fill="none"
-        className="nt-tile-blue"
-        stroke="currentColor"
-        strokeWidth="1.7"
-      />
-    );
-  }
+  if (code === "white") return null;
   if (code in honorNames) {
     return (
       <Glyph
@@ -405,7 +418,7 @@ export function Tile({
         <rect
           className="nt-tile-edge"
           x="0.7"
-          y="3"
+          y="0.7"
           width="40.6"
           height="54"
           rx="4"
@@ -413,9 +426,9 @@ export function Tile({
         <rect
           className="nt-tile-face"
           x="0.7"
-          y="0.7"
+          y="3.5"
           width="40.6"
-          height="52.5"
+          height="50.3"
           rx="4"
         />
         {back ? (

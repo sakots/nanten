@@ -6,6 +6,22 @@ nantenは静的サイトとして公開します。`pnpm build` で生成した 
 
 Node.js 22.12以上とpnpmを使用します。
 
+SNSのリンクプレビューを有効にする場合は、リポジトリ直下に `.env.local` を作成して公開URLを指定します。設定項目の見本は `.env.example` にあります。
+
+```dotenv
+SITE_URL=https://example.com/nanten/
+```
+
+ドメイン直下なら `https://example.com/` を指定します。URLにはHTMLファイル名ではなく公開ディレクトリを指定してください。末尾の `/` は省略しても自動で補います。HTTP・HTTPSの絶対URLだけを受け付け、認証情報・クエリ・フラグメントは指定できません。公開先を変えた場合はこの設定を変更して再ビルドします。
+
+`.env.local` はGit管理対象外です。設定値はビルド時に読み込むため、サーバーへのアップロードは不要です。`SITE_URL` は公開情報であり、生成したHTMLにも含まれます。未設定または空欄でもゲームはビルドできますが、OGP・Twitterカード用メタタグとcanonicalは生成しません。仮の公開URLを自動で入れることはありません。
+
+環境変数でも指定できます（次はPOSIXシェルの例です）。環境変数は `.env.local` より優先されます。
+
+```sh
+SITE_URL=https://example.com/nanten/ pnpm build
+```
+
 ```sh
 pnpm install
 pnpm build
@@ -43,7 +59,7 @@ FTPクライアントで契約サーバーの公開ディレクトリに接続�
 - `index.html` を既定のページとして表示できる一般的な静的Webサーバーを使用します。
 - `.js` をJavaScript、`.css` をCSSとして配信できる必要があります。JavaScriptモジュールは正しいMIMEタイプで配信してください。
 - HTTPSでの公開を推奨します。
-- Viteの `base: "./"` により、生成するJS・CSS・faviconの参照を相対パスにします。公開先のフォルダー名ごとの再設定・再ビルドは不要です。
+- Viteの `base: "./"` により、生成するJS・CSS・faviconの参照を相対パスにします。アプリ自体の配置先の変更に追加設定は不要ですが、SNS用の絶対URLを含む公開ビルドは `SITE_URL` を変更して作り直してください。
 - アプリ内の画面切り替えはブラウザー内の状態で行い、履歴APIによるパス型ルーティングは使用しません。SPA用のリライトルールや `.htaccess` の追加は不要です。
 - 外部の画像・フォント・API・CDNは不要です。牌はSVGで描画します。
 - `file://` でHTMLを直接開く方法は対象外です。ブラウザーのモジュール制限があるため、HTTPまたはHTTPSで確認してください。
@@ -71,5 +87,6 @@ FTPクライアントで契約サーバーの公開ディレクトリに接続�
 - 配信用画像：`public/ogp.png`（1200×630px、PNG）。Twitterの大きい画像カードとOGPで共用します。`pnpm build` で `dist/ogp.png` にコピーされます。
 - 編集用原稿：`images/ogp.svg`。配色はゲーム画面と同じ深緑・生成りを基調とし、サービス名・麻雀牌・「その手、何点？」を配置します。スクリーンショットや他サービスの素材は使用しません。
 - 公開時は `ogp.png` もFTPでアップロードしてください。SVG原稿はアップロード不要です。
-- この画像をSNSのリンクプレビューに表示するには、公開先の絶対URLを `og:image`・`twitter:image` に指定し、`twitter:card` を `summary_large_image` に設定します。公開URLは配置先により変わるため、今回の画像追加ではメタタグに仮のURLは設定しません。
-
+- `SITE_URL` を設定してビルドすると、`og:url`・canonicalに公開URL、`og:image`・`twitter:image` にその直下の `ogp.png` の絶対URLを埋め込みます。たとえば `https://example.com/nanten/` なら画像URLは `https://example.com/nanten/ogp.png` です。
+- OGPのタイトル・説明・サイト名・言語・画像のサイズと代替文、Twitterの `summary_large_image` カード用メタタグも生成します。JavaScriptを実行しないSNSクローラーでも、生成済みHTMLから読み取れます。
+- 画像は認証なしで公開アクセスできる必要があります。設定を変更しても既存のSNSプレビューはキャッシュされる場合があります。SNS側での実際の表示確認は、FTP公開後に行ってください。

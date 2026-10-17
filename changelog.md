@@ -17,6 +17,7 @@
 - ビルド成果物を相対パスで参照するよう修正し、ルート・サブディレクトリへのFTP公開手順を追加。
 - 画面下部に `package.json` と連動するバージョン情報とGitHubリポジトリへのリンクを追加。
 - Twitterカード・OGP共用の1200×630px画像 `public/ogp.png` と編集用原稿 `images/ogp.svg` を追加。
+- `SITE_URL` による公開URL設定と、OGP・Twitterカード・canonicalの静的HTML生成機能を追加。
 
 ### [2026/10/17] v0.1.0
 

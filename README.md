@@ -37,7 +37,9 @@ pnpm preview
 
 ## FTPで公開
 
-`pnpm build` で生成した **`dist/` の中身**（`index.html`・`favicon.svg`・`assets/`）を、サーバーの公開ディレクトリへFTPでアップロードしてください。ドメイン直下・`/nanten/` などのサブディレクトリの両方に対応します。公開サーバーにNode.jsやpnpmは不要です。
+`pnpm build` で生成した **`dist/` の中身**（`index.html`・`favicon.svg`・`ogp.png`・`assets/`）を、サーバーの公開ディレクトリへFTPでアップロードしてください。ドメイン直下・`/nanten/` などのサブディレクトリの両方に対応します。公開サーバーにNode.jsやpnpmは不要です。
+
+SNSの共有画像を有効にするには、`.env.example` を参考に `.env.local` に `SITE_URL=https://公開先のドメイン/nanten/` を設定してからビルドします。`og:image`・`twitter:image` などに公開先の絶対URLを埋め込みます。URL未設定でもゲームは動作しますが、共有用メタタグは生成しません。
 
 配置例、更新時のアップロード順、確認方法は [FTPによる公開](docs/deployment.md) を参照してください。
 
@@ -60,6 +62,7 @@ pnpm preview
 - ビルド成果物を相対パスで参照するよう修正し、`dist/` の中身をFTPで公開する手順を追加。
 - 画面下部にバージョン情報とGitHubリポジトリへのリンクを追加。
 - Twitterカード・OGP共用の1200×630px画像と編集用SVGを追加。
+- `SITE_URL` で公開URLを指定し、OGP・Twitterカード・canonicalをビルド時に生成する設定を追加。
 
 ### [2026/10/17] v0.1.0
 

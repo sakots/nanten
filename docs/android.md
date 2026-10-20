@@ -131,7 +131,7 @@ pnpm android:adfree:release
 | `pnpm android:ads:release` | `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` |
 | `pnpm android:adfree:release` | `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` |
 
-現在のversionCodeは802、versionNameは0.8.2です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
+現在のversionCodeは803、versionNameは0.8.3です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
 
 生成した `.aab` をPlay Consoleの内部テストなどのリリースへアップロードします。初回はPlay App Signingの登録手順に従い、作成した鍵をアップロード鍵として使用します。AABは直接端末にインストールするファイルではありません。Play経由のインストール・起動と公開前の確認を終えてから製品版へ進めてください。
 

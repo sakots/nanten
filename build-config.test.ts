@@ -30,7 +30,7 @@ describe("本番ビルドのキー制限", () => {
     },
   );
 
-  it.each(["development", "staging"])(
+  it.each(["development", "staging", "android-ads", "android-adfree"])(
     "モードを %s に変えてもキーなしビルドを拒否する",
     (mode) => {
       expect(() => config({ command: "build", mode })).toThrow();
@@ -58,5 +58,9 @@ describe("本番ビルドのキー制限", () => {
   it("利用できない鍵ファイルならビルドを拒否する", () => {
     vi.stubEnv("NANTEN_BUILD_SSH_KEY", join(envDir, "missing-key"));
     expect(() => config({ command: "build", mode: "production" })).toThrow();
+  });
+
+  it("Android版の未知のモードをWeb版として扱わない", () => {
+    expect(() => config({ command: "serve", mode: "android-unknown" })).toThrow();
   });
 });

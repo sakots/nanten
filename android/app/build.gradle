@@ -1,0 +1,135 @@
+import com.android.build.api.variant.BuildConfigField
+import groovy.json.JsonOutput
+
+apply plugin: 'com.android.application'
+
+def releaseEnvironment = [
+    'NANTEN_ANDROID_KEYSTORE', 'NANTEN_ANDROID_STORE_PASSWORD',
+    'NANTEN_ANDROID_KEY_ALIAS', 'NANTEN_ANDROID_KEY_PASSWORD'
+].collectEntries { key -> [(key): System.getenv(key) ?: ''] }
+def productionAds = [
+    'NANTEN_ADMOB_APP_ID', 'NANTEN_ADMOB_BANNER_ID', 'NANTEN_ADMOB_INTERSTITIAL_ID'
+].collectEntries { key -> [(key): System.getenv(key) ?: ''] }
+
+android {
+    namespace = "io.github.sakots.nanten"
+    compileSdk = rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "io.github.sakots.nanten"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 800
+        versionName "0.8.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    flavorDimensions += 'distribution'
+    productFlavors {
+        ads {
+            dimension 'distribution'
+            applicationId 'io.github.sakots.nanten'
+            resValue 'string', 'app_name', 'nanten'
+            resValue 'string', 'title_activity_main', 'nanten'
+        }
+        adfree {
+            dimension 'distribution'
+            applicationId 'io.github.sakots.nanten.adfree'
+            resValue 'string', 'app_name', 'nanten 広告なし'
+            resValue 'string', 'title_activity_main', 'nanten 広告なし'
+        }
+    }
+    signingConfigs {
+        release {
+            if (releaseEnvironment.values().every { !it.isEmpty() }) {
+                storeFile rootProject.file(releaseEnvironment.NANTEN_ANDROID_KEYSTORE)
+                storePassword releaseEnvironment.NANTEN_ANDROID_STORE_PASSWORD
+                keyAlias releaseEnvironment.NANTEN_ANDROID_KEY_ALIAS
+                keyPassword releaseEnvironment.NANTEN_ANDROID_KEY_PASSWORD
+            }
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        def ads = variant.flavorName == 'ads'
+        def debug = variant.buildType == 'debug'
+        if (ads) {
+            variant.manifestPlaceholders.put('admobAppId', debug
+                ? 'ca-app-pub-3940256099942544~3347511713' : productionAds.NANTEN_ADMOB_APP_ID)
+            variant.buildConfigFields.put('ADMOB_BANNER_ID', new BuildConfigField('String',
+                JsonOutput.toJson(debug ? 'ca-app-pub-3940256099942544/9214589741'
+                    : productionAds.NANTEN_ADMOB_BANNER_ID), null))
+            variant.buildConfigFields.put('ADMOB_INTERSTITIAL_ID', new BuildConfigField('String',
+                JsonOutput.toJson(debug ? 'ca-app-pub-3940256099942544/1033173712'
+                    : productionAds.NANTEN_ADMOB_INTERSTITIAL_ID), null))
+        }
+        def validation = tasks.register("validate${variant.name.capitalize()}Distribution") {
+            doLast {
+                def assets = file("src/${variant.flavorName}/assets")
+                if (!new File(assets, 'public/index.html').isFile()
+                    || !new File(assets, 'capacitor.config.json').isFile()) {
+                    throw new GradleException("Missing ${variant.flavorName} assets. Run pnpm android:${variant.flavorName} from the repository root.")
+                }
+                if (file('src/main/assets/public').exists() || file('src/main/assets/capacitor.config.json').exists()) {
+                    throw new GradleException('Shared Capacitor assets are not allowed. Run pnpm android:ads or pnpm android:adfree from the repository root.')
+                }
+                if (!debug) {
+                    releaseEnvironment.each { key, value ->
+                        if (value.isEmpty()) throw new GradleException("Release requires ${key}.")
+                    }
+                    if (!rootProject.file(releaseEnvironment.NANTEN_ANDROID_KEYSTORE).isFile()) {
+                        throw new GradleException('NANTEN_ANDROID_KEYSTORE must point to an existing signing keystore.')
+                    }
+                    if (ads) {
+                        productionAds.each { key, value ->
+                            def pattern = key == 'NANTEN_ADMOB_APP_ID'
+                                ? /ca-app-pub-[0-9]{16}~[0-9]{10}/ : /ca-app-pub-[0-9]{16}\/[0-9]{10}/
+                            if (!(value ==~ pattern) || value.startsWith('ca-app-pub-3940256099942544')) {
+                                throw new GradleException("${key} must be a production AdMob ID, not a Google test publisher ID.")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        tasks.configureEach { task ->
+            if (task.name == "pre${variant.name.capitalize()}Build") {
+                task.dependsOn(validation)
+            }
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    implementation project(':capacitor-cordova-android-plugins')
+    adsImplementation 'com.google.android.gms:play-services-ads:25.5.0'
+    adsImplementation 'com.google.android.ump:user-messaging-platform:4.0.0'
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+}
+
+apply from: 'capacitor.build.gradle'

@@ -6,3 +6,8 @@ dist/
 .env.*.local
 
 up.sh
+
+/android/app/src/ads/assets/
+/android/app/src/adfree/assets/
+*.jks
+*.keystore

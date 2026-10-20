@@ -1,6 +1,6 @@
 # FTPによる公開
 
-nantenは静的サイトとして公開します。`pnpm build` で生成した **`dist/` の中身だけ**をFTPでアップロードすれば動作します。公開サーバーにNode.js・pnpm・PHP・データベースは不要です。
+nantenのWeb／PWA版は静的サイトとして公開します。`pnpm build` で生成した **`dist/` の中身だけ**をFTPでアップロードすれば動作します。公開サーバーにNode.js・pnpm・PHP・データベースは不要です。Google Play用の広告あり・なしのAndroid版は別の [Androidビルド手順](android.md) を参照してください。Android向けビルド資産をFTP公開する必要はありません。
 
 ## 1. 手元でビルドする
 

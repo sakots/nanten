@@ -6,6 +6,10 @@ import { VitePWA } from "vite-plugin-pwa";
 import { verifyBuildKey } from "./build/verify-ssh-key";
 
 export default defineConfig(({ command, mode }) => {
+  if (mode.startsWith("android-") && !["android-ads", "android-adfree"].includes(mode)) {
+    throw new Error(`未対応のAndroidビルドモードです: ${mode}`);
+  }
+  const isAndroid = mode === "android-ads" || mode === "android-adfree";
   const env = loadEnv(mode, process.cwd(), ["SITE_URL", "NANTEN_BUILD_SSH_KEY"]);
   if (command === "build") {
     verifyBuildKey(
@@ -74,9 +78,16 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     base: "./",
+    define: {
+      __NANTEN_PLATFORM__: JSON.stringify(isAndroid ? "android" : "web"),
+      __NANTEN_ADS__: mode === "android-ads",
+    },
+    build: {
+      outDir: isAndroid ? `dist/${mode}` : "dist",
+    },
     plugins: [
       react(),
-      VitePWA({
+      ...(isAndroid ? [] : [VitePWA({
         registerType: "prompt",
         injectRegister: false,
         includeAssets: ["favicon.svg", "icons/*.png"],
@@ -114,7 +125,7 @@ export default defineConfig(({ command, mode }) => {
           skipWaiting: false,
           clientsClaim: false,
         },
-      }),
+      })]),
       { name: "social-metadata", transformIndexHtml: () => tags },
     ],
   };

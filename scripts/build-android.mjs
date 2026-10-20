@@ -30,4 +30,9 @@ rmSync(generatedAssets, { recursive: true, force: true });
 
 const flavorTask = variant === "ads" ? "Ads" : "Adfree";
 const task = target === "release" ? `bundle${flavorTask}Release` : `assemble${flavorTask}Debug`;
-run(process.platform === "win32" ? "gradlew.bat" : "./gradlew", [task], android);
+if (process.platform === "win32") {
+  // Batch files require cmd.exe; task is derived only from the validated choices above.
+  run(env.ComSpec || "cmd.exe", ["/d", "/s", "/c", `gradlew.bat ${task}`], android);
+} else {
+  run("./gradlew", [task], android);
+}

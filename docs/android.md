@@ -53,6 +53,8 @@ Google Playでパッケージ名 `nanten.myapp` を要求されるアプリに�
 
 WindowsのPowerShellからも同じコマンドを使用します。ビルドスクリプトは `gradlew.bat` を `cmd.exe /d /s /c` 経由で実行します。バッチファイルの直接起動による `spawnSync gradlew.bat EINVAL` を避けるための処理です。Gradleの作業ディレクトリを別途指定するため、プロジェクトのパスに空白が含まれていてもコマンド文字列へ埋め込みません。
 
+Gradleラッパーは `8.14.3` に固定します。Android Gradle Plugin `8.13.0` はGradle `9.6` 以降で削除された内部APIを使用するため、Gradle `9.7.1` ではビルドできません。システムの `gradle` ではなく、上記のpnpmコマンドが呼ぶ `android/gradlew`（Windowsでは `gradlew.bat`）を使用してください。Gradleを更新する場合はAndroid Gradle Pluginとの互換性も確認してください。
+
 広告ありWeb資産は `dist/android-ads/`、広告なしは `dist/android-adfree/` に生成します。これだけではAndroidアプリではありません。広告はネイティブAndroid上でのみ表示します。通常の `pnpm build` は `dist/` を作り直すため、その下のAndroid向けWeb資産も削除します。必要な版のAndroidビルドコマンドを再実行すれば再生成します。
 
 Capacitorが同期する資産はビルドスクリプトが `android/app/src/ads/assets/` または `android/app/src/adfree/assets/` に分離します。フレーバー間で前回の広告コードや設定を共用しません。生成物はGit管理対象外です。

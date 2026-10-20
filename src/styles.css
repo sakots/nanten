@@ -676,6 +676,26 @@ p {
   line-height: 2.1;
   margin-bottom: 0;
 }
+.tip-card details p,
+.tip-card table {
+  font-size: 10px;
+  line-height: 2.1;
+}
+.tip-card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+.tip-card th,
+.tip-card td {
+  border-bottom: 1px solid var(--border);
+  padding: 6px 3px;
+  text-align: left;
+}
+.tip-card th,
+.tip-card td:last-child {
+  white-space: nowrap;
+}
 .feedback {
   margin-top: 24px;
 }

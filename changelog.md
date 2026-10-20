@@ -6,6 +6,7 @@
 
 ### [2026/10/20] v0.8.1
 
+- Android Gradle Pluginとの非互換でリリースビルドが失敗するため、Gradleラッパーを `8.14.3` に固定する修正。
 - Google Playの指定に合わせ、Androidのパッケージ名を広告あり版は `nanten.myapp`、広告なし版は `nanten.myapp.adfree` に修正。
 - WindowsでGradleラッパーを直接起動すると失敗するため、cmd.exe経由で実行するよう修正。
 - ヒント・回答解説・結果の振り返りの点数表記を、符→翻の順に修正。

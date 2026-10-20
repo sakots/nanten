@@ -1125,6 +1125,20 @@ p {
 .footer-meta a {
   text-underline-offset: 3px;
 }
+.ad-privacy-button {
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ad-status {
+  flex-basis: 100%;
+  max-width: 40em;
+  line-height: 1.6;
+}
 .sr-only {
   position: absolute;
   width: 1px;

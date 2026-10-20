@@ -6,6 +6,11 @@ import { calculateScore } from "./game/scoring";
 import { createGame, gameReducer } from "./game/session";
 import type { Level, Problem, Score } from "./game/types";
 import { version } from "../package.json";
+import type * as AndroidAds from "./ads/AndroidAds";
+
+const nativeAds = __NANTEN_PLATFORM__ === "android" && __NANTEN_ADS__
+  ? import("./ads/AndroidAds").catch(() => null)
+  : null;
 
 const levels: { value: Level; label: string; detail: string }[] = [
   { value: "all", label: "すべて", detail: "いろいろな点数に挑戦" },
@@ -248,6 +253,8 @@ export default function App() {
   const [state, dispatch] = useReducer(gameReducer, undefined, () =>
     createGame(createSession("all")),
   );
+  const sessionRef = useRef(state.problems);
+  const [ads, setAds] = useState<typeof AndroidAds | null>(null);
   const [answers, setAnswers] = useState<string[]>(["", ""]);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -258,6 +265,17 @@ export default function App() {
   const attempt = state.attempts[state.index];
   const correctCount = state.attempts.filter((item) => item.correct).length;
   const hintCount = state.attempts.filter((item) => item.hinted).length;
+  const AdsResultsButton = ads?.ResultsButton;
+  const AdPrivacySettings = ads?.PrivacySettings;
+
+  useEffect(() => {
+    if (!nativeAds) return;
+    let active = true;
+    void nativeAds.then((module) => {
+      if (active) setAds(module);
+    });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const theme = darkMode ? "dark" : "light";
@@ -275,8 +293,10 @@ export default function App() {
   }, [attempt, state.finished]);
 
   function restart(nextLevel: Level) {
+    const problems = createSession(nextLevel);
+    sessionRef.current = problems;
     setLevel(nextLevel);
-    dispatch({ type: "restart", problems: createSession(nextLevel) });
+    dispatch({ type: "restart", problems });
     setAnswers(["", ""]);
     setError("");
   }
@@ -630,16 +650,25 @@ export default function App() {
                     <PaymentSummary score={score} />
                     <Breakdown problem={problem} score={score} />
                     <div className="feedback-actions">
-                      <button
-                        className="primary-button"
-                        ref={nextRef}
-                        onClick={next}
-                      >
-                        {state.index === state.problems.length - 1
-                          ? "結果を見る"
-                          : "次の問題へ"}{" "}
-                        <span aria-hidden="true">→</span>
-                      </button>
+                      {AdsResultsButton && state.problems.length === 10 && state.index === 9 ? (
+                        <AdsResultsButton
+                          buttonRef={nextRef}
+                          onContinue={() => {
+                            if (sessionRef.current === state.problems) next();
+                          }}
+                        />
+                      ) : (
+                        <button
+                          className="primary-button"
+                          ref={nextRef}
+                          onClick={next}
+                        >
+                          {state.index === state.problems.length - 1
+                            ? "結果を見る"
+                            : "次の問題へ"}{" "}
+                          <span aria-hidden="true">→</span>
+                        </button>
+                      )}
                     </div>
                   </section>
                 )}
@@ -751,6 +780,7 @@ export default function App() {
             >
               GitHub<span className="sr-only">（新しいタブで開く）</span>
             </a>
+            {AdPrivacySettings && <AdPrivacySettings />}
           </div>
         </footer>
       </main>

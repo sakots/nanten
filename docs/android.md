@@ -6,10 +6,12 @@ Capacitorで既存のReactアプリをAndroidアプリとして実行します�
 
 | 版 | applicationId | 広告 |
 | --- | --- | --- |
-| Android広告あり | `io.github.sakots.nanten` | 画面下部バナーと10問終了時のインタースティシャル |
-| Android広告なし | `io.github.sakots.nanten.adfree` | 広告SDK・同意SDK・広告用権限を含めない |
+| Android広告あり | `nanten.myapp` | 画面下部バナーと10問終了時のインタースティシャル |
+| Android広告なし | `nanten.myapp.adfree` | 広告SDK・同意SDK・広告用権限を含めない |
 
 2つのAndroid版は別アプリとして同時インストールできます。Google Playでも別々に登録します。applicationIdは公開後に変更できないため、初回公開前に確認してください。
+
+Google Playでパッケージ名 `nanten.myapp` を要求されるアプリには、広告あり版のAPK／AABを使用します。Javaのnamespace `io.github.sakots.nanten` は内部コード用であり、配布パッケージ名とは異なります。
 
 ## 表示とプライバシー
 

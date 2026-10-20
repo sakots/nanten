@@ -15,7 +15,7 @@ android {
     namespace = "io.github.sakots.nanten"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "io.github.sakots.nanten"
+        applicationId "nanten.myapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 801
@@ -32,13 +32,13 @@ android {
     productFlavors {
         ads {
             dimension 'distribution'
-            applicationId 'io.github.sakots.nanten'
+            applicationId 'nanten.myapp'
             resValue 'string', 'app_name', 'nanten'
             resValue 'string', 'title_activity_main', 'nanten'
         }
         adfree {
             dimension 'distribution'
-            applicationId 'io.github.sakots.nanten.adfree'
+            applicationId 'nanten.myapp.adfree'
             resValue 'string', 'app_name', 'nanten 広告なし'
             resValue 'string', 'title_activity_main', 'nanten 広告なし'
         }

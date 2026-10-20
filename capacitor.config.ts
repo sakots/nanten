@@ -3,7 +3,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 const variant = process.env.NANTEN_ANDROID_VARIANT;
 
 const config: CapacitorConfig = {
-  appId: variant === "adfree" ? "io.github.sakots.nanten.adfree" : "io.github.sakots.nanten",
+  appId: variant === "adfree" ? "nanten.myapp.adfree" : "nanten.myapp",
   appName: variant === "adfree" ? "nanten 広告なし" : "nanten",
   webDir: variant ? `dist/android-${variant}` : "dist",
   plugins: variant === "ads" ? {

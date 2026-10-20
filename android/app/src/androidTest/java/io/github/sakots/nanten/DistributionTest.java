@@ -25,7 +25,7 @@ public class DistributionTest {
     public void flavorHasItsOwnIdentityAndAdvertisingManifest() throws Exception {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         boolean ads = BuildConfig.FLAVOR.equals("ads");
-        assertEquals(ads ? "io.github.sakots.nanten" : "io.github.sakots.nanten.adfree", context.getPackageName());
+        assertEquals(ads ? "nanten.myapp" : "nanten.myapp.adfree", context.getPackageName());
         ApplicationInfo application = context.getPackageManager().getApplicationInfo(
             context.getPackageName(), PackageManager.GET_META_DATA);
         String appId = application.metaData == null ? null

@@ -43,6 +43,8 @@ Android SDK・JDK 21・SSHビルド鍵が必要です。リリース版にはAnd
 
 初回はAndroid用アップロード鍵を作成し、`.env.local` の `NANTEN_ANDROID_KEYSTORE`・`NANTEN_ANDROID_STORE_PASSWORD`・`NANTEN_ANDROID_KEY_ALIAS`・`NANTEN_ANDROID_KEY_PASSWORD` を設定してください。SSH鍵だけではAABを署名できません。具体的な作成コマンドは [初回のアップロード鍵作成](docs/android.md#初回のアップロード鍵作成) に記載しています。生成先は広告あり版が `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab`、広告なし版が `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` です。
 
+AdMobの販売者宣言は `public/app-ads.txt` にあります。デベロッパーサイトのドメイン直下 `/app-ads.txt` に公開してください。ゲームを `/nanten/` へ配置する場合も、ファイルはドメイン直下へ別途配置します。AABの再ビルドは不要です。詳しくは [app-ads.txtの公開](docs/android.md#app-adstxtの公開) を参照してください。
+
 ## 開発
 
 Node.js 22.12以上とpnpmを使用します。
@@ -76,6 +78,10 @@ SNSの共有画像を有効にするには、`.env.example` を参考に `.env.l
 牌の配色・配置は `images/pai.png` を見本にします。筒子は黒と赤、索子は緑を基調に五索の中央・七索の上段・九索の中央列を赤にします。二索は縦2本、六索は3列2段、七索は上段1本と下段3列2段、八索は左右の縦竹と中央の斜め竹を組み合わせます。一索は緑の尾羽を広げた鳥、白は無地とし、外部画像に依存しないSVGで描画します。
 
 ## 更新履歴
+
+### [2026/10/21] v0.8.1
+
+- AdMobの認定販売者を宣言する `app-ads.txt` と、デベロッパーサイトのドメイン直下への公開手順を追加。
 
 ### [2026/10/20] v0.8.1
 

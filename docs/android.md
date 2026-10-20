@@ -44,6 +44,18 @@ Google Playでパッケージ名 `nanten.myapp` を要求されるアプリに�
 
 公開前にはAdMobで両広告枠を作成し、プライバシーメッセージ、プライバシーポリシー、app-ads.txtを設定してください。Play Consoleの広告申告・データセーフティ・対象年齢なども実際の運用とSDKのデータ利用に合わせて設定する必要があります。実機で同意・表示・終了・オフライン時の動作を確認してから公開してください。
 
+## app-ads.txtの公開
+
+AdMobの認定販売者を宣言するファイルを `public/app-ads.txt` に置きます。登録済みの本番広告IDと同じパブリッシャーID `pub-6652873007002259` を使用し、`pnpm build` で `dist/app-ads.txt` にコピーします。AdMobのアカウントを変更する場合は、このファイルも管理画面のスニペットに合わせて更新してください。
+
+1. Google Playのストア掲載情報にデベロッパーのウェブサイトを登録します。
+2. そのサイトのドメイン直下にファイルをアップロードし、`https://example.com/app-ads.txt` で認証なしに本文を取得できるようにします。ゲームが `/nanten/` にあっても、`/nanten/app-ads.txt` に置くだけでは不十分です。AABへの同梱だけでも公開にはなりません。
+3. 同じドメインで既に `app-ads.txt` を公開している場合は、既存の宣言を消さず、このファイルの行を追記します。同じ行が既にある場合は重複させません。
+4. 公開URLがHTTP 200でプレーンテキストを返すことを確認します。ログイン画面やHTMLのエラーページを返したり、robots.txtでクローラーを拒否したりしないでください。
+5. AdMobの「アプリ」→「app-ads.txt」で検出・認証状態を確認します。Googleの案内ではクロールと検証に少なくとも24時間待つ必要があります。ファイルの公開だけで広告配信の承認や表示が保証されるわけではありません。
+
+ファイルだけをFTPで公開できるため、この作業のためにAABを再ビルドする必要はありません。形式と公開条件は [Google公式のapp-ads.txt設定手順](https://developers.google.com/admob/android/app-ads) を参照してください。
+
 ## 環境構築と設定
 
 1. Node.js 22.12以上、pnpm、OpenSSH、JDK 21、Android SDKを用意します。Android Studio 2025.2.1以降のSDK ManagerでAndroid SDK Platform 36とBuild Toolsをインストールし、`ANDROID_HOME` と必要なら `JAVA_HOME` を設定します。

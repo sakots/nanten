@@ -258,6 +258,7 @@ export default function App() {
   const [answers, setAnswers] = useState<string[]>(["", ""]);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const questionRef = useRef<HTMLDivElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const resultRef = useRef<HTMLHeadingElement>(null);
   const problem = state.problems[state.index];
@@ -325,8 +326,12 @@ export default function App() {
     dispatch({ type: "next" });
     setAnswers(["", ""]);
     setError("");
-    if (state.index < state.problems.length - 1)
-      requestAnimationFrame(() => inputRef.current?.focus());
+    if (state.index < state.problems.length - 1) {
+      requestAnimationFrame(() => {
+        questionRef.current?.focus({ preventScroll: true });
+        questionRef.current?.scrollIntoView({ block: "start", behavior: "instant" });
+      });
+    }
   }
 
   return (
@@ -477,7 +482,7 @@ export default function App() {
               </section>
             ) : (
               <>
-                <div className="progress-heading">
+                <div className="progress-heading" ref={questionRef} tabIndex={-1}>
                   <div>
                     <span className="question-number">
                       {String(state.index + 1).padStart(2, "0")}

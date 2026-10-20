@@ -186,7 +186,7 @@ function Breakdown({
       <div className="breakdown-title">
         <h3>役と符の内訳</h3>
         <strong>
-          {problem.han}翻 {problem.fu}符{score.limit ? ` · ${score.limit}` : ""}
+          {problem.fu}符 {problem.han}翻{score.limit ? ` · ${score.limit}` : ""}
         </strong>
       </div>
       <div className="breakdown-columns">
@@ -452,7 +452,7 @@ export default function App() {
                                 {item.problem.win === "ron" ? "ロン" : "ツモ"}
                               </span>
                               <span>
-                                {item.problem.han}翻 {item.problem.fu}符
+                                {item.problem.fu}符 {item.problem.han}翻
                               </span>
                             </summary>
                             <div className="review-body">

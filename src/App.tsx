@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { Tile } from "./components/Tile";
+import { ScoreTable } from "./components/ScoreTable";
 import { createSession } from "./game/problems";
 import { calculateScore } from "./game/scoring";
 import { createGame, gameReducer } from "./game/session";
@@ -847,6 +848,7 @@ export default function App() {
             </section>
           </aside>
         </div>
+        <ScoreTable />
         <footer className="site-footer">
           <span>nanten</span>
           <p>積み重ねた一問が、自信になる。</p>

@@ -1,0 +1,99 @@
+.score-reference {
+  margin-top: 28px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.score-reference > summary {
+  padding: 18px 16px;
+  font-size: 16px;
+  font-weight: 650;
+}
+.score-table-body {
+  padding: 0 12px 20px;
+  max-width: 760px;
+  margin: auto;
+}
+.score-table-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.score-table-options fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 4px;
+}
+.score-table-options legend {
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+.score-table-options button {
+  min-width: 52px;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 14px;
+}
+.score-table-options button[aria-pressed="true"] {
+  border-color: var(--green);
+  box-shadow: inset 0 -3px var(--green);
+  color: var(--green);
+  font-weight: 700;
+}
+.score-table-guide {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 12px 0;
+}
+.score-reference table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(12px, 2.8vw, 14px);
+  font-variant-numeric: tabular-nums;
+}
+.score-reference caption {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 650;
+  padding: 10px 0;
+}
+.score-table-grid {
+  table-layout: fixed;
+}
+.score-reference th,
+.score-reference td {
+  border-bottom: 1px solid var(--border);
+  padding: 10px 2px;
+  text-align: center;
+  vertical-align: middle;
+}
+.score-reference thead th {
+  color: var(--muted);
+}
+.score-table-points {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+}
+.score-table-limit {
+  color: var(--green);
+}
+.score-table-limits th {
+  text-align: left;
+  width: 65%;
+}
+.score-table-limits small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.6;
+}

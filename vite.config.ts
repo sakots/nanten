@@ -1,13 +1,16 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import type { HtmlTagDescriptor } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { verifyBuildKey } from "./build/verify-ssh-key";
 
 export default defineConfig(({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd(), ["SITE_URL", "NANTEN_BUILD_KEY"]);
-  if (command === "build" && !env.NANTEN_BUILD_KEY?.trim()) {
-    throw new Error(
-      "本番ビルドには NANTEN_BUILD_KEY が必要です。.env.local または環境変数に空白以外の値を設定してください。",
+  const env = loadEnv(mode, process.cwd(), ["SITE_URL", "NANTEN_BUILD_SSH_KEY"]);
+  if (command === "build") {
+    verifyBuildKey(
+      env.NANTEN_BUILD_SSH_KEY,
+      fileURLToPath(new URL("./build/allowed_signers", import.meta.url)),
     );
   }
   const configuredUrl = env.SITE_URL?.trim();

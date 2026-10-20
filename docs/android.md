@@ -6,10 +6,12 @@ Capacitorで既存のReactアプリをAndroidアプリとして実行します�
 
 | 版 | applicationId | 広告 |
 | --- | --- | --- |
-| Android広告あり | `io.github.sakots.nanten` | 画面下部バナーと10問終了時のインタースティシャル |
-| Android広告なし | `io.github.sakots.nanten.adfree` | 広告SDK・同意SDK・広告用権限を含めない |
+| Android広告あり | `nanten.myapp` | 画面下部バナーと10問終了時のインタースティシャル |
+| Android広告なし | `nanten.myapp.adfree` | 広告SDK・同意SDK・広告用権限を含めない |
 
 2つのAndroid版は別アプリとして同時インストールできます。Google Playでも別々に登録します。applicationIdは公開後に変更できないため、初回公開前に確認してください。
+
+Google Playでパッケージ名 `nanten.myapp` を要求されるアプリには、広告あり版のAPK／AABを使用します。Javaのnamespace `io.github.sakots.nanten` は内部コード用であり、配布パッケージ名とは異なります。
 
 ## 表示とプライバシー
 
@@ -71,7 +73,42 @@ NANTEN_ANDROID_KEY_PASSWORD=
 
 AdMobの3項目は広告ありリリース版だけに必要です。アプリIDは `ca-app-pub-数字16桁~数字10桁`、広告ユニットIDは `ca-app-pub-数字16桁/数字10桁` の形式です。バナー用とインタースティシャル用にそれぞれ正しい形式の広告枠を登録してください。IDの形式確認だけではAdMob上での所有権や枠の種類までは確認できません。
 
-Android署名の4項目は両リリース版に必要です。`NANTEN_ANDROID_KEYSTORE` はアップロード鍵のkeystoreファイルのパスです。初めて作成する場合はAndroid Studioの署名付きバンドル生成、またはJDKの `keytool` を使用し、keystoreとパスワードを安全にバックアップしてください。秘密鍵をリポジトリ内に保存しないでください。Play App Signingの登録・アップロード鍵の管理はPlay Consoleの手順に従います。
+Android署名の4項目は両リリース版に必要です。`NANTEN_ANDROID_KEYSTORE` はアップロード鍵のkeystoreファイルの**絶対パス**です（`~` は使用しません）。Androidアプリの署名鍵はSSHビルド鍵とは別で、既存のSSH鍵ではAABを署名できません。
+
+### 初回のアップロード鍵作成
+
+既に公開済みのアプリ、またはアップロード鍵を作成済みのアプリでは、その鍵を使用してください。更新のたびに新しい鍵を作成しないでください。新規アプリで鍵がない場合だけ、次の手順を実行します。
+
+1. リポジトリ外に鍵の保存先ディレクトリを作成します。Linuxでは例として `~/.local/share/nanten/`、Windowsではユーザーフォルダー内の専用ディレクトリを使用します。
+2. JDK付属の `keytool` でアップロード鍵を作成します。以下の `/absolute/path/upload-key.jks` は実際の保存先の絶対パスに置き換えてください。コマンドは改行せず実行します。
+
+   ```sh
+   keytool -genkeypair -keystore /absolute/path/upload-key.jks -storetype PKCS12 -alias upload -keyalg RSA -keysize 2048 -validity 10000
+   ```
+
+   パスワードと証明書の情報を対話形式で入力します。パスワードをコマンド引数やシェル履歴に残さないでください。PKCS12ではキーパスワードとストアパスワードを同じ値にします。
+
+3. Git管理対象外の `.env.local` に設定します。パスワードは作成時に指定した値へ置き換え、例の値をそのまま使わないでください。Windowsのパスは `C:/Users/ユーザー名/…/upload-key.jks` のように `/` で区切れます。
+
+   ```dotenv
+   NANTEN_ANDROID_KEYSTORE=/absolute/path/upload-key.jks
+   NANTEN_ANDROID_STORE_PASSWORD='作成時のパスワード'
+   NANTEN_ANDROID_KEY_ALIAS=upload
+   NANTEN_ANDROID_KEY_PASSWORD='作成時のパスワード'
+   ```
+
+4. keystoreとパスワードを安全な別の場所へバックアップします。`.env.local` にもパスワードがあるため、Linuxでは `chmod 600 .env.local /absolute/path/upload-key.jks` で読み取りを所有者だけに制限します。Windowsではファイルのアクセス権を制限します。秘密鍵やパスワードをGitへ追加したり、AABと一緒に配布したりしないでください。
+
+### AABの生成とアップロード
+
+設定後、リポジトリ直下で公開する版のコマンドを実行します。Web資産生成・Capacitor同期・リリース署名・AAB生成まで行うため、Android Studioでの再署名は不要です。
+
+```sh
+pnpm android:ads:release
+pnpm android:adfree:release
+```
+
+両方公開する場合だけ2つのコマンドを順番に実行します。広告なし版にAdMob IDは不要です。`Release requires NANTEN_ANDROID_KEYSTORE.` で停止した場合は署名設定が読み込まれていません。上記4項目が空欄でないことを確認してください。
 
 | コマンド | 生成先 |
 | --- | --- |
@@ -80,7 +117,11 @@ Android署名の4項目は両リリース版に必要です。`NANTEN_ANDROID_KE
 | `pnpm android:ads:release` | `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` |
 | `pnpm android:adfree:release` | `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` |
 
-初期versionCodeは800です。Google Playへの更新では、既にアップロード済みの値より大きくしてください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
+現在のversionCodeは801、versionNameは0.8.1です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
+
+生成した `.aab` をPlay Consoleの内部テストなどのリリースへアップロードします。初回はPlay App Signingの登録手順に従い、作成した鍵をアップロード鍵として使用します。AABは直接端末にインストールするファイルではありません。Play経由のインストール・起動と公開前の確認を終えてから製品版へ進めてください。
+
+署名はJDK付属の `jarsigner -verify android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` などで確認できます。アップロード鍵の証明書は自己署名のため、証明書チェーンに関する警告だけでは署名失敗とは限りません。署名の検証とPlay Consoleでの受け入れは別で、ストア情報・ポリシー申告・実機での動作確認も必要です。
 
 ## 公開前の動作確認
 
@@ -97,3 +138,9 @@ Android署名の4項目は両リリース版に必要です。`NANTEN_ANDROID_KE
 Web・広告ありAndroid・広告なしAndroidの資産ビルド、両デバッグAPKの生成、広告なし版の一時署名鍵によるAAB生成を確認しました。一時鍵で署名したAABは配布しないため削除しています。APK内のクラスと権限を調べ、広告なし版にAdMob・UMP・広告ID権限が含まれないことも確認しました。広告ありリリース版は、AdMob ID未設定・Google公式テストID、およびリリース署名未設定を拒否します。
 
 Web版と両Android向け資産はブラウザーで10問から結果表示まで確認しました。広告あり資産のブラウザー確認は、ネイティブプラグインがない場合の続行経路だけを対象とし、広告表示の代用とはしていません。検証環境はKVM権限がなく、ソフトウェアエミュレーターの起動も完了しなかったため、ネイティブ広告・UMP画面の実表示やAndroidの計測テスト実行は未確認です。公開前には上記の実機確認が必要です。
+
+### v0.8.1のAAB生成確認
+
+Android署名鍵が未設定だと `Release requires NANTEN_ANDROID_KEYSTORE.` で停止することを確認しました。リポジトリ外にRSA 2048bit・有効期間10000日のアップロード鍵を作成し、`.env.local` に署名の4項目を設定した後、広告あり・広告なし両方のリリースコマンドが成功しました。生成したAABはversionCode 801、versionName 0.8.1、targetSdkVersion 36です。
+
+両AABは `jarsigner -verify` の署名検証と、Google公式 [bundletool 1.18.3](https://github.com/google/bundletool/releases/tag/1.18.3) の `validate` を通過しました。`jarsigner` は自己署名証明書・タイムスタンプなし・POSIX属性・JarFile/JarInputStream間の読み取り差について警告を出しています。Play Consoleへのアップロードと実機確認は未実施です。作成したアップロード鍵は以後のビルドでも使用するため、削除せずパスワードとともにバックアップしてください。

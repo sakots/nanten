@@ -41,6 +41,8 @@ HTTPSで公開したサイトを開き、AndroidのChromeではメニューの�
 
 Android SDK・JDK 21・SSHビルド鍵が必要です。リリース版にはAndroid署名鍵、広告ありリリース版には自身のAdMobアプリIDと2種類の広告ユニットIDも設定します。環境構築・生成先・公開前の確認は [Androidビルド手順](docs/android.md) を参照してください。
 
+初回はAndroid用アップロード鍵を作成し、`.env.local` の `NANTEN_ANDROID_KEYSTORE`・`NANTEN_ANDROID_STORE_PASSWORD`・`NANTEN_ANDROID_KEY_ALIAS`・`NANTEN_ANDROID_KEY_PASSWORD` を設定してください。SSH鍵だけではAABを署名できません。具体的な作成コマンドは [初回のアップロード鍵作成](docs/android.md#初回のアップロード鍵作成) に記載しています。生成先は広告あり版が `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab`、広告なし版が `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` です。
+
 ## 開発
 
 Node.js 22.12以上とpnpmを使用します。
@@ -77,8 +79,10 @@ SNSの共有画像を有効にするには、`.env.example` を参考に `.env.l
 
 ### [2026/10/20] v0.8.1
 
+- Google Playの指定に合わせ、Androidのパッケージ名を広告あり版は `nanten.myapp`、広告なし版は `nanten.myapp.adfree` に修正。
 - WindowsでGradleラッパーを直接起動すると失敗するため、cmd.exe経由で実行するよう修正。
 - ヒント・回答解説・結果の振り返りの点数表記を、符→翻の順に修正。
+- Google Play向けAABをビルドできるよう、アップロード鍵の作成・署名設定・生成先・公開手順の不足を修正。
 
 ### [2026/10/20] v0.8.0
 

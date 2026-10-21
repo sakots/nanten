@@ -14,6 +14,7 @@ export type Wind = "東" | "南" | "西" | "北";
 
 export interface Problem {
   id: string;
+  patternNumber: number;
   title: string;
   level: Exclude<Level, "all">;
   concealed: TileCode[];
@@ -43,6 +44,6 @@ export interface Score {
   total: number;
 }
 
-export type HandTemplate = Omit<Problem, "id" | "dealer" | "seatWind"> & {
+export type HandTemplate = Omit<Problem, "id" | "patternNumber" | "dealer" | "seatWind"> & {
   key: string;
 };

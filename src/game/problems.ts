@@ -462,11 +462,12 @@ const templates: HandTemplate[] = [
 
 // Each shape is practiced once as a child and once as dealer. Winds are shown explicitly;
 // no template has a wind triplet or value-wind pair that changes its fu with the seat.
-export const problems: Problem[] = templates.flatMap(({ key, ...template }) => {
+export const problems: Problem[] = templates.flatMap(({ key, ...template }, index) => {
   const concealed = sortTiles(template.concealed);
+  const patternNumber = index + 1;
   return [
-    { ...template, concealed, id: `${key}-child`, dealer: false, seatWind: "南" as const },
-    { ...template, concealed, id: `${key}-dealer`, dealer: true, seatWind: "東" as const },
+    { ...template, concealed, patternNumber, id: `${key}-child`, dealer: false, seatWind: "南" as const },
+    { ...template, concealed, patternNumber, id: `${key}-dealer`, dealer: true, seatWind: "東" as const },
   ];
 });
 

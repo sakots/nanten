@@ -288,6 +288,12 @@ p {
   font-size: 12px;
   margin-left: 6px;
 }
+.pattern-number {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+  margin-top: 8px;
+}
 .score-counter {
   display: flex;
   align-items: center;

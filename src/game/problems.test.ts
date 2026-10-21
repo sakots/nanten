@@ -225,6 +225,15 @@ function interpretations(
 }
 
 describe("curated hands", () => {
+  it("lets beginners determine every payment without calculating fu", () => {
+    for (const problem of problems.filter((p) => p.level === "basic")) {
+      const expected = calculateScore(problem).payments;
+      for (const fu of [30, 40, 110]) {
+        expect(calculateScore({ ...problem, fu }).payments, `${problem.id}, ${fu}fu`).toEqual(expected);
+      }
+    }
+  });
+
   it("preserves published pattern numbers when more hands are appended", () => {
     for (const [key, patternNumber] of [
       ["pinfu-ron", 1],
@@ -357,11 +366,11 @@ describe("curated hands", () => {
           : Math.max(30, Math.ceil(raw / 10) * 10),
         p.id,
       ).toBe(p.fu);
-      const expectedLevel = calculateScore(p).basePoints < 2000
-        ? "basic"
+      const expectedLevel = p.han <= 4
+        ? "intermediate"
         : p.han >= 11 && !p.yaku.some((y) => y.han === 13)
           ? "advanced"
-          : "intermediate";
+          : "basic";
       expect(p.level, p.id).toBe(expectedLevel);
     }
   });

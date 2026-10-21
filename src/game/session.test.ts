@@ -6,7 +6,7 @@ const problem: Problem = {
   id: "session-fixture",
   patternNumber: 1,
   title: "平和",
-  level: "basic",
+  level: "intermediate",
   concealed: [
     "1m",
     "2m",

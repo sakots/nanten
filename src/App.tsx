@@ -15,8 +15,8 @@ const nativeAds = __NANTEN_PLATFORM__ === "android" && __NANTEN_ADS__
 
 const levels: { value: Level; label: string; detail: string }[] = [
   { value: "all", label: "すべて", detail: "いろいろな点数に挑戦" },
-  { value: "basic", label: "初級", detail: "満貫未満" },
-  { value: "intermediate", label: "中級", detail: "満貫〜倍満・通常の役満" },
+  { value: "basic", label: "初級", detail: "符計算不要 · 5〜10翻・通常の役満" },
+  { value: "intermediate", label: "中級", detail: "符を確認 · 1〜4翻（満貫を含む）" },
   { value: "advanced", label: "上級", detail: "三倍満・数え役満" },
 ];
 const number = (value: number) => value.toLocaleString("ja-JP");

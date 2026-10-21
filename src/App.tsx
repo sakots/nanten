@@ -2,7 +2,7 @@ import { useEffect, useReducer, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { Tile } from "./components/Tile";
 import { ScoreTable } from "./components/ScoreTable";
-import { createSession } from "./game/problems";
+import { createSession, problems } from "./game/problems";
 import { calculateScore } from "./game/scoring";
 import { createGame, gameReducer } from "./game/session";
 import type { Level, Problem, Score } from "./game/types";
@@ -20,6 +20,15 @@ const levels: { value: Level; label: string; detail: string }[] = [
   { value: "advanced", label: "上級", detail: "三倍満・数え役満" },
 ];
 const number = (value: number) => value.toLocaleString("ja-JP");
+const patternCount = new Set(problems.map((problem) => problem.patternNumber)).size;
+
+function ProblemPattern({ problem }: { problem: Problem }) {
+  return (
+    <p className="pattern-number">
+      問題パターン {problem.patternNumber} / 全{patternCount}種類
+    </p>
+  );
+}
 
 function PaymentSummary({ score }: { score: Score }) {
   return (
@@ -462,6 +471,7 @@ export default function App() {
                               </span>
                             </summary>
                             <div className="review-body">
+                              <ProblemPattern problem={item.problem} />
                               <Hand problem={item.problem} />
                               <p>
                                 あなたの回答：
@@ -499,6 +509,7 @@ export default function App() {
                     <span> / {state.attempts.length}問</span>
                   </div>
                 </div>
+                <ProblemPattern problem={problem} />
                 <div
                   className="progress-track"
                   role="progressbar"

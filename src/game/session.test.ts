@@ -4,6 +4,7 @@ import type { Problem } from "./types";
 
 const problem: Problem = {
   id: "session-fixture",
+  patternNumber: 1,
   title: "平和",
   level: "basic",
   concealed: [

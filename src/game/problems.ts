@@ -1,9 +1,7 @@
-import type { Level, Problem, TileCode } from "./types";
+import type { HandTemplate, Level, Problem, TileCode } from "./types";
 import { sortTiles } from "./tiles";
-
-type HandTemplate = Omit<Problem, "id" | "dealer" | "seatWind"> & {
-  key: string;
-};
+import { standardTemplates } from "./standardProblems";
+import { advancedTemplates } from "./advancedProblems";
 
 // Space-separated literals keep the physical hand auditable; concealed NEVER includes the winning tile.
 function tiles(codes: string): TileCode[] {
@@ -458,17 +456,28 @@ const templates: HandTemplate[] = [
     explanation:
       "清一色6翻に123・456・789の一気通貫2翻と平和1翻。表示牌の四萬に対して五萬4枚がドラで、6＋2＋1＋4＝13翻の数え役満です。門前ロンは30符ですが、支払いは符に関係なく役満です。",
   },
+  ...standardTemplates,
+  ...advancedTemplates,
 ];
 
 // Each shape is practiced once as a child and once as dealer. Winds are shown explicitly;
 // no template has a wind triplet or value-wind pair that changes its fu with the seat.
-export const problems: Problem[] = templates.flatMap(({ key, ...template }) => {
+export const problems: Problem[] = templates.flatMap(({ key, ...template }, index) => {
   const concealed = sortTiles(template.concealed);
+  const patternNumber = index + 1;
   return [
-    { ...template, concealed, id: `${key}-child`, dealer: false, seatWind: "南" as const },
-    { ...template, concealed, id: `${key}-dealer`, dealer: true, seatWind: "東" as const },
+    { ...template, concealed, patternNumber, id: `${key}-child`, dealer: false, seatWind: "南" as const },
+    { ...template, concealed, patternNumber, id: `${key}-dealer`, dealer: true, seatWind: "東" as const },
   ];
 });
+
+const handShapes = new Map(problems.map((problem) => [
+  problem,
+  JSON.stringify([
+    sortTiles([...problem.concealed, problem.winningTile]),
+    problem.melds,
+  ]),
+]));
 
 export function createSession(
   level: Level,
@@ -485,5 +494,14 @@ export function createSession(
     const j = Math.floor(value * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  return pool.slice(0, 10);
+  const selected: Problem[] = [];
+  const seen = new Set<string>();
+  for (const problem of pool) {
+    const shape = handShapes.get(problem)!;
+    if (seen.has(shape)) continue;
+    seen.add(shape);
+    selected.push(problem);
+    if (selected.length === 10) break;
+  }
+  return selected;
 }

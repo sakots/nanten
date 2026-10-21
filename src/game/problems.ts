@@ -4,6 +4,8 @@ import { standardTemplates } from "./standardProblems";
 import { advancedTemplates } from "./advancedProblems";
 import { practiceExpansionTemplates } from "./practiceExpansion";
 import { advancedExpansionTemplates } from "./advancedExpansion";
+import { beginnerFlushTemplates } from "./beginnerFlushProblems";
+import { beginnerSingleRoleTemplates } from "./beginnerSingleRoleProblems";
 
 // Space-separated literals keep the physical hand auditable; concealed NEVER includes the winning tile.
 function tiles(codes: string): TileCode[] {
@@ -14,7 +16,7 @@ const templates: HandTemplate[] = [
   {
     key: "pinfu-ron",
     title: "両面待ちの平和",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 8s 7s 8s 5p 5p"),
     winningTile: "9s",
     solution: {
@@ -38,7 +40,7 @@ const templates: HandTemplate[] = [
   {
     key: "pinfu-tsumo",
     title: "平和ツモは20符",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 8s 7s 8s 5p 5p"),
     winningTile: "9s",
     solution: {
@@ -62,7 +64,7 @@ const templates: HandTemplate[] = [
   {
     key: "open-tanyao",
     title: "鳴いた断么九",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("4p 5p 6p 6s 7s 8s 2p 2p 3s 4s"),
     winningTile: "5s",
     solution: {
@@ -86,7 +88,7 @@ const templates: HandTemplate[] = [
   {
     key: "white-pon",
     title: "白の明刻",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("1m 2m 3m 4p 5p 6p 7s 8s 2p 2p"),
     winningTile: "9s",
     solution: {
@@ -110,7 +112,7 @@ const templates: HandTemplate[] = [
   {
     key: "chiitoi-ron",
     title: "七対子の固定符",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("1m 1m 3m 3m 5p 5p 7p 7p 2s 2s 4s 4s west"),
     winningTile: "west",
     solution: {
@@ -131,7 +133,7 @@ const templates: HandTemplate[] = [
   {
     key: "concealed-kan",
     title: "暗槓とドラの60符",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 2p 2p"),
     winningTile: "8s",
     solution: {
@@ -162,7 +164,7 @@ const templates: HandTemplate[] = [
   {
     key: "open-chinitsu",
     title: "副露した清一色",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("3m 4m 5m 6m 7m 8m 7m 8m 5m 5m"),
     winningTile: "9m",
     solution: {
@@ -186,7 +188,7 @@ const templates: HandTemplate[] = [
   {
     key: "honitsu-ittsu",
     title: "混一色・一気通貫とドラ",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1s 2s 3s 4s 5s 6s 7s 8s north north"),
     winningTile: "9s",
     solution: {
@@ -215,7 +217,7 @@ const templates: HandTemplate[] = [
   {
     key: "sanankou",
     title: "対々和と三暗刻",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("2m 2m 2m 5p 5p 5p 8s 8s north north"),
     winningTile: "8s",
     solution: {
@@ -245,7 +247,7 @@ const templates: HandTemplate[] = [
   {
     key: "closed-chinitsu",
     title: "門前清一色の倍満",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1m 2m 3m 3m 4m 5m 6m 7m 8m 7m 8m 5m 5m"),
     winningTile: "9m",
     solution: {
@@ -270,7 +272,7 @@ const templates: HandTemplate[] = [
   {
     key: "daisangen",
     title: "三元牌をそろえた大三元",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("2m 3m 5p 5p"),
     winningTile: "4m",
     solution: {
@@ -298,7 +300,7 @@ const templates: HandTemplate[] = [
   {
     key: "honitsu-chiitoi",
     title: "混一色の七対子ツモ",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1s 1s 2s 2s 4s 4s 5s 5s 7s 7s east east north"),
     winningTile: "north",
     solution: {
@@ -323,7 +325,7 @@ const templates: HandTemplate[] = [
   {
     key: "sanbaiman-ittsu-tsumo",
     title: "清一色・一気通貫の三倍満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1m 2m 3m 4m 5m 6m 7m 8m 2m 3m 4m 5m 5m"),
     winningTile: "9m",
     solution: {
@@ -350,7 +352,7 @@ const templates: HandTemplate[] = [
   {
     key: "sanbaiman-tanyao-ron",
     title: "断么九・清一色とドラ4の三倍満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2m 3m 4m 4m 5m 6m 5m 6m 7m 6m 7m 5m 5m"),
     winningTile: "8m",
     solution: {
@@ -379,7 +381,7 @@ const templates: HandTemplate[] = [
   {
     key: "sanbaiman-chiitoi",
     title: "清一色の七対子とドラ",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1m 1m 2m 2m 3m 3m 5m 5m 6m 6m 8m 8m 9m"),
     winningTile: "9m",
     solution: {
@@ -405,7 +407,7 @@ const templates: HandTemplate[] = [
   {
     key: "kazoe-tanyao-tsumo",
     title: "ツモを加えて13翻の数え役満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2m 3m 4m 4m 5m 6m 5m 6m 7m 6m 7m 5m 5m"),
     winningTile: "8m",
     solution: {
@@ -432,7 +434,7 @@ const templates: HandTemplate[] = [
   {
     key: "kazoe-ittsu-ron",
     title: "一気通貫とドラ4の数え役満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1m 2m 3m 4m 5m 6m 7m 8m 3m 4m 5m 5m 5m"),
     winningTile: "9m",
     solution: {
@@ -462,6 +464,8 @@ const templates: HandTemplate[] = [
   ...advancedTemplates,
   ...practiceExpansionTemplates,
   ...advancedExpansionTemplates,
+  ...beginnerFlushTemplates,
+  ...beginnerSingleRoleTemplates,
 ];
 
 // Each shape is practiced once as a child and once as dealer. Winds are shown explicitly;

@@ -9,7 +9,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "sanshoku-iipeikou-four-han-ron",
     title: "三色同順と一盃口の30符4翻",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("1m 2m 3m 1m 2m 3m 1p 2p 3p 2s 3s 6p 6p"),
     winningTile: "1s",
     solution: {
@@ -37,7 +37,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "chiitoitsu-two-dora-ron",
     title: "実物のドラ2枚を数える七対子",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2m 2m 5m 5m 8p 8p 9p 9p 3s 3s 6s 6s red"),
     winningTile: "red",
     solution: {
@@ -61,7 +61,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "terminal-ankan-two-dragons-seventy-fu",
     title: "暗槓と二つの役牌で70符2翻",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("red red red 3p 5p 7s 7s"),
     winningTile: "4p",
     solution: {
@@ -94,7 +94,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "open-tanyao-pon-tsumo",
     title: "鳴いた断么九をツモで和了",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2p 3p 4p 6s 7s 8s 4m 5m 6p 6p"),
     winningTile: "3m",
     solution: {
@@ -119,7 +119,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "west-round-wind-triplet",
     title: "西場の西は場風の役牌",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("west west west 3p 4p 5p 6s 7s 2m 2m"),
     winningTile: "8s",
     solution: {
@@ -143,7 +143,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "west-round-value-pair-tsumo",
     title: "西場の雀頭で平和にならないツモ",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("1m 2m 3m 5m 6m 2p 3p 4p 6s 7s 8s west west"),
     winningTile: "4m",
     solution: {
@@ -168,7 +168,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "simple-ankan-fifty-fu-tsumo",
     title: "中張牌の暗槓は16符",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("white white white 1m 2m 3m 6s 7s 2p 2p"),
     winningTile: "8s",
     solution: {
@@ -197,7 +197,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "closed-white-tanki-ron",
     title: "四面子一雀頭の単騎待ち",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("white white white 2m 3m 4m 4p 5p 6p 7s 8s 9s 8m"),
     winningTile: "8m",
     solution: {
@@ -223,7 +223,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "sanshoku-doukou-white-tsumo",
     title: "三色同刻と対々和の満貫",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("4p 4p 4p 4s 4s 9s 9s"),
     winningTile: "4s",
     solution: {
@@ -257,7 +257,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "sankantsu-mixed-kans-ninety-fu",
     title: "明槓と暗槓が混じる三槓子",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2s 3s white white"),
     winningTile: "4s",
     solution: {
@@ -291,7 +291,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "suuankou-shanpon-tsumo",
     title: "シャンポンをツモる四暗刻",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1m 1m 1m 5p 5p 5p 8s 8s green green green 3m 3m"),
     winningTile: "8s",
     solution: {
@@ -317,7 +317,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "tsuuiisou-open-two-dragons",
     title: "風牌と三元牌だけの字一色",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("north north north red"),
     winningTile: "red",
     solution: {
@@ -348,7 +348,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "chinroutou-three-open-triplets",
     title: "一・九だけでそろえる清老頭",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("9s 9s 9s 9p"),
     winningTile: "9p",
     solution: {
@@ -378,7 +378,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "mixed-suits-ryanpeikou-pinfu-tsumo",
     title: "二色で作る二盃口の満貫ツモ",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1m 2m 3m 1m 2m 3m 7p 8p 6p 7p 8p 9s 9s"),
     winningTile: "6p",
     solution: {
@@ -403,7 +403,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "closed-chanta-sanshoku-two-dora",
     title: "門前の混全帯么九と三色同順",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1m 2m 3m 1p 2p 3p 1s 2s 9p 9p 9p white white"),
     winningTile: "3s",
     solution: {
@@ -434,7 +434,7 @@ export const practiceExpansionTemplates: HandTemplate[] = [
   {
     key: "open-junchan-sanshoku-two-dora",
     title: "副露の純全帯么九と三色同順",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("8p 9p 7s 8s 9s 1m 1m 1m 1s 1s"),
     winningTile: "7p",
     solution: {

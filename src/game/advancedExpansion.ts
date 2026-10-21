@@ -9,7 +9,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-open-chinitsu-kan-dora-seven",
     title: "明槓のドラ4と雀頭を含むドラ3で12翻",
-    level: "advanced",
+    level: "basic",
     concealed: tiles("1m 2m 3m 1m 2m 3m 7m 8m 9m 9m"),
     winningTile: "9m",
     solution: {
@@ -36,7 +36,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "kazoe-open-shousangen-kan-dora-five",
     title: "小三元・混一色とドラ5の数え役満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("green green green 3s 3s 3s 7s 7s red red"),
     winningTile: "7s",
     solution: {
@@ -71,7 +71,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-chinitsu-three-concealed-kans",
     title: "三つの暗槓と清一色で12翻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("8p 8p 3p 3p"),
     winningTile: "8p",
     solution: {
@@ -107,7 +107,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-open-chinitsu-three-kans",
     title: "明槓と二つの暗槓で11翻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("6s 6s 3s 3s"),
     winningTile: "6s",
     solution: {
@@ -143,7 +143,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "kazoe-chinitsu-junchan-ryanpeikou",
     title: "清一色・純全帯么九・二盃口の数え役満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2m 3m 1m 2m 3m 7m 8m 9m 7m 8m 9m 1m 1m"),
     winningTile: "1m",
     solution: {
@@ -172,7 +172,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-chinitsu-junchan-triple-sequence",
     title: "同じ順子3組でも一盃口は1翻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1p 2p 3p 1p 2p 3p 1p 2p 3p 7p 8p 9p 9p"),
     winningTile: "9p",
     solution: {
@@ -201,7 +201,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "kazoe-chinitsu-ittsu-kanchan-dora-four",
     title: "嵌張待ちの一気通貫とドラ4で数え役満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1s 2s 3s 1s 2s 3s 4s 6s 7s 8s 9s 2s 2s"),
     winningTile: "5s",
     solution: {
@@ -231,7 +231,7 @@ export const advancedExpansionTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-open-honroutou-shousangen-tsumo",
     title: "混老頭・小三元と三暗刻の12翻ツモ",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("green green green 1m 1m 1m 9m 9m red red"),
     winningTile: "9m",
     solution: {

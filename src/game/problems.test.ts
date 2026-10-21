@@ -234,6 +234,24 @@ describe("curated hands", () => {
     }
   });
 
+  it("uses one non-dora yaku in beginner practice", () => {
+    for (const problem of problems.filter((p) => p.level === "basic")) {
+      expect(problem.yaku.filter((yaku) => yaku.name !== "ドラ"), problem.id).toHaveLength(1);
+    }
+  });
+
+  it("moves previous beginner hands and high-han combinations into intermediate practice", () => {
+    for (const id of [
+      "open-chinitsu-child",
+      "daisangen-dealer",
+      "suuankou-shanpon-tsumo-child",
+      "sanbaiman-ryanpeikou-ron-child",
+      "kazoe-tanyao-tsumo-dealer",
+    ]) {
+      expect(problems.find((problem) => problem.id === id)?.level, id).toBe("intermediate");
+    }
+  });
+
   it("preserves published pattern numbers when more hands are appended", () => {
     for (const [key, patternNumber] of [
       ["pinfu-ron", 1],
@@ -366,38 +384,30 @@ describe("curated hands", () => {
           : Math.max(30, Math.ceil(raw / 10) * 10),
         p.id,
       ).toBe(p.fu);
-      const expectedLevel = p.han <= 4
-        ? "intermediate"
-        : p.han >= 11 && !p.yaku.some((y) => y.han === 13)
-          ? "advanced"
-          : "basic";
-      expect(p.level, p.id).toBe(expectedLevel);
+      expect(p.level === "advanced", p.id).toBe(p.han <= 4);
     }
   });
 });
 
 describe("ten-question sessions", () => {
-  it("keeps ordinary yakuman out of advanced practice while offering sanbaiman and counted yakuman", () => {
-    const advanced = problems.filter((p) => p.level === "advanced");
-    expect(advanced.every((p) => p.han >= 11 && p.yaku.every((y) => y.han < 13))).toBe(true);
-    for (const han of [11, 12, 13]) expect(advanced.some((p) => p.han === han)).toBe(true);
 
-  });
-
-  it("varies the set of physical advanced hands across repeated practice sessions", () => {
-    const sets = new Set<string>();
-    for (let seed = 1; seed <= 5; seed++) {
-      let state = seed;
-      const session = createSession("advanced", () => {
-        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
-        return state / 2 ** 32;
-      });
-      sets.add(JSON.stringify(session.map((p) => JSON.stringify([
-        allTiles(p).sort(), p.melds,
-      ])).sort()));
-    }
-    expect(sets.size, "repeated advanced practice must vary the hands, not just their order or seats").toBeGreaterThan(1);
-  });
+  it.each(["basic", "intermediate", "advanced"] as const)(
+    "varies the set of physical %s hands across repeated practice sessions",
+    (level) => {
+      const sets = new Set<string>();
+      for (let seed = 1; seed <= 5; seed++) {
+        let state = seed;
+        const session = createSession(level, () => {
+          state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+          return state / 2 ** 32;
+        });
+        sets.add(JSON.stringify(session.map((p) => JSON.stringify([
+          allTiles(p).sort(), p.melds,
+        ])).sort()));
+      }
+      expect(sets.size, `${level}: practice must vary the hands, not just their order or seats`).toBeGreaterThan(1);
+    },
+  );
 
   it.each(["all", "basic", "intermediate", "advanced"] as const)(
     "does not repeat a physical hand as a different seat or win method in %s sessions",

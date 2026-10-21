@@ -8,7 +8,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "kanchan-tanyao-ron",
     title: "嵌張待ちの断么九",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2m 3m 4m 4m 5m 6m 3p 5p 6s 7s 8s 6p 6p"),
     winningTile: "4p",
     solution: {
@@ -33,7 +33,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "penchan-tsumo",
     title: "辺張待ちの門前ツモ",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("1p 2p 4m 5m 6m 7m 8m 9m 3s 4s 5s 8s 8s"),
     winningTile: "3p",
     solution: {
@@ -58,7 +58,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "shanpon-ron-exposed-fu",
     title: "シャンポンのロン牌は明刻扱い",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("4m 4m 4m 6p 7p 8p 6s 6s 2p 2p"),
     winningTile: "6s",
     solution: {
@@ -84,7 +84,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "dragon-pair-tsumo",
     title: "三元牌の雀頭に付く2符",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("1m 2m 3m 4p 5p 7s 8s 9s 3m 4m 5m green green"),
     winningTile: "6p",
     solution: {
@@ -109,7 +109,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "open-kan-sixty-fu",
     title: "么九牌の明槓と暗刻で60符",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("9s 9s 9s white white white 3m 4m 5p 5p"),
     winningTile: "2m",
     solution: {
@@ -136,7 +136,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "iipeikou-pinfu-ron",
     title: "門前の同じ順子で一盃口",
-    level: "intermediate",
+    level: "advanced",
     concealed: tiles("2m 3m 2m 3m 4m 4p 5p 6p 7s 8s 9s 6p 6p"),
     winningTile: "4m",
     solution: {
@@ -163,7 +163,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "sanshoku-tanyao-tsumo",
     title: "三色同順と断么九の満貫ツモ",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("2m 3m 4m 2p 3p 4p 2s 3s 4s 6s 7s 5p 5p"),
     winningTile: "8s",
     solution: {
@@ -189,7 +189,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "chanta-white-dora",
     title: "混全帯么九と白のドラ3",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1m 2m 7p 8p 9p white white white north north"),
     winningTile: "3m",
     solution: {
@@ -218,7 +218,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "junchan-dragonless-ron",
     title: "字牌を使わない純全帯么九",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1m 2m 3m 7m 8m 9m 1p 2p 7s 8s 9s 9p 9p"),
     winningTile: "3p",
     solution: {
@@ -246,7 +246,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "honroutou-chiitoitsu-dora",
     title: "混老頭の七対子は25符",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("1m 1m 9m 9m 1p 1p 9p 9p 1s 1s white white green"),
     winningTile: "green",
     solution: {
@@ -271,7 +271,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "shousangen-white-dora",
     title: "小三元と二つの役牌",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("4m 5m 6m 7s 8s red red"),
     winningTile: "9s",
     solution: {
@@ -305,7 +305,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "toitoi-open-kan-tanki",
     title: "明槓のドラ4と対々和",
-    level: "basic",
+    level: "intermediate",
     concealed: tiles("2s 2s 2s red red red green"),
     winningTile: "green",
     solution: {

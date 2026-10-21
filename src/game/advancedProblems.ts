@@ -9,7 +9,7 @@ export const advancedTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-ryanpeikou-ron",
     title: "二盃口とドラ2の12翻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2m 3m 1m 2m 3m 5m 6m 7m 5m 6m 7m 9m 9m"),
     winningTile: "1m",
     solution: {
@@ -38,7 +38,7 @@ export const advancedTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-ryanpeikou-tsumo",
     title: "二盃口の平和ツモで11翻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2p 3p 4p 2p 3p 4p 6p 7p 8p 6p 7p 1p 1p"),
     winningTile: "8p",
     solution: {
@@ -64,7 +64,7 @@ export const advancedTemplates: HandTemplate[] = [
   {
     key: "kazoe-iipeikou-ittsu-ron",
     title: "一盃口・一気通貫とドラ3の数え役満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1s 2s 3s 1s 2s 3s 4s 5s 6s 7s 8s 5s 5s"),
     winningTile: "9s",
     solution: {
@@ -94,7 +94,7 @@ export const advancedTemplates: HandTemplate[] = [
   {
     key: "kazoe-chinitsu-sanankou-ron",
     title: "清一色・三暗刻とドラ3の数え役満",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("1p 1p 1p 3p 3p 3p 6p 6p 6p 8p 8p 5p 5p"),
     winningTile: "8p",
     solution: {
@@ -126,7 +126,7 @@ export const advancedTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-shousangen-sanankou-ron",
     title: "小三元・混一色・三暗刻の11翻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("white white white green green green 2s 2s 2s 7s 7s red red"),
     winningTile: "7s",
     solution: {
@@ -161,7 +161,7 @@ export const advancedTemplates: HandTemplate[] = [
   {
     key: "sanbaiman-tanyao-sanankou-ron",
     title: "断么九・清一色・三暗刻の11翻",
-    level: "advanced",
+    level: "intermediate",
     concealed: tiles("2m 2m 2m 4m 4m 4m 6m 6m 8m 8m 8m 3m 3m"),
     winningTile: "6m",
     solution: {

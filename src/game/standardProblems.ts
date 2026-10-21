@@ -8,7 +8,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "kanchan-tanyao-ron",
     title: "嵌張待ちの断么九",
-    level: "basic",
+    level: "advanced",
     concealed: tiles("2m 3m 4m 4m 5m 6m 3p 5p 6s 7s 8s 6p 6p"),
     winningTile: "4p",
     solution: {
@@ -33,7 +33,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "penchan-tsumo",
     title: "辺張待ちの門前ツモ",
-    level: "basic",
+    level: "advanced",
     concealed: tiles("1p 2p 4m 5m 6m 7m 8m 9m 3s 4s 5s 8s 8s"),
     winningTile: "3p",
     solution: {
@@ -58,7 +58,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "shanpon-ron-exposed-fu",
     title: "シャンポンのロン牌は明刻扱い",
-    level: "basic",
+    level: "advanced",
     concealed: tiles("4m 4m 4m 6p 7p 8p 6s 6s 2p 2p"),
     winningTile: "6s",
     solution: {
@@ -84,7 +84,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "dragon-pair-tsumo",
     title: "三元牌の雀頭に付く2符",
-    level: "basic",
+    level: "advanced",
     concealed: tiles("1m 2m 3m 4p 5p 7s 8s 9s 3m 4m 5m green green"),
     winningTile: "6p",
     solution: {
@@ -109,7 +109,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "open-kan-sixty-fu",
     title: "么九牌の明槓と暗刻で60符",
-    level: "basic",
+    level: "advanced",
     concealed: tiles("9s 9s 9s white white white 3m 4m 5p 5p"),
     winningTile: "2m",
     solution: {
@@ -136,7 +136,7 @@ export const standardTemplates: HandTemplate[] = [
   {
     key: "iipeikou-pinfu-ron",
     title: "門前の同じ順子で一盃口",
-    level: "basic",
+    level: "advanced",
     concealed: tiles("2m 3m 2m 3m 4m 4p 5p 6p 7s 8s 9s 6p 6p"),
     winningTile: "4m",
     solution: {

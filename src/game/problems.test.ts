@@ -191,6 +191,9 @@ function interpretations(
           else han += 2;
         }
         if (dragons === 2 && honors.slice(4).includes(split.pair)) han += 2;
+        if (Array.from({ length: 9 }, (_, i) => i + 1).some((rank) =>
+          ["m", "p", "s"].every((suit) => tripletTiles.includes(`${rank}${suit}` as TileCode)))) han += 2;
+        if (groups.filter((g) => g.kan).length === 3) han += 2;
       }
       if (!yakuman) {
         for (const suit of ["m", "p", "s"]) {
@@ -222,6 +225,19 @@ function interpretations(
 }
 
 describe("curated hands", () => {
+  it("preserves published pattern numbers when more hands are appended", () => {
+    for (const [key, patternNumber] of [
+      ["pinfu-ron", 1],
+      ["kanchan-tanyao-ron", 18],
+      ["sanbaiman-ryanpeikou-ron", 30],
+      ["sanbaiman-tanyao-sanankou-ron", 35],
+    ] as const) {
+      for (const seat of ["child", "dealer"]) {
+        expect(problems.find((p) => p.id === `${key}-${seat}`)?.patternNumber).toBe(patternNumber);
+      }
+    }
+  });
+
   it("explains the actual completed hand and winning wait without losing or adding tiles", () => {
     for (const p of problems) {
       const { groups, winningGroup, wait } = p.solution;
@@ -356,6 +372,22 @@ describe("ten-question sessions", () => {
     const advanced = problems.filter((p) => p.level === "advanced");
     expect(advanced.every((p) => p.han >= 11 && p.yaku.every((y) => y.han < 13))).toBe(true);
     for (const han of [11, 12, 13]) expect(advanced.some((p) => p.han === han)).toBe(true);
+
+  });
+
+  it("varies the set of physical advanced hands across repeated practice sessions", () => {
+    const sets = new Set<string>();
+    for (let seed = 1; seed <= 5; seed++) {
+      let state = seed;
+      const session = createSession("advanced", () => {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        return state / 2 ** 32;
+      });
+      sets.add(JSON.stringify(session.map((p) => JSON.stringify([
+        allTiles(p).sort(), p.melds,
+      ])).sort()));
+    }
+    expect(sets.size, "repeated advanced practice must vary the hands, not just their order or seats").toBeGreaterThan(1);
   });
 
   it.each(["all", "basic", "intermediate", "advanced"] as const)(

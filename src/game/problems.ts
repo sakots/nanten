@@ -2,6 +2,8 @@ import type { HandTemplate, Level, Problem, TileCode } from "./types";
 import { sortTiles } from "./tiles";
 import { standardTemplates } from "./standardProblems";
 import { advancedTemplates } from "./advancedProblems";
+import { practiceExpansionTemplates } from "./practiceExpansion";
+import { advancedExpansionTemplates } from "./advancedExpansion";
 
 // Space-separated literals keep the physical hand auditable; concealed NEVER includes the winning tile.
 function tiles(codes: string): TileCode[] {
@@ -458,6 +460,8 @@ const templates: HandTemplate[] = [
   },
   ...standardTemplates,
   ...advancedTemplates,
+  ...practiceExpansionTemplates,
+  ...advancedExpansionTemplates,
 ];
 
 // Each shape is practiced once as a child and once as dealer. Winds are shown explicitly;

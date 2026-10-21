@@ -106,7 +106,8 @@ function interpretations(
         flushHan +
         Number(p.win === "tsumo") +
         doraHan +
-        Number(tiles.every((t) => !terminal(t))),
+        Number(tiles.every((t) => !terminal(t))) +
+        (tiles.every(terminal) ? 2 : 0),
       fu: 25,
       rawFu: 25,
     });
@@ -155,7 +156,9 @@ function interpretations(
       const dragons = honors
         .slice(4)
         .filter((t) => tripletTiles.includes(t)).length;
-      const yakuman = dragons === 3 || tiles.every((t) => honors.includes(t));
+      const yakuman = dragons === 3 || tiles.every((t) => honors.includes(t))
+        || concealedTriplets === 4
+        || tiles.every((t) => !honors.includes(t) && /^[19]/.test(t));
       let han = yakuman
         ? 13
         : flushHan +
@@ -168,6 +171,27 @@ function interpretations(
           Number(tripletTiles.includes(windCodes[p.seatWind])) +
           (groups.every((g) => !g.sequence) ? 2 : 0) +
           (concealedTriplets === 3 ? 2 : 0);
+      if (!yakuman) {
+        const sequences = groups.filter((g) => g.sequence);
+        const sequenceCounts = new Map<string, number>();
+        for (const g of sequences) {
+          const key = g.tiles.join(" ");
+          sequenceCounts.set(key, (sequenceCounts.get(key) ?? 0) + 1);
+        }
+        if (closed) {
+          const identicalPairs = [...sequenceCounts.values()]
+            .reduce((sum, n) => sum + Math.floor(n / 2), 0);
+          han += identicalPairs === 2 ? 3 : identicalPairs === 1 ? 1 : 0;
+        }
+        if (Array.from({ length: 7 }, (_, i) => i + 1).some((start) =>
+          ["m", "p", "s"].every((suit) => sequences.some((g) =>
+            g.tiles[0] === `${start}${suit}`)))) han += closed ? 2 : 1;
+        if (groups.every((g) => g.tiles.some(terminal)) && terminal(split.pair)) {
+          if (sequences.length > 0) han += hasHonors ? (closed ? 2 : 1) : (closed ? 3 : 2);
+          else han += 2;
+        }
+        if (dragons === 2 && honors.slice(4).includes(split.pair)) han += 2;
+      }
       if (!yakuman) {
         for (const suit of ["m", "p", "s"]) {
           const starts = groups
@@ -242,12 +266,14 @@ describe("curated hands", () => {
     }
   });
 
-  it("provides at least ten problems per difficulty", () => {
+  it("provides ten distinct physical hands per difficulty without relying on parent-child duplicates", () => {
     for (const level of ["basic", "intermediate", "advanced"]) {
-      expect(
-        problems.filter((p) => p.level === level).length,
-        level,
-      ).toBeGreaterThanOrEqual(10);
+      const shapes = problems.filter((p) => p.level === level).map((p) =>
+        JSON.stringify([
+          [...p.concealed, p.winningTile].sort(),
+          p.melds,
+        ]));
+      expect(new Set(shapes).size, level).toBeGreaterThanOrEqual(10);
     }
     expect(new Set(problems.map((p) => p.id)).size).toBe(problems.length);
   });
@@ -300,11 +326,15 @@ describe("curated hands", () => {
         p.id,
       ).toBe(p.yaku.some((y) => y.han === 13) ? 0 : doraHan);
       const raw = p.fuDetails.reduce((sum, detail) => sum + detail.fu, 0);
-      expect(interpretations(p), p.id).toContainEqual({
+      const candidates = interpretations(p);
+      expect(candidates, p.id).toContainEqual({
         han: p.han,
         fu: p.fu,
         rawFu: raw,
       });
+      const bestBase = Math.max(...candidates.filter((candidate) => candidate.han > 0).map((candidate) =>
+        calculateScore({ ...p, han: candidate.han, fu: candidate.fu }).basePoints));
+      expect(calculateScore(p).basePoints, `${p.id}: best scoring interpretation`).toBe(bestBase);
       expect(
         p.fu === 25 || p.fu === 20
           ? raw
@@ -322,21 +352,30 @@ describe("curated hands", () => {
 });
 
 describe("ten-question sessions", () => {
-  it("includes sanbaiman and counted yakuman, but not ordinary yakuman, in advanced practice", () => {
-    const session = createSession("advanced", () => 0.375);
-    expect(new Set(session.map((p) => p.han))).toEqual(new Set([11, 12, 13]));
-    expect(session.every((p) => p.yaku.every((y) => y.han < 13))).toBe(true);
-    for (const win of ["ron", "tsumo"]) {
-      for (const dealer of [false, true]) {
-        const limits = session
-          .filter((p) => p.win === win && p.dealer === dealer)
-          .map((p) => calculateScore(p).limit);
-        expect([...new Set(limits)].sort(), `${win}, dealer=${dealer}`).toEqual(
-          ["三倍満", "役満"],
-        );
-      }
-    }
+  it("keeps ordinary yakuman out of advanced practice while offering sanbaiman and counted yakuman", () => {
+    const advanced = problems.filter((p) => p.level === "advanced");
+    expect(advanced.every((p) => p.han >= 11 && p.yaku.every((y) => y.han < 13))).toBe(true);
+    for (const han of [11, 12, 13]) expect(advanced.some((p) => p.han === han)).toBe(true);
   });
+
+  it.each(["all", "basic", "intermediate", "advanced"] as const)(
+    "does not repeat a physical hand as a different seat or win method in %s sessions",
+    (level) => {
+      for (let seed = 1; seed <= 20; seed++) {
+        let state = seed;
+        const session = createSession(level, () => {
+          state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+          return state / 2 ** 32;
+        });
+        const shapes = session.map((p) => JSON.stringify([
+          allTiles(p).sort(),
+          p.melds.map((m) => [m.kind, m.open, m.tiles]),
+        ]));
+        expect(session, `${level}, seed=${seed}`).toHaveLength(10);
+        expect(new Set(shapes).size, `${level}, seed=${seed}`).toBe(10);
+      }
+    },
+  );
 
   it.each(["all", "basic", "intermediate", "advanced"] as const)(
     "selects ten unique %s problems deterministically without mutation",

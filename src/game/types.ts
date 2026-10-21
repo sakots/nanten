@@ -42,3 +42,7 @@ export interface Score {
   payments: { label: string; points: number }[];
   total: number;
 }
+
+export type HandTemplate = Omit<Problem, "id" | "dealer" | "seatWind"> & {
+  key: string;
+};

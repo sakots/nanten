@@ -7,6 +7,7 @@ import { advancedExpansionTemplates } from "./advancedExpansion";
 import { beginnerFlushTemplates } from "./beginnerFlushProblems";
 import { beginnerSingleRoleTemplates } from "./beginnerSingleRoleProblems";
 import { numericVariantTemplates } from "./numericVariantProblems";
+import { withRedFives } from "./redDora";
 
 // Space-separated literals keep the physical hand auditable; concealed NEVER includes the winning tile.
 function tiles(codes: string): TileCode[] {
@@ -494,7 +495,8 @@ export function createSession(
   random: () => number = Math.random,
 ): Problem[] {
   const pool = problems.filter(
-    (problem) => level === "all" || problem.level === level,
+    (problem) => level === "all" || problem.level === level ||
+      (level === "intermediate" && problem.level === "advanced"),
   );
   // Fisher–Yates on a new array preserves the curated collection and samples without replacement.
   for (let i = pool.length - 1; i > 0; i--) {
@@ -510,7 +512,9 @@ export function createSession(
     const shape = handShapes.get(problem)!;
     if (seen.has(shape)) continue;
     seen.add(shape);
-    selected.push(problem);
+    const variant = withRedFives(problem, random);
+    if (level !== "all" && variant.level !== level) continue;
+    selected.push(variant);
     if (selected.length === 10) break;
   }
   return selected;

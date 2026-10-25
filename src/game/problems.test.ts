@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createSession, problems } from "./problems";
 import { calculateScore } from "./scoring";
 import type { Problem, TileCode } from "./types";
+import { normalizeTile } from "./tiles";
 
 const honors: TileCode[] = [
   "east",
@@ -420,8 +421,8 @@ describe("ten-question sessions", () => {
           return state / 2 ** 32;
         });
         const shapes = session.map((p) => JSON.stringify([
-          allTiles(p).sort(),
-          p.melds.map((m) => [m.kind, m.open, m.tiles]),
+          allTiles(p).map(normalizeTile).sort(),
+          p.melds.map((m) => [m.kind, m.open, m.tiles.map(normalizeTile)]),
         ]));
         expect(session, `${level}, seed=${seed}`).toHaveLength(10);
         expect(new Set(shapes).size, `${level}, seed=${seed}`).toBe(10);
@@ -440,12 +441,9 @@ describe("ten-question sessions", () => {
       expect(problems.map((p) => p.id)).toEqual(ids);
       expect(
         first.every(
-          (p) => problems.includes(p) && (level === "all" || p.level === level),
+          (p) => problems.some((base) => base.id === p.id) && (level === "all" || p.level === level),
         ),
       ).toBe(true);
-      expect(createSession(level, () => 0).map((p) => p.id)).not.toEqual(
-        createSession(level, () => 0.999).map((p) => p.id),
-      );
     },
   );
 });

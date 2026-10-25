@@ -6,6 +6,7 @@ import { practiceExpansionTemplates } from "./practiceExpansion";
 import { advancedExpansionTemplates } from "./advancedExpansion";
 import { beginnerFlushTemplates } from "./beginnerFlushProblems";
 import { beginnerSingleRoleTemplates } from "./beginnerSingleRoleProblems";
+import { numericVariantTemplates } from "./numericVariantProblems";
 
 // Space-separated literals keep the physical hand auditable; concealed NEVER includes the winning tile.
 function tiles(codes: string): TileCode[] {
@@ -466,6 +467,7 @@ const templates: HandTemplate[] = [
   ...advancedExpansionTemplates,
   ...beginnerFlushTemplates,
   ...beginnerSingleRoleTemplates,
+  ...numericVariantTemplates,
 ];
 
 // Each shape is practiced once as a child and once as dealer. Winds are shown explicitly;

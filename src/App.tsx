@@ -5,6 +5,7 @@ import { ScoreTable } from "./components/ScoreTable";
 import { createSession, problems } from "./game/problems";
 import { calculateScore } from "./game/scoring";
 import { createGame, gameReducer } from "./game/session";
+import { normalizeTile } from "./game/tiles";
 import type { Level, Problem, Score } from "./game/types";
 import { version } from "../package.json";
 import type * as AndroidAds from "./ads/AndroidAds";
@@ -46,6 +47,15 @@ function PaymentSummary({ score }: { score: Score }) {
   );
 }
 
+function displayedMeldTiles(meld: Problem["melds"][number]) {
+  if (meld.kind !== "kan" || meld.open) return meld.tiles;
+  const redIndex = meld.tiles.findIndex((tile) => tile[0] === "0");
+  if (redIndex < 0 || redIndex === 1 || redIndex === 2) return meld.tiles;
+  const tiles = [...meld.tiles];
+  [tiles[1], tiles[redIndex]] = [tiles[redIndex], tiles[1]];
+  return tiles;
+}
+
 function Hand({ problem }: { problem: Problem }) {
   return (
     <div className="table-surface">
@@ -68,7 +78,7 @@ function Hand({ problem }: { problem: Problem }) {
               style={{ flexGrow: meld.tiles.length + (meld.kind === "kan" ? 0 : 16 / 42) }}
             >
               <div className="meld-tiles" data-called={meld.kind !== "kan" ? "" : undefined}>
-                {meld.tiles.map((tile, tileIndex) => (
+                {displayedMeldTiles(meld).map((tile, tileIndex) => (
                   <Tile
                     key={tileIndex}
                     code={tile}
@@ -123,7 +133,7 @@ function HandSolution({ problem }: { problem: Problem }) {
   const winningIndex = completed.lastIndexOf(problem.winningTile);
   const waiting = completed.filter((_, index) => index !== winningIndex);
   const otherPair = wait === "シャンポン"
-    ? groups.find((group, index) => index !== winningGroup && group.length === 2)
+    ? groups.find((group, index) => index !== winningGroup && group.length === 2 && normalizeTile(group[0]) === normalizeTile(group[1]))
     : undefined;
 
   return (
@@ -148,13 +158,13 @@ function HandSolution({ problem }: { problem: Problem }) {
                 );
               })}
             </div>
-            <span>{group.length === 2 ? groups.length === 7 ? "対子" : "雀頭" : group[0] === group[1] ? "刻子" : "順子"}</span>
+            <span>{group.length === 2 ? groups.length === 7 ? "対子" : "雀頭" : normalizeTile(group[0]) === normalizeTile(group[1]) ? "刻子" : "順子"}</span>
           </div>
         ))}
         {problem.melds.map((meld, index) => (
           <div className="solution-group" key={`meld-${index}`}>
             <div className="solution-tiles" data-called={meld.kind !== "kan" ? "" : undefined}>
-              {meld.tiles.map((tile, tileIndex) => (
+              {displayedMeldTiles(meld).map((tile, tileIndex) => (
                 <Tile key={tileIndex} code={tile} compact back={!meld.open && meld.kind === "kan" && (tileIndex === 0 || tileIndex === 3)} />
               ))}
             </div>
@@ -227,6 +237,12 @@ function Breakdown({
         <>
           <HandSolution problem={problem} />
           <p className="explanation">{problem.explanation}</p>
+          {problem.baseExplanation && (
+            <details>
+              <summary>赤ドラ加算前の牌姿の解説</summary>
+              <p>{problem.baseExplanation}</p>
+            </details>
+          )}
           <div className="calculation">
             <span>基本点</span>
             <code>
@@ -850,7 +866,8 @@ export default function App() {
                 <ul>
                   <li>切り上げ満貫なし</li>
                   <li>数え役満あり（13翻以上）</li>
-                  <li>本場・供託・赤ドラなし</li>
+                  <li>赤ドラ各色1枚あり</li>
+                  <li>本場・供託なし</li>
                   <li>ダブル役満・ローカル役なし</li>
                   <li>自由入力の手牌判定ではなく問題集形式</li>
                   <li>成績はリロードでリセット</li>

@@ -1,4 +1,5 @@
 import type { TileCode } from "../game/types";
+import { normalizeTile } from "../game/tiles";
 import "./Tile.css";
 
 const numerals = [
@@ -25,7 +26,7 @@ const honorNames = {
 export function tileName(code: TileCode): string {
   if (code in honorNames) return honorNames[code as keyof typeof honorNames];
   const suit = code[1] === "m" ? "萬" : code[1] === "p" ? "筒" : "索";
-  return `${numerals[Number(code[0]) - 1]}${suit}`;
+  return `${code[0] === "0" ? "赤" : ""}${numerals[Number(normalizeTile(code)[0]) - 1]}${suit}`;
 }
 
 // Hand-drawn strokes keep every character independent of installed fonts.
@@ -158,7 +159,7 @@ function dotColor(rank: number, index: number): Color {
   return "ink";
 }
 
-function Circles({ rank }: { rank: number }) {
+function Circles({ rank, red = false }: { rank: number; red?: boolean }) {
   if (rank === 1) {
     return (
       <g transform="translate(21 27)" fill="none" strokeWidth="1.5">
@@ -187,7 +188,7 @@ function Circles({ rank }: { rank: number }) {
         <g
           key={index}
           transform={`translate(${x} ${y})`}
-          className={`nt-tile-${dotColor(rank, index)}`}
+          className={`nt-tile-${red ? "red" : dotColor(rank, index)}`}
         >
           <circle
             r={radius}
@@ -295,7 +296,7 @@ const peacockEyes: readonly Point[] = [
   [27, 27],
 ];
 
-function Bamboo({ rank }: { rank: number }) {
+function Bamboo({ rank, red = false }: { rank: number; red?: boolean }) {
   if (rank === 1) {
     return (
       <g strokeLinejoin="round" strokeLinecap="round">
@@ -354,7 +355,7 @@ function Bamboo({ rank }: { rank: number }) {
           <g
             key={index}
             transform={`translate(${x} ${y}) rotate(${rotation})`}
-            className={`nt-tile-${(rank === 5 && index === 2) || (rank === 7 && index === 0) || (rank === 9 && index % 3 === 1) ? "red" : "green"}`}
+            className={`nt-tile-${red || (rank === 5 && index === 2) || (rank === 7 && index === 0) || (rank === 9 && index % 3 === 1) ? "red" : "green"}`}
           >
             <path
               d={`M-2 ${-length / 2}Q-4 ${-length / 2} -3 ${-length / 2 + 2}L-2 -1.8Q-3.7 0 -2 1.8L-2.5 ${length / 2 - 2}Q-4 ${length / 2} -2 ${length / 2}H2Q4 ${length / 2} 2.5 ${length / 2 - 2}L2 1.8Q3.7 0 2 -1.8L3 ${-length / 2 + 2}Q4 ${-length / 2} 2 ${-length / 2}Z`}
@@ -388,12 +389,13 @@ function Face({ code }: { code: TileCode }) {
       />
     );
   }
-  const rank = Number(code[0]);
-  if (code[1] === "p") return <Circles rank={rank} />;
-  if (code[1] === "s") return <Bamboo rank={rank} />;
+  const red = code[0] === "0";
+  const rank = Number(normalizeTile(code)[0]);
+  if (code[1] === "p") return <Circles rank={rank} red={red} />;
+  if (code[1] === "s") return <Bamboo rank={rank} red={red} />;
   return (
     <>
-      <Glyph name={numerals[rank - 1]} x={9} y={5} width={24} height={20} />
+      <Glyph name={numerals[rank - 1]} x={9} y={5} width={24} height={20} color={red ? "red" : "ink"} />
       <Glyph name="萬" x={7} y={27} width={28} height={24} color="red" />
     </>
   );

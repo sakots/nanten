@@ -5,10 +5,18 @@ const honorOrder: Record<string, number> = {
 };
 const suitOrder: Record<string, number> = { m: 0, p: 9, s: 18 };
 
+export function normalizeTile(tile: TileCode): TileCode {
+  if (tile === "0m") return "5m";
+  if (tile === "0p") return "5p";
+  if (tile === "0s") return "5s";
+  return tile;
+}
+
 function rank(tile: TileCode): number {
-  return honorOrder[tile] ?? suitOrder[tile[1]] + Number(tile[0]) - 1;
+  const normalized = normalizeTile(tile);
+  return honorOrder[normalized] ?? suitOrder[normalized[1]] + Number(normalized[0]) - 1;
 }
 
 export function sortTiles(tiles: readonly TileCode[]): TileCode[] {
-  return [...tiles].sort((a, b) => rank(a) - rank(b));
+  return [...tiles].sort((a, b) => rank(a) - rank(b) || Number(b[0] === "0") - Number(a[0] === "0"));
 }

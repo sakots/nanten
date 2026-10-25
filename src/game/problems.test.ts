@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createSession, problems } from "./problems";
-import { calculateScore } from "./scoring";
+import { calculateScore, gradeAnswer } from "./scoring";
 import type { Problem, TileCode } from "./types";
 import { normalizeTile } from "./tiles";
 
@@ -80,7 +80,7 @@ function partitions(tiles: TileCode[], groups: Group[] = []): Partition[] {
 }
 
 // Independently derive the yaku and raw fu for every possible placement of the winning tile.
-// Riichi/ippatsu/last-tile circumstances are deliberately absent from this curated set.
+// Riichi is explicit context; ippatsu and last-tile circumstances are absent.
 function interpretations(
   p: Problem,
 ): { han: number; fu: number; rawFu: number }[] {
@@ -94,6 +94,7 @@ function interpretations(
   };
   const tiles = allTiles(p);
   const closed = !p.melds.some((m) => m.open);
+  const riichiHan = Number(closed && p.yaku.some((yaku) => yaku.name === "立直"));
   const doraHan = redHan + p.doraIndicators.reduce(
     (sum, indicator) => sum + count(tiles, dora(indicator)),
     0,
@@ -113,6 +114,7 @@ function interpretations(
       han:
         2 +
         flushHan +
+        riichiHan +
         Number(p.win === "tsumo") +
         doraHan +
         Number(tiles.every((t) => !terminal(t))) +
@@ -172,6 +174,7 @@ function interpretations(
         ? 13
         : flushHan +
           doraHan +
+          riichiHan +
           Number(closed && p.win === "tsumo") +
           Number(pinfu) +
           Number(tiles.every((t) => !terminal(t))) +
@@ -398,6 +401,46 @@ describe("curated hands", () => {
       ).toBe(p.fu);
       expect(p.level === "advanced", p.id).toBe(p.han <= 4);
     }
+  });
+});
+
+describe("riichi practice", () => {
+  it.each([
+    ["pinfu-ron", 2, 30, [2000], [2900]],
+    ["pinfu-tsumo", 3, 20, [700, 1300], [1300]],
+    ["chiitoi-ron", 3, 25, [3200], [4800]],
+    ["concealed-kan", 4, 60, [2000, 4000], [4000]],
+  ] as const)("includes riichi in %s payments without changing fu or adding deposits", (key, han, fu, child, dealer) => {
+    for (const [seat, payments] of [["child", child], ["dealer", dealer]] as const) {
+      const p = problems.find((p) => p.id === `${key}-${seat}`)!;
+      expect(p.han).toBe(han);
+      expect(p.fu).toBe(fu);
+      expect(calculateScore(p).payments.map((payment) => payment.points)).toEqual(payments);
+      expect(gradeAnswer(p, [...payments])).toBe(true);
+      expect(gradeAnswer(p, payments.map((points) => points + 1000))).toBe(false);
+    }
+  });
+
+  it("keeps riichi closed and excludes unrelated situational bonuses", () => {
+    const riichi = problems.filter((p) => p.yaku.some((yaku) => yaku.name === "立直"));
+    expect(riichi.some((p) => p.melds.some((meld) => meld.kind === "kan"))).toBe(true);
+    for (const p of riichi) {
+      expect(p.melds.some((meld) => meld.open), p.id).toBe(false);
+      expect(p.yaku.some((yaku) => /一発|ダブル立直|裏ドラ/.test(yaku.name)), p.id).toBe(false);
+      expect(p.level, p.id).toBe(p.han <= 4 ? "advanced" : "intermediate");
+    }
+  });
+
+  it("mixes riichi and non-riichi hands into repeated sessions", () => {
+    const contexts = new Set<boolean>();
+    for (let seed = 1; seed <= 30; seed++) {
+      let state = seed;
+      for (const p of createSession("all", () => {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        return state / 2 ** 32;
+      })) contexts.add(p.yaku.some((yaku) => yaku.name === "立直"));
+    }
+    expect(contexts).toEqual(new Set([true, false]));
   });
 });
 

@@ -63,6 +63,7 @@ function Hand({ problem }: { problem: Problem }) {
         <span>手牌</span>
         <span>
           {problem.melds.some((meld) => meld.open) ? "副露あり" : "門前"} ·{" "}
+          {problem.yaku.some((yaku) => yaku.name === "立直") && "立直 · "}
           {problem.win === "ron" ? "ロン和了" : "ツモ和了"}
         </span>
       </div>

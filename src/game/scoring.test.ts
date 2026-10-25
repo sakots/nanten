@@ -81,18 +81,18 @@ describe("answer grading", () => {
     const tsumo = problems.find(
       (problem) => problem.id === "pinfu-tsumo-child",
     )!;
-    expect(gradeAnswer(ron, [1000])).toBe(true);
-    expect(gradeAnswer(tsumo, [400, 700])).toBe(true);
+    expect(gradeAnswer(ron, [2000])).toBe(true);
+    expect(gradeAnswer(tsumo, [700, 1300])).toBe(true);
     for (const invalid of [
       [],
-      [400],
-      [400, 700, 100],
-      [700, 400],
-      [NaN, 700],
-      [Infinity, 700],
-      [0, 700],
-      [-400, 700],
-      [400.5, 700],
+      [700],
+      [700, 1300, 100],
+      [1300, 700],
+      [NaN, 1300],
+      [Infinity, 1300],
+      [0, 1300],
+      [-700, 1300],
+      [700.5, 1300],
     ]) {
       expect(gradeAnswer(tsumo, invalid)).toBe(false);
     }

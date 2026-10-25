@@ -17,7 +17,7 @@ function tiles(codes: string): TileCode[] {
 const templates: HandTemplate[] = [
   {
     key: "pinfu-ron",
-    title: "両面待ちの平和",
+    title: "立直と両面待ちの平和",
     level: "advanced",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 8s 7s 8s 5p 5p"),
     winningTile: "9s",
@@ -29,19 +29,19 @@ const templates: HandTemplate[] = [
     win: "ron",
     roundWind: "東",
     doraIndicators: ["north"],
-    han: 1,
+    han: 2,
     fu: 30,
-    yaku: [{ name: "平和", han: 1 }],
+    yaku: [{ name: "立直", han: 1 }, { name: "平和", han: 1 }],
     fuDetails: [
       { label: "副底", fu: 20 },
       { label: "門前ロン", fu: 10 },
     ],
     explanation:
-      "789索の両面待ち。すべて順子で、雀頭の五筒は役牌ではありません。20＋10＝30符。ドラは東で、手牌にはありません。",
+      "立直1翻と平和1翻で2翻。789索の両面待ち。すべて順子で、雀頭の五筒は役牌ではありません。20＋10＝30符。ドラは東で、手牌にはありません。一発・裏ドラは加算しません。",
   },
   {
     key: "pinfu-tsumo",
-    title: "平和ツモは20符",
+    title: "立直しても平和ツモは20符",
     level: "advanced",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 8s 7s 8s 5p 5p"),
     winningTile: "9s",
@@ -53,15 +53,16 @@ const templates: HandTemplate[] = [
     win: "tsumo",
     roundWind: "東",
     doraIndicators: ["north"],
-    han: 2,
+    han: 3,
     fu: 20,
     yaku: [
+      { name: "立直", han: 1 },
       { name: "平和", han: 1 },
       { name: "門前清自摸和", han: 1 },
     ],
     fuDetails: [{ label: "平和ツモの固定符（ツモ符を加算しない）", fu: 20 }],
     explanation:
-      "平和と門前清自摸和で2翻。平和ツモは例外としてツモの2符を加えず、20符のまま計算します。",
+      "立直・平和・門前清自摸和で3翻。平和ツモは例外としてツモの2符を加えず、20符のまま計算します。立直による加符はなく、一発・裏ドラも加算しません。",
   },
   {
     key: "open-tanyao",
@@ -113,7 +114,7 @@ const templates: HandTemplate[] = [
   },
   {
     key: "chiitoi-ron",
-    title: "七対子の固定符",
+    title: "立直した七対子の固定符",
     level: "advanced",
     concealed: tiles("1m 1m 3m 3m 5p 5p 7p 7p 2s 2s 4s 4s west"),
     winningTile: "west",
@@ -125,16 +126,16 @@ const templates: HandTemplate[] = [
     win: "ron",
     roundWind: "東",
     doraIndicators: ["north"],
-    han: 2,
+    han: 3,
     fu: 25,
-    yaku: [{ name: "七対子", han: 2 }],
+    yaku: [{ name: "立直", han: 1 }, { name: "七対子", han: 2 }],
     fuDetails: [{ label: "七対子の固定符", fu: 25 }],
     explanation:
-      "異なる7種類の対子で七対子。25符固定で、単騎待ちや門前ロンの符は加えず、30符にも切り上げません。",
+      "立直1翻と、異なる7種類の対子による七対子2翻で3翻。25符固定で、立直・単騎待ち・門前ロンの符は加えず、30符にも切り上げません。一発・裏ドラは加算しません。",
   },
   {
     key: "concealed-kan",
-    title: "暗槓とドラの60符",
+    title: "暗槓後の立直とドラの60符",
     level: "advanced",
     concealed: tiles("2m 3m 4m 4p 5p 6p 6s 7s 2p 2p"),
     winningTile: "8s",
@@ -148,9 +149,10 @@ const templates: HandTemplate[] = [
     win: "tsumo",
     roundWind: "東",
     doraIndicators: ["7s"],
-    han: 3,
+    han: 4,
     fu: 60,
     yaku: [
+      { name: "立直", han: 1 },
       { name: "役牌・白", han: 1 },
       { name: "門前清自摸和", han: 1 },
       { name: "ドラ", han: 1 },
@@ -161,7 +163,7 @@ const templates: HandTemplate[] = [
       { label: "ツモ", fu: 2 },
     ],
     explanation:
-      "暗槓だけなら門前のままです。ドラ表示牌の七索に対してドラは八索が1枚。20＋32＋2＝54符を60符へ切り上げます。3翻60符は切り上げ満貫にしません。",
+      "暗槓だけなら門前のままなので、暗槓後に立直できます。立直・役牌の白・門前清自摸和・ドラで4翻。ドラ表示牌の七索に対してドラは八索が1枚。20＋32＋2＝54符を60符へ切り上げ、4翻60符で満貫です。一発・裏ドラ・槓裏ドラは加算しません。",
   },
   {
     key: "open-chinitsu",

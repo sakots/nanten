@@ -164,3 +164,5 @@ Android署名鍵が未設定だと `Release requires NANTEN_ANDROID_KEYSTORE.` �
 `pnpm build`、`pnpm android:ads:release`、`pnpm android:adfree:release` が成功し、Web版と両方の署名付きAABを生成しました。両リリースの生成マニフェストでversionCode 900、versionName 0.9.0、targetSdkVersion 36を確認しました。
 
 両AABは `jarsigner -verify` を通過しました。自己署名証明書・証明書チェーン・タイムスタンプなし・POSIX属性・JarFile/JarInputStream間の読み取り差について警告があります。Web本番ビルドはブラウザーでv0.9.0の表示、赤五索の和了牌、赤ドラ込み40符2翻・子ロン2,600点の正解判定を確認しました。今回、Android実機での起動とPlay Consoleへのアップロードは未実施です。
+
+問題総数の修正後も3つのビルドを実行し、全169種類・親子338問を収録したWeb資産と両AABを再生成しました。両AABの署名検証は成功し、上記と同種の警告が残っています。ブラウザーでは出題・回答後・10問完了後の振り返りに同じ「問題パターン124 / 全169種類」が表示され、幅320pxでも横スクロールがないことを確認しました。バージョンは0.9.0・900のままです。

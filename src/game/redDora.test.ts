@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { problems } from "./problems";
+import { baseProblems } from "./problems";
 import { withRedFives } from "./redDora";
 import { calculateScore, gradeAnswer } from "./scoring";
 import { normalizeTile } from "./tiles";
@@ -8,14 +8,14 @@ import type { Problem, TileCode } from "./types";
 const visible = (p: Problem) => [
   ...p.concealed, p.winningTile, ...p.melds.flatMap((m) => m.tiles), ...p.doraIndicators,
 ];
-const hand = (id: string) => problems.find((p) => p.id === `${id}-child`)!;
+const hand = (id: string) => baseProblems.find((p) => p.id === `${id}-child`)!;
 
 describe("one red five among four physical copies", () => {
   it.each(["m", "p", "s"] as const)("gives each visible %s five exactly one of four red slots without replacement", (suit) => {
     const five = `5${suit}` as TileCode;
     const red = `0${suit}` as TileCode;
     for (const copies of [1, 2, 3, 4]) {
-      const p = problems.find((p) => visible(p).filter((tile) => tile === five).length === copies)!;
+      const p = baseProblems.find((p) => visible(p).filter((tile) => tile === five).length === copies)!;
       expect(p, `${suit}: ${copies} visible copies`).toBeDefined();
       const before = structuredClone(p);
       const variants = [0, 0.25, 0.5, 0.75].map((slot) => withRedFives(p, () => slot));
@@ -30,7 +30,7 @@ describe("one red five among four physical copies", () => {
   });
 
   it("preserves the completed hand, winning occurrence, waits and fu in every curated variant", () => {
-    for (const p of problems) {
+    for (const p of baseProblems) {
       for (const slot of [0, 0.25, 0.5, 0.75]) {
         const v = withRedFives(p, () => slot);
         expect(v.solution.groups.flat().sort(), p.id).toEqual([...v.concealed, v.winningTile].sort());
@@ -85,7 +85,7 @@ describe("one red five among four physical copies", () => {
   });
 
   it("can make the winning tile red, including a five completing a triplet or a pair", () => {
-    for (const p of problems.filter((p) => /^5[mps]$/.test(p.winningTile))) {
+    for (const p of baseProblems.filter((p) => /^5[mps]$/.test(p.winningTile))) {
       const same = p.concealed.filter((tile) => tile === p.winningTile).length;
       const v = withRedFives(p, () => same / 4);
       expect(v.winningTile, p.id).toBe(`0${p.winningTile[1]}`);

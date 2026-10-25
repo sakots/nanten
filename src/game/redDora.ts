@@ -78,3 +78,36 @@ export function withRedFives(problem: Problem, random: () => number): Problem {
     explanation: redExplanation + indicatorExplanation,
   };
 }
+
+/** Enumerate distinct visible questions, retaining the physical-copy probability as a weight. */
+export function redFiveVariants(problem: Problem): { problem: Problem; weight: number }[] {
+  const visible = [
+    ...problem.concealed, problem.winningTile,
+    ...problem.melds.flatMap((meld) => meld.tiles), ...problem.doraIndicators,
+  ];
+  const suits = ["5m", "5p", "5s"].filter((five) => visible.includes(five as TileCode)).length;
+  const variants = new Map<string, { problem: Problem; weight: number }>();
+  const slots: number[] = [];
+  const enumerate = () => {
+    if (slots.length < suits) {
+      // Prefer no visible red for the original number; four visible copies necessarily include red.
+      for (let slot = 3; slot >= 0; slot--) {
+        slots.push(slot / 4);
+        enumerate();
+        slots.pop();
+      }
+      return;
+    }
+    let index = 0;
+    const sampled = withRedFives(problem, () => slots[index++]);
+    const melds = sampled.melds.map((meld) => ({ ...meld, tiles: sortTiles(meld.tiles) }));
+    const key = JSON.stringify([
+      sampled.concealed, sampled.winningTile, melds, sampled.doraIndicators,
+    ]);
+    const existing = variants.get(key);
+    if (existing) existing.weight++;
+    else variants.set(key, { problem: { ...sampled, melds }, weight: 1 });
+  };
+  enumerate();
+  return [...variants.values()];
+}

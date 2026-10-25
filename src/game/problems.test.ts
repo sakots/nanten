@@ -258,6 +258,7 @@ describe("curated hands", () => {
       ["kanchan-tanyao-ron", 18],
       ["sanbaiman-ryanpeikou-ron", 30],
       ["sanbaiman-tanyao-sanankou-ron", 35],
+      ["beginner-chinroutou-open-kan-shanpon", 71],
     ] as const) {
       for (const seat of ["child", "dealer"]) {
         expect(problems.find((p) => p.id === `${key}-${seat}`)?.patternNumber).toBe(patternNumber);

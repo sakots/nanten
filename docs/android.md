@@ -131,7 +131,7 @@ pnpm android:adfree:release
 | `pnpm android:ads:release` | `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` |
 | `pnpm android:adfree:release` | `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` |
 
-現在のversionCodeは804、versionNameは0.8.4です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
+現在のversionCodeは900、versionNameは0.9.0です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
 
 生成した `.aab` をPlay Consoleの内部テストなどのリリースへアップロードします。初回はPlay App Signingの登録手順に従い、作成した鍵をアップロード鍵として使用します。AABは直接端末にインストールするファイルではありません。Play経由のインストール・起動と公開前の確認を終えてから製品版へ進めてください。
 
@@ -158,3 +158,9 @@ Web版と両Android向け資産はブラウザーで10問から結果表示ま�
 Android署名鍵が未設定だと `Release requires NANTEN_ANDROID_KEYSTORE.` で停止することを確認しました。リポジトリ外にRSA 2048bit・有効期間10000日のアップロード鍵を作成し、`.env.local` に署名の4項目を設定した後、広告あり・広告なし両方のリリースコマンドが成功しました。生成したAABはversionCode 801、versionName 0.8.1、targetSdkVersion 36です。
 
 両AABは `jarsigner -verify` の署名検証と、Google公式 [bundletool 1.18.3](https://github.com/google/bundletool/releases/tag/1.18.3) の `validate` を通過しました。`jarsigner` は自己署名証明書・タイムスタンプなし・POSIX属性・JarFile/JarInputStream間の読み取り差について警告を出しています。Play Consoleへのアップロードと実機確認は未実施です。作成したアップロード鍵は以後のビルドでも使用するため、削除せずパスワードとともにバックアップしてください。
+
+### v0.9.0のビルド確認
+
+`pnpm build`、`pnpm android:ads:release`、`pnpm android:adfree:release` が成功し、Web版と両方の署名付きAABを生成しました。両リリースの生成マニフェストでversionCode 900、versionName 0.9.0、targetSdkVersion 36を確認しました。
+
+両AABは `jarsigner -verify` を通過しました。自己署名証明書・証明書チェーン・タイムスタンプなし・POSIX属性・JarFile/JarInputStream間の読み取り差について警告があります。Web本番ビルドはブラウザーでv0.9.0の表示、赤五索の和了牌、赤ドラ込み40符2翻・子ロン2,600点の正解判定を確認しました。今回、Android実機での起動とPlay Consoleへのアップロードは未実施です。

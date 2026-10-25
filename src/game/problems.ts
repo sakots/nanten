@@ -7,7 +7,7 @@ import { advancedExpansionTemplates } from "./advancedExpansion";
 import { beginnerFlushTemplates } from "./beginnerFlushProblems";
 import { beginnerSingleRoleTemplates } from "./beginnerSingleRoleProblems";
 import { numericVariantTemplates } from "./numericVariantProblems";
-import { withRedFives } from "./redDora";
+import { redFiveVariants } from "./redDora";
 
 // Space-separated literals keep the physical hand auditable; concealed NEVER includes the winning tile.
 function tiles(codes: string): TileCode[] {
@@ -473,7 +473,7 @@ const templates: HandTemplate[] = [
 
 // Each shape is practiced once as a child and once as dealer. Winds are shown explicitly;
 // no template has a wind triplet or value-wind pair that changes its fu with the seat.
-export const problems: Problem[] = templates.flatMap(({ key, ...template }, index) => {
+export const baseProblems: Problem[] = templates.flatMap(({ key, ...template }, index) => {
   const concealed = sortTiles(template.concealed);
   const patternNumber = index + 1;
   return [
@@ -482,7 +482,37 @@ export const problems: Problem[] = templates.flatMap(({ key, ...template }, inde
   ];
 });
 
-const handShapes = new Map(problems.map((problem) => [
+// The 89 published numbers identify each base hand's representative variant.
+// New visible red arrangements follow them; future base hands also append after this catalog.
+const publishedBaseCount = 89;
+let nextPatternNumber = Math.min(publishedBaseCount, templates.length) + 1;
+export const problems: Problem[] = [];
+const variantsByBase = new Map<Problem, { entries: { problem: Problem; weight: number }[]; weight: number }>();
+for (let index = 0; index < baseProblems.length; index += 2) {
+  const child = baseProblems[index];
+  const dealer = baseProblems[index + 1];
+  const variants = redFiveVariants(child);
+  const childEntries: { problem: Problem; weight: number }[] = [];
+  const dealerEntries: { problem: Problem; weight: number }[] = [];
+  for (const [variantIndex, variant] of variants.entries()) {
+    const patternNumber = variantIndex === 0 && child.patternNumber <= publishedBaseCount
+      ? child.patternNumber : nextPatternNumber++;
+    const suffix = variantIndex === 0 ? "" : `-red-${variantIndex}`;
+    const childProblem = { ...variant.problem, id: child.id + suffix, patternNumber };
+    const dealerProblem = {
+      ...childProblem, id: dealer.id + suffix, dealer: dealer.dealer, seatWind: dealer.seatWind,
+    };
+    childEntries.push({ problem: childProblem, weight: variant.weight });
+    dealerEntries.push({ problem: dealerProblem, weight: variant.weight });
+    problems.push(childProblem, dealerProblem);
+  }
+  const weight = variants.reduce((sum, variant) => sum + variant.weight, 0);
+  variantsByBase.set(child, { entries: childEntries, weight });
+  variantsByBase.set(dealer, { entries: dealerEntries, weight });
+}
+problems.sort((a, b) => a.patternNumber - b.patternNumber);
+
+const handShapes = new Map(baseProblems.map((problem) => [
   problem,
   JSON.stringify([
     sortTiles([...problem.concealed, problem.winningTile]),
@@ -494,7 +524,7 @@ export function createSession(
   level: Level,
   random: () => number = Math.random,
 ): Problem[] {
-  const pool = problems.filter(
+  const pool = baseProblems.filter(
     (problem) => level === "all" || problem.level === level ||
       (level === "intermediate" && problem.level === "advanced"),
   );
@@ -512,7 +542,19 @@ export function createSession(
     const shape = handShapes.get(problem)!;
     if (seen.has(shape)) continue;
     seen.add(shape);
-    const variant = withRedFives(problem, random);
+    const variants = variantsByBase.get(problem)!;
+    const value = random();
+    if (!Number.isFinite(value) || value < 0 || value >= 1)
+      throw new RangeError("乱数は0以上1未満で指定してください。");
+    let ticket = Math.floor(value * variants.weight);
+    let variant = variants.entries[0].problem;
+    for (const entry of variants.entries) {
+      if (ticket < entry.weight) {
+        variant = entry.problem;
+        break;
+      }
+      ticket -= entry.weight;
+    }
     if (level !== "all" && variant.level !== level) continue;
     selected.push(variant);
     if (selected.length === 10) break;

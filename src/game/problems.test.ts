@@ -16,9 +16,9 @@ const honors: TileCode[] = [
 const windCodes = { 東: "east", 南: "south", 西: "west", 北: "north" } as const;
 const terminal = (tile: TileCode) =>
   honors.includes(tile) || /^[19]/.test(tile);
-const number = (tile: TileCode) => Number(tile[0]);
+const number = (tile: TileCode) => Number(normalizeTile(tile)[0]);
 const count = (tiles: TileCode[], tile: TileCode) =>
-  tiles.filter((value) => value === tile).length;
+  tiles.filter((value) => normalizeTile(value) === normalizeTile(tile)).length;
 const allTiles = (p: Problem) => [
   ...p.concealed,
   p.winningTile,
@@ -84,9 +84,17 @@ function partitions(tiles: TileCode[], groups: Group[] = []): Partition[] {
 function interpretations(
   p: Problem,
 ): { han: number; fu: number; rawFu: number }[] {
+  const redHan = allTiles(p).filter((tile) => tile[0] === "0").length;
+  p = {
+    ...p,
+    concealed: p.concealed.map(normalizeTile),
+    winningTile: normalizeTile(p.winningTile),
+    melds: p.melds.map((meld) => ({ ...meld, tiles: meld.tiles.map(normalizeTile) })),
+    doraIndicators: p.doraIndicators.map(normalizeTile),
+  };
   const tiles = allTiles(p);
   const closed = !p.melds.some((m) => m.open);
-  const doraHan = p.doraIndicators.reduce(
+  const doraHan = redHan + p.doraIndicators.reduce(
     (sum, indicator) => sum + count(tiles, dora(indicator)),
     0,
   );
@@ -237,7 +245,7 @@ describe("curated hands", () => {
 
   it("uses one non-dora yaku in beginner practice", () => {
     for (const problem of problems.filter((p) => p.level === "basic")) {
-      expect(problem.yaku.filter((yaku) => yaku.name !== "ドラ"), problem.id).toHaveLength(1);
+      expect(problem.yaku.filter((yaku) => yaku.name !== "ドラ" && yaku.name !== "赤ドラ"), problem.id).toHaveLength(1);
     }
   });
 
@@ -277,7 +285,8 @@ describe("curated hands", () => {
       const sevenPairs = p.yaku.some((y) => y.name === "七対子");
       expect(pairs.length, p.id).toBe(sevenPairs ? 7 : 1);
       expect(groups.length + p.melds.length, p.id).toBe(sevenPairs ? 7 : 5);
-      for (const group of groups) {
+      for (const original of groups) {
+        const group = original.map(normalizeTile);
         if (group.length === 2 || group[0] === group[1]) {
           expect(new Set(group).size, p.id).toBe(1);
         } else {
@@ -288,13 +297,14 @@ describe("curated hands", () => {
           ]);
         }
       }
-      const winning = groups[winningGroup];
-      expect(winning, p.id).toContain(p.winningTile);
+      const winning = groups[winningGroup].map(normalizeTile);
+      const winningTile = normalizeTile(p.winningTile);
+      expect(groups[winningGroup], p.id).toContain(p.winningTile);
       const expectedWait = winning.length === 2 ? "単騎"
         : winning[0] === winning[1] ? "シャンポン"
-        : winning[1] === p.winningTile ? "嵌張"
-        : (number(winning[0]) === 1 && number(p.winningTile) === 3) ||
-          (number(winning[0]) === 7 && number(p.winningTile) === 7) ? "辺張"
+        : winning[1] === winningTile ? "嵌張"
+        : (number(winning[0]) === 1 && number(winningTile) === 3) ||
+          (number(winning[0]) === 7 && number(winningTile) === 7) ? "辺張"
         : "両面";
       expect(wait, p.id).toBe(expectedWait);
     }
@@ -306,7 +316,7 @@ describe("curated hands", () => {
       ...honors,
     ];
     for (const p of problems) {
-      const ranks = p.concealed.map((t) => order.indexOf(t));
+      const ranks = p.concealed.map((t) => order.indexOf(normalizeTile(t)));
       expect(ranks, p.id).toEqual([...ranks].sort((a, b) => a - b));
     }
   });
@@ -340,7 +350,7 @@ describe("curated hands", () => {
         ).toBeLessThanOrEqual(4);
       for (const meld of p.melds) {
         expect(meld.tiles.length).toBe(meld.kind === "kan" ? 4 : 3);
-        if (meld.kind !== "chi") expect(new Set(meld.tiles).size).toBe(1);
+        if (meld.kind !== "chi") expect(new Set(meld.tiles.map(normalizeTile)).size).toBe(1);
         else {
           expect(new Set(meld.tiles.map((t) => t[1])).size).toBe(1);
           expect(meld.tiles.map(number)).toEqual([
@@ -369,7 +379,7 @@ describe("curated hands", () => {
           .filter((y) => y.name === "ドラ")
           .reduce((sum, y) => sum + y.han, 0),
         p.id,
-      ).toBe(p.yaku.some((y) => y.han === 13) ? 0 : doraHan);
+      ).toBe(p.yaku.some((y) => y.name.includes("（役満）")) ? 0 : doraHan);
       const raw = p.fuDetails.reduce((sum, detail) => sum + detail.fu, 0);
       const candidates = interpretations(p);
       expect(candidates, p.id).toContainEqual({
@@ -441,7 +451,7 @@ describe("ten-question sessions", () => {
       expect(problems.map((p) => p.id)).toEqual(ids);
       expect(
         first.every(
-          (p) => problems.some((base) => base.id === p.id) && (level === "all" || p.level === level),
+          (p) => problems.includes(p) && (level === "all" || p.level === level),
         ),
       ).toBe(true);
     },

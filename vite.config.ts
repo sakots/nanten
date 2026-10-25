@@ -121,9 +121,9 @@ export default defineConfig(({ command, mode }) => {
           globPatterns: ["**/*.{js,css,html,svg}"],
           navigateFallback: "index.html",
           cleanupOutdatedCaches: true,
-          // 新版は全画面を閉じてから有効化し、練習中の再読み込みを避ける。
+          // 新版の有効化は更新ボタンまで待ち、有効化後は画面を引き継いで再読み込みを通知する。
           skipWaiting: false,
-          clientsClaim: false,
+          clientsClaim: true,
         },
       })]),
       { name: "social-metadata", transformIndexHtml: () => tags },

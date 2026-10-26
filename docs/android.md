@@ -156,6 +156,8 @@ pnpm android:adfree:release
 
 署名はJDK付属の `jarsigner -verify android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` などで確認できます。アップロード鍵の証明書は自己署名のため、証明書チェーンに関する警告だけでは署名失敗とは限りません。署名の検証とPlay Consoleでの受け入れは別で、ストア情報・ポリシー申告・実機での動作確認も必要です。
 
+ストアの掲載画像は [Google Playの掲載画像](play-store-assets.md) を参照してください。フィーチャーグラフィックと携帯電話用スクリーンショット、登録順と代替テキストを用意しています。
+
 ## 公開前の動作確認
 
 1. 2つのAPKを同一端末にインストールし、別アプリとして起動することを確認します。

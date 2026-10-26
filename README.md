@@ -50,6 +50,8 @@ AdMobの販売者宣言は `public/app-ads.txt` にあります。デベロッ�
 
 Google Play向けの [プライバシーポリシー](public/privacy-policy.html) を用意しています。`dist/privacy-policy.html` をWebサイトで公開し、そのHTTPS URLをPlay ConsoleとAdMobに登録してください。アプリのフッターからも本文を開けます。公開条件とデータセーフティの注意点は [プライバシーポリシーの公開](docs/android.md#プライバシーポリシーの公開) を参照してください。
 
+Google Playの [掲載画像](images/google-play/) と [登録手順・代替テキスト](docs/play-store-assets.md) を用意しています。フィーチャーグラフィック1枚と携帯電話用スクリーンショット4枚を登録できます。
+
 ## 開発
 
 Node.js 22.12以上とpnpmを使用します。
@@ -88,6 +90,7 @@ SNSの共有画像を有効にするには、`.env.example` を参考に `.env.l
 
 - Google Play公開に必要なデータの取り扱いを明示するため、広告あり・広告なし版に対応したプライバシーポリシーとアプリ内リンク、公開手順を追加。
 - プライバシーポリシーを含む更新を配布するため、アプリとAndroidのversionNameを0.9.1、versionCodeを901に更新。
+- Google Playのストア掲載用に、フィーチャーグラフィック1枚と携帯電話用スクリーンショット4枚を追加。
 
 ### [2026/10/25] v0.9.0
 

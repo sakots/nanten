@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <defs>
+    <linearGradient id="felt" x2="1" y2="1">
+      <stop stop-color="#123e35"/>
+      <stop offset="1" stop-color="#226451"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#d4dfc5" stroke-opacity=".055"/>
+    </pattern>
+    <filter id="shadow" x="-50%" y="-40%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#082a23" flood-opacity=".4"/>
+    </filter>
+    <g id="tile">
+      <rect width="112" height="160" rx="12" fill="#c09648"/>
+      <rect y="0" width="112" height="151" rx="12" fill="#f7f5e9" stroke="#d9deca" stroke-width="2"/>
+      <path d="M12 142H100" stroke="#e5e4d4" stroke-width="2"/>
+    </g>
+    <g id="bamboo" fill="#246b48">
+      <path d="M-5-23Q-10-23-7-18L-4-4Q-8 0-4 4L-5 18Q-10 23-4 23H4Q10 23 5 18L4 4Q8 0 4-4L7-18Q10-23 5-23Z"/>
+      <path d="M0-17V17" stroke="#f7f5e9" stroke-width="2.5"/>
+      <path d="M-6 0H6" stroke="#246b48" stroke-width="4"/>
+    </g>
+  </defs>
+  <rect width="1024" height="500" fill="url(#felt)"/>
+  <rect width="1024" height="500" fill="url(#grid)"/>
+  <circle cx="797" cy="247" r="190" fill="#d4dfc5" fill-opacity=".035"/>
+  <circle cx="797" cy="247" r="170" fill="none" stroke="#c7bb88" stroke-opacity=".23"/>
+  <circle cx="797" cy="247" r="140" fill="none" stroke="#c7bb88" stroke-opacity=".12"/>
+  <path d="M74 91H114" stroke="#cbbd80" stroke-width="3"/>
+  <g font-family="'Noto Sans CJK JP', sans-serif">
+    <text x="74" y="152" font-size="52" font-weight="700" letter-spacing="-1" fill="#f5f2df">nanten</text>
+    <text x="72" y="244" font-family="'Noto Serif CJK JP', serif" font-size="60" font-weight="700" fill="#f5f2df">その手、何点？</text>
+    <text x="76" y="300" font-size="25" letter-spacing="2" fill="#e2e7d5">麻雀点数トレーニング</text>
+    <text x="76" y="357" font-size="19" fill="#c5d4bd">10問ずつ、役と符を確かめる。</text>
+  </g>
+  <g transform="translate(633 173) rotate(-16 56 80)" filter="url(#shadow)">
+    <use href="#tile"/>
+    <path d="M23 39H89 M34 54H78V87H34Z M35 71H77 M56 25V125 M54 88Q38 110 20 121 M58 88Q75 110 94 121" fill="none" stroke="#252e27" stroke-width="5" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(752 125) rotate(5 56 80)" filter="url(#shadow)">
+    <use href="#tile"/>
+    <g transform="translate(56 77)">
+      <use href="#bamboo" transform="translate(-30 -29)"/>
+      <use href="#bamboo" transform="translate(30 -29)"/>
+      <use href="#bamboo" transform="translate(-15 -18) rotate(55) scale(.7)"/>
+      <use href="#bamboo" transform="translate(15 -18) rotate(-55) scale(.7)"/>
+      <use href="#bamboo" transform="translate(-30 29)"/>
+      <use href="#bamboo" transform="translate(30 29)"/>
+      <use href="#bamboo" transform="translate(-15 18) rotate(-55) scale(.7)"/>
+      <use href="#bamboo" transform="translate(15 18) rotate(55) scale(.7)"/>
+    </g>
+  </g>
+  <g transform="translate(831 235) rotate(15 56 80)" filter="url(#shadow)">
+    <use href="#tile"/>
+    <path d="M23 51H89V95H23Z M56 26V128" fill="none" stroke="#ae3735" stroke-width="7" stroke-linejoin="round"/>
+  </g>
+</svg>

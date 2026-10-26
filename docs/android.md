@@ -44,6 +44,25 @@ Google Playでパッケージ名 `nanten.myapp` を要求されるアプリに�
 
 公開前にはAdMobで両広告枠を作成し、プライバシーメッセージ、プライバシーポリシー、app-ads.txtを設定してください。Play Consoleの広告申告・データセーフティ・対象年齢なども実際の運用とSDKのデータ利用に合わせて設定する必要があります。実機で同意・表示・終了・オフライン時の動作を確認してから公開してください。
 
+## プライバシーポリシーの公開
+
+本文は [public/privacy-policy.html](../public/privacy-policy.html) を正本とします。Android広告あり版・広告なし版とWeb／PWA版の違い、端末内保存、AdMob／UMPによるデータ処理、保持・削除方法、問い合わせ窓口を記載します。アプリのフッターから同梱の本文を開けるようにし、Web版ではService Workerの画面フォールバックで本文がゲームに置き換わらないようにします。
+
+1. `pnpm build` で生成される `dist/privacy-policy.html` をWebサイトへアップロードします。本文単体の公開も可能です。ゲームを `/nanten/` に置く場合は、同じ場所の `/nanten/privacy-policy.html` に配置します。
+2. 公開URLがHTTPSでHTTP 200と本文を返し、ログイン・地域制限なしで閲覧できることを確認します。Google Playにはローカルファイルやリポジトリの編集画面ではなく、この公開URLを登録します。
+3. 両アプリのPlay Consoleの「プライバシー ポリシー」欄と、AdMobのプライバシーメッセージに公開URLを設定します。同じ本文を両アプリに使用できます。
+4. 公開前に、開発者名 `sakots` と問い合わせ先のGitHub Issuesが運用と一致することを確認します。Issuesは公開窓口のため、個人情報の投稿を求めないでください。別の窓口を使用する場合は本文も変更します。
+5. 広告あり版のデータセーフティは、ゲームの回答を送信しないことだけを理由に「収集なし」とせず、Google Mobile Ads SDKとUMPの実際の設定・処理も含めて申告します。広告なし版とは分けて確認します。対象年齢・配信地域・広告設定を変更する場合も本文と申告を見直します。
+
+アプリ内リンクを配布済みAndroid版へ反映するにはAPK／AABの再ビルドが必要です。公開済みWeb本文だけを変更する場合はHTMLの再配置で更新できますが、Androidに同梱した本文はアプリ更新まで変わりません。
+
+確認した公式資料：
+
+- [Google Playのユーザーデータ・プライバシーポリシー要件](https://support.google.com/googleplay/android-developer/answer/10144311?hl=ja)
+- [Google Mobile Ads SDKのデータ開示](https://developers.google.com/admob/android/privacy/play-data-disclosure?hl=ja)
+
+2026/10/26に既存112テスト、Web本番ビルド、Android広告あり・広告なし向けWeb資産ビルドの成功を確認しました。Web本番版をChromiumで開き、Service Worker制御下のフッターから本文を表示でき、オフラインでも本文を読み込めること、幅320pxで横スクロールがなく、ライト／ダーク両配色で表示できることを確認しました。Android実機でのリンク操作と、公開サーバーへの配置・Play ConsoleへのURL登録は未確認です。
+
 ## app-ads.txtの公開
 
 AdMobの認定販売者を宣言するファイルを `public/app-ads.txt` に置きます。登録済みの本番広告IDと同じパブリッシャーID `pub-6652873007002259` を使用し、`pnpm build` で `dist/app-ads.txt` にコピーします。AdMobのアカウントを変更する場合は、このファイルも管理画面のスニペットに合わせて更新してください。

@@ -120,6 +120,7 @@ export default defineConfig(({ command, mode }) => {
         workbox: {
           globPatterns: ["**/*.{js,css,html,svg}"],
           navigateFallback: "index.html",
+          navigateFallbackDenylist: [/\/privacy-policy\.html$/],
           cleanupOutdatedCaches: true,
           // 新版の有効化は更新ボタンまで待ち、有効化後は画面を引き継いで再読み込みを通知する。
           skipWaiting: false,

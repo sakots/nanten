@@ -891,6 +891,13 @@ export default function App() {
             >
               GitHub<span className="sr-only">（新しいタブで開く）</span>
             </a>
+            <a
+              href="./privacy-policy.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              プライバシーポリシー<span className="sr-only">（新しいタブで開く）</span>
+            </a>
             {AdPrivacySettings && <AdPrivacySettings />}
           </div>
         </footer>

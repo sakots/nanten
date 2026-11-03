@@ -271,6 +271,18 @@ p {
   line-height: 1.6;
   margin-top: 11px;
 }
+.rule-settings {
+  margin-top: 14px;
+}
+.kiriage-toggle {
+  font-size: 14px;
+  gap: 10px;
+}
+.rule-settings p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
 .progress-heading {
   display: flex;
   justify-content: space-between;
@@ -1176,6 +1188,49 @@ p {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+@media (min-width: 821px) {
+  .sidebar {
+    display: contents;
+  }
+  .tip-card {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .tip-card h3 {
+    font-size: 18px;
+  }
+  .tip-card h3 br {
+    display: none;
+  }
+  .tip-card > p:not(.eyebrow),
+  .tip-card details {
+    color: inherit;
+  }
+  .tip-card > p:not(.eyebrow),
+  .tip-card details,
+  .tip-card details ul,
+  .tip-card details p,
+  .tip-card table {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  .tip-card details {
+    max-width: 52em;
+  }
+  .tip-card summary {
+    min-height: 44px;
+    padding: 8px 0;
+    font-weight: 600;
+  }
+  .tip-card details li + li,
+  .tip-card details p {
+    margin-top: 8px;
+  }
+  .tip-card th,
+  .tip-card td {
+    padding: 10px 12px;
+  }
 }
 @media (min-width: 1050px) {
   .hand-tiles > .nt-tile,

@@ -1,12 +1,15 @@
 import type { Problem, Score, Win } from "./types";
 
-/** Four-player riichi, no kiriage, honba or deposits; counted yakuman is capped at one. */
-export function calculateScore(input: {
-  han: number;
-  fu: number;
-  dealer: boolean;
-  win: Win;
-}): Score {
+/** Four-player riichi, no honba or deposits; counted yakuman is capped at one. */
+export function calculateScore(
+  input: {
+    han: number;
+    fu: number;
+    dealer: boolean;
+    win: Win;
+  },
+  kiriage = false,
+): Score {
   const { han, fu, dealer, win } = input;
   if (
     !Number.isSafeInteger(han) ||
@@ -37,7 +40,12 @@ export function calculateScore(input: {
   } else if (han >= 6) {
     basePoints = 3000;
     limit = "跳満";
-  } else if (han === 5 || roundedFu * 2 ** (han + 2) >= 2000) {
+  } else if (
+    han === 5 ||
+    roundedFu * 2 ** (han + 2) >= 2000 ||
+    (kiriage &&
+      ((han === 4 && roundedFu === 30) || (han === 3 && roundedFu === 60)))
+  ) {
     basePoints = 2000;
     limit = "満貫";
   } else {
@@ -73,8 +81,12 @@ export function calculateScore(input: {
   return { basePoints, limit, payments, total };
 }
 
-export function gradeAnswer(problem: Problem, answers: number[]): boolean {
-  const { payments } = calculateScore(problem);
+export function gradeAnswer(
+  problem: Problem,
+  answers: number[],
+  kiriage = false,
+): boolean {
+  const { payments } = calculateScore(problem, kiriage);
   return (
     answers.length === payments.length &&
     answers.every(

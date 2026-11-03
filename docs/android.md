@@ -150,7 +150,7 @@ pnpm android:adfree:release
 | `pnpm android:ads:release` | `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` |
 | `pnpm android:adfree:release` | `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` |
 
-現在のversionCodeは901、versionNameは0.9.1です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
+現在のversionCodeは1000、versionNameは0.10.0です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
 
 生成した `.aab` をPlay Consoleの内部テストなどのリリースへアップロードします。初回はPlay App Signingの登録手順に従い、作成した鍵をアップロード鍵として使用します。AABは直接端末にインストールするファイルではありません。Play経由のインストール・起動と公開前の確認を終えてから製品版へ進めてください。
 
@@ -195,3 +195,11 @@ Android署名鍵が未設定だと `Release requires NANTEN_ANDROID_KEYSTORE.` �
 両AABは `jarsigner -verify` を通過しました。自己署名証明書・証明書チェーン・タイムスタンプなし・POSIX属性・JarFile/JarInputStream間の読み取り差の警告があります。GradleではflatDir、SDK XML形式、非推奨機能の警告も出ています。
 
 Chromiumの既存PWAキャッシュがないオリジンで、Web本番版のv0.9.1表示とプライバシーポリシーの表示を確認しました。既存PWA利用者は更新の適用が必要です。Android実機での起動とPlay Consoleへのアップロードは未実施です。
+
+### v0.10.0のビルド確認
+
+2026/11/04に既存135テスト、`pnpm android:ads:release`、`pnpm android:adfree:release`、`pnpm build` が成功しました。両AABに切り上げ満貫スイッチとPCの点数説明表示改善を収録しています。AAB内のマニフェストでversionName 0.10.0、versionCode 1000、広告あり版のパッケージ名 `nanten.myapp`、広告なし版のパッケージ名 `nanten.myapp.adfree` を確認しました。
+
+両AABは `jarsigner -verify` とGoogle公式bundletool 1.18.3の `validate` を通過しました。自己署名証明書・証明書チェーン・タイムスタンプなし・POSIX属性・JarFile/JarInputStream間の読み取り差の警告があります。GradleではflatDir、SDK XML形式、非推奨機能の警告も出ています。
+
+Web本番ビルドはChromiumでv0.10.0の表示、Service Worker制御、切り上げ満貫オフの子ロン7,700点とオンの満貫表示を確認しました。Android端末は接続されておらず、今回の実機確認とPlay Consoleへのアップロードは未実施です。GitHub Releaseの署名付きAABをPlay Consoleへアップロードし、実機確認・審査を経てストア公開してください。

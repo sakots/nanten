@@ -59,6 +59,19 @@ function displayedMeldTiles(meld: Problem["melds"][number]) {
 function Hand({ problem }: { problem: Problem }) {
   return (
     <div className="table-surface">
+      <div className="table-context">
+        <dl className="table-winds">
+          <div>
+            <dt>場風</dt>
+            <dd>{problem.roundWind}</dd>
+          </div>
+          <div>
+            <dt>自風</dt>
+            <dd>{problem.seatWind}</dd>
+          </div>
+        </dl>
+        <span className="table-stakes">0本場 · 供託なし</span>
+      </div>
       <div className="table-heading">
         <span>手牌</span>
         <span>
@@ -576,15 +589,6 @@ export default function App() {
                     {problem.dealer ? "親" : "子"}の
                     {problem.win === "ron" ? "ロン" : "ツモ"}
                   </span>
-                </div>
-                <div className="context-row">
-                  <span>
-                    場風 <strong>{problem.roundWind}</strong>
-                  </span>
-                  <span>
-                    自風 <strong>{problem.seatWind}</strong>
-                  </span>
-                  <span>0本場 · 供託なし</span>
                 </div>
                 <Hand problem={problem} />
                 {!attempt && (

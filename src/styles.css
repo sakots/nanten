@@ -364,23 +364,49 @@ p {
   background: #fbf4e8;
   border-color: #efdfbf;
 }
-.context-row {
+.question-heading + .table-surface {
+  margin-top: 16px;
+}
+.table-context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ffffff26;
+}
+.table-winds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+}
+.table-winds > div {
   display: flex;
   align-items: center;
-  gap: 17px;
-  color: #737f71;
+  gap: 10px;
+  padding: 6px 12px;
+  border: 1px solid #ffffff38;
+  border-radius: 6px;
+  background: #102f282e;
+}
+.table-winds dt {
+  color: #d3dfc6;
+  font-size: 13px;
+}
+.table-winds dd {
+  margin: 0;
+  color: #fff8df;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.table-stakes {
+  color: #c1d2b7;
   font-size: 11px;
-  margin: 13px 0 18px;
-}
-.context-row strong {
-  color: #344d3e;
-  margin-left: 5px;
-  font-weight: 650;
-}
-.context-row > span:last-child {
-  margin-left: auto;
-  color: #8a9284;
-  font-size: 10px;
+  white-space: nowrap;
 }
 .table-surface {
   border-radius: 10px;
@@ -1382,12 +1408,6 @@ p {
   .question-heading h2 {
     font-size: 19px;
   }
-  .context-row {
-    gap: 12px;
-  }
-  .context-row > span:last-child {
-    font-size: 9px;
-  }
   .table-surface {
     padding: 15px 12px;
   }
@@ -1577,7 +1597,7 @@ p {
 }
 :root[data-theme="dark"] :is(
   .header-help, .eyebrow, .intro-copy, .level-options button, .level-note,
-  .question-total, .score-counter, .context-row, .context-row > span:last-child,
+  .question-total, .score-counter,
   .answer-guide, .answer-inputs label > span, .input-with-unit > span,
   .note-card li > span, .note-card li p, .rule-chips span,
   .tip-card > p:not(.eyebrow), .tip-card details, .tip-icon,
@@ -1590,7 +1610,7 @@ p {
   color: #afbaad;
 }
 :root[data-theme="dark"] :is(
-  .score-counter strong, .context-row strong, .tip-card strong,
+  .score-counter strong, .tip-card strong,
   .breakdown-title > strong, .calculation code, .result-stats strong
 ) {
   color: #b6dfc4;

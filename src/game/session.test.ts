@@ -98,4 +98,62 @@ describe("練習の進行", () => {
     expect(restarted.finished).toBe(false);
     expect(restarted.index).toBe(0);
   });
+
+  it("切り上げ満貫が有効なら8000点を正解、7700点を不正解にする", () => {
+    const boundary = { ...problem, han: 4 };
+    const state = createGame([boundary], true);
+    expect(
+      gameReducer(state, { type: "answer", answers: [8000] }).attempts[0].correct,
+    ).toBe(true);
+    expect(
+      gameReducer(state, { type: "answer", answers: [7700] }).attempts[0].correct,
+    ).toBe(false);
+  });
+
+  it("ルール変更は進行をリセットし、再挑戦はルールを保持し、明示的なfalseで戻せる", () => {
+    const boundary = { ...problem, han: 4 };
+    let state = createGame([problem, problem]);
+    state = gameReducer(state, { type: "answer", answers: [1000] });
+    state = gameReducer(state, { type: "next" });
+    state = gameReducer(state, { type: "hint" });
+    state = gameReducer(state, {
+      type: "restart",
+      problems: [boundary],
+      kiriage: true,
+    });
+    expect(state).toMatchObject({
+      kiriage: true,
+      index: 0,
+      attempts: [],
+      hintVisible: false,
+      finished: false,
+    });
+    state = gameReducer(state, { type: "answer", answers: [8000] });
+    expect(state.attempts[0].correct).toBe(true);
+    state = gameReducer(state, { type: "next" });
+    expect(state.finished).toBe(true);
+    state = gameReducer(state, { type: "restart", problems: [boundary] });
+    expect(state).toMatchObject({
+      kiriage: true,
+      index: 0,
+      attempts: [],
+      hintVisible: false,
+      finished: false,
+    });
+    state = gameReducer(state, { type: "answer", answers: [8000] });
+    expect(state.attempts[0].correct).toBe(true);
+    state = gameReducer(state, {
+      type: "restart",
+      problems: [boundary],
+      kiriage: false,
+    });
+    expect(state.kiriage).toBe(false);
+    expect(state.attempts).toEqual([]);
+    expect(
+      gameReducer(state, { type: "answer", answers: [7700] }).attempts[0].correct,
+    ).toBe(true);
+    expect(
+      gameReducer(state, { type: "answer", answers: [8000] }).attempts[0].correct,
+    ).toBe(false);
+  });
 });

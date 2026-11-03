@@ -10,6 +10,7 @@ export interface Attempt {
 
 export interface GameState {
   problems: Problem[];
+  kiriage: boolean;
   index: number;
   attempts: Attempt[];
   hintVisible: boolean;
@@ -20,12 +21,13 @@ type Action =
   | { type: "hint" }
   | { type: "answer"; answers: number[] }
   | { type: "next" }
-  | { type: "restart"; problems: Problem[] };
+  | { type: "restart"; problems: Problem[]; kiriage?: boolean };
 
-export function createGame(problems: Problem[]): GameState {
+export function createGame(problems: Problem[], kiriage = false): GameState {
   if (!problems.length) throw new Error("出題する問題が必要です。");
   return {
     problems,
+    kiriage,
     index: 0,
     attempts: [],
     hintVisible: false,
@@ -34,7 +36,8 @@ export function createGame(problems: Problem[]): GameState {
 }
 
 export function gameReducer(state: GameState, action: Action): GameState {
-  if (action.type === "restart") return createGame(action.problems);
+  if (action.type === "restart")
+    return createGame(action.problems, action.kiriage ?? state.kiriage);
   if (state.finished) return state;
   const answered = state.attempts.length > state.index;
   if (action.type === "hint") {
@@ -44,7 +47,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
   }
   if (action.type === "answer") {
     const problem = state.problems[state.index];
-    const expected = calculateScore(problem).payments.length;
+    const expected = calculateScore(problem, state.kiriage).payments.length;
     if (
       answered ||
       action.answers.length !== expected ||
@@ -58,7 +61,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
         {
           problem,
           answers: action.answers,
-          correct: gradeAnswer(problem, action.answers),
+          correct: gradeAnswer(problem, action.answers, state.kiriage),
           hinted: state.hintVisible,
         },
       ],

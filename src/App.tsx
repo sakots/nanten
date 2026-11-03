@@ -202,6 +202,8 @@ function Breakdown({
   score: Score;
   hint?: boolean;
 }) {
+  const appliedKiriage = score.limit === "満貫" &&
+    ((problem.fu === 30 && problem.han === 4) || (problem.fu === 60 && problem.han === 3));
   return (
     <div className="breakdown">
       <div className="breakdown-title">
@@ -238,6 +240,11 @@ function Breakdown({
         <>
           <HandSolution problem={problem} />
           <p className="explanation">{problem.explanation}</p>
+          {appliedKiriage && (
+            <p className="explanation">
+              切り上げ満貫オンのため、{problem.fu}符{problem.han}翻を基本点2,000の満貫として計算します。
+            </p>
+          )}
           {problem.baseExplanation && (
             <details>
               <summary>赤ドラ加算前の牌姿の解説</summary>
@@ -289,7 +296,7 @@ export default function App() {
   const nextRef = useRef<HTMLButtonElement>(null);
   const resultRef = useRef<HTMLHeadingElement>(null);
   const problem = state.problems[state.index];
-  const score = calculateScore(problem);
+  const score = calculateScore(problem, state.kiriage);
   const attempt = state.attempts[state.index];
   const correctCount = state.attempts.filter((item) => item.correct).length;
   const hintCount = state.attempts.filter((item) => item.hinted).length;
@@ -320,11 +327,11 @@ export default function App() {
     else if (attempt) nextRef.current?.focus();
   }, [attempt, state.finished]);
 
-  function restart(nextLevel: Level) {
+  function restart(nextLevel: Level, kiriage = state.kiriage) {
     const problems = createSession(nextLevel);
     sessionRef.current = problems;
     setLevel(nextLevel);
-    dispatch({ type: "restart", problems });
+    dispatch({ type: "restart", problems, kiriage });
     setAnswers(["", ""]);
     setError("");
   }
@@ -437,6 +444,26 @@ export default function App() {
               {levels.find((item) => item.value === level)?.detail} ·
               範囲を変えると1問目から始まります
             </p>
+            <div className="rule-settings">
+              <button
+                type="button"
+                className="theme-toggle kiriage-toggle"
+                role="switch"
+                aria-label="切り上げ満貫"
+                aria-checked={state.kiriage}
+                aria-describedby="kiriage-note"
+                onClick={() => restart(level, !state.kiriage)}
+              >
+                <span>切り上げ満貫</span>
+                <span className="theme-toggle-track" aria-hidden="true">
+                  <span />
+                </span>
+                <span aria-hidden="true">{state.kiriage ? "オン" : "オフ"}</span>
+              </button>
+              <p id="kiriage-note">
+                オンで30符4翻・60符3翻を満貫にします。変更すると1問目から始まります。
+              </p>
+            </div>
             {state.finished ? (
               <section className="results">
                 <p className="eyebrow">PRACTICE COMPLETE</p>
@@ -495,11 +522,11 @@ export default function App() {
                                 {item.answers.map(number).join(" / ")}点
                               </p>
                               <PaymentSummary
-                                score={calculateScore(item.problem)}
+                                score={calculateScore(item.problem, state.kiriage)}
                               />
                               <Breakdown
                                 problem={item.problem}
-                                score={calculateScore(item.problem)}
+                                score={calculateScore(item.problem, state.kiriage)}
                               />
                             </div>
                           </details>
@@ -801,7 +828,7 @@ export default function App() {
                   <tbody>
                     <tr>
                       <th scope="row">満貫</th>
-                      <td>5翻、または40符以上の4翻・70符以上の3翻</td>
+                      <td>5翻、または{state.kiriage ? "30" : "40"}符以上の4翻・{state.kiriage ? "60" : "70"}符以上の3翻</td>
                       <td>2,000</td>
                     </tr>
                     <tr>
@@ -836,7 +863,7 @@ export default function App() {
               </details>
               <details>
                 <summary>4翻でも満貫にならない場合</summary>
-                <p>4翻でも20符・25符・30符は満貫未満です。符×2の6乗（符×64）で基本点を求め、支払う人ごとに100点単位で切り上げます。</p>
+                <p>4翻でも20符・25符{!state.kiriage && "・30符"}は満貫未満です。符×2の6乗（符×64）で基本点を求め、支払う人ごとに100点単位で切り上げます。</p>
                 <table>
                   <thead>
                     <tr>
@@ -853,19 +880,23 @@ export default function App() {
                     </tr>
                     <tr>
                       <th scope="row">30符4翻</th>
-                      <td>7,700点</td>
-                      <td>11,600点</td>
+                      <td>{state.kiriage ? "8,000点" : "7,700点"}</td>
+                      <td>{state.kiriage ? "12,000点" : "11,600点"}</td>
                     </tr>
                   </tbody>
                 </table>
-                <p>30符4翻なら基本点は30×64＝1,920。子のロンは1,920×4＝7,680を切り上げます。</p>
+                <p>{state.kiriage
+                  ? "30符4翻は切り上げ満貫の対象です。基本点は2,000となり、子のロンは2,000×4＝8,000点です。"
+                  : "30符4翻なら基本点は30×64＝1,920。子のロンは1,920×4＝7,680を切り上げます。"}</p>
                 <p>20符は平和ツモだけで、ロンはありません。20符4翻の子のツモは子1,300点・親2,600点、親のツモは各子2,600点です。</p>
-                <p>このゲームは切り上げ満貫なし。30符4翻も60符3翻も満貫にせず、上の式で計算します。</p>
+                <p>{state.kiriage
+                  ? "切り上げ満貫はオンです。60符3翻も基本点2,000の満貫として計算します。"
+                  : "切り上げ満貫はオフです。30符4翻も60符3翻も満貫にせず、上の式で計算します。"}</p>
               </details>
               <details>
                 <summary>採用ルールを確認</summary>
                 <ul>
-                  <li>切り上げ満貫なし</li>
+                  <li>切り上げ満貫{state.kiriage ? "あり" : "なし"}</li>
                   <li>数え役満あり（13翻以上）</li>
                   <li>赤ドラ各色1枚あり</li>
                   <li>本場・供託なし</li>
@@ -877,7 +908,7 @@ export default function App() {
             </section>
           </aside>
         </div>
-        <ScoreTable />
+        <ScoreTable kiriage={state.kiriage} />
         <footer className="site-footer">
           <span>nanten</span>
           <p>積み重ねた一問が、自信になる。</p>

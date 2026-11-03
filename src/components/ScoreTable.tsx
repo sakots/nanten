@@ -13,7 +13,7 @@ const limits = [
   { name: "役満", condition: "役満役・13翻以上の数え役満", han: 13 },
 ];
 
-function buildChart(dealer: boolean, win: Win) {
+function buildChart(dealer: boolean, win: Win, kiriage: boolean) {
   return {
     rows: fuValues.map((fu) => ({
       fu,
@@ -23,20 +23,25 @@ function buildChart(dealer: boolean, win: Win) {
           (fu === 25 && (han < 2 || (win === "tsumo" && han < 3))) ||
           (fu === 110 && han === 1 && win === "tsumo")
         ) return null;
-        return calculateScore({ fu, han, dealer, win });
+        return calculateScore({ fu, han, dealer, win }, kiriage);
       }),
     })),
     limits: limits.map((limit) => ({
       ...limit,
-      score: calculateScore({ fu: 30, han: limit.han, dealer, win }),
+      condition: limit.han === 5 && kiriage
+        ? "5翻・または符による上限（30符4翻・60符3翻を含む）"
+        : limit.condition,
+      score: calculateScore({ fu: 30, han: limit.han, dealer, win }, kiriage),
     })),
   };
 }
 
-const charts = [false, true].map((dealer) => ({
-  ron: buildChart(dealer, "ron"),
-  tsumo: buildChart(dealer, "tsumo"),
-}));
+const charts = [false, true].map((kiriage) =>
+  [false, true].map((dealer) => ({
+    ron: buildChart(dealer, "ron", kiriage),
+    tsumo: buildChart(dealer, "tsumo", kiriage),
+  })),
+);
 
 function Points({ score }: { score: Score }) {
   return (
@@ -51,10 +56,10 @@ function Points({ score }: { score: Score }) {
   );
 }
 
-export function ScoreTable() {
+export function ScoreTable({ kiriage }: { kiriage: boolean }) {
   const [dealer, setDealer] = useState(false);
   const [win, setWin] = useState<Win>("ron");
-  const chart = charts[Number(dealer)][win];
+  const chart = charts[Number(kiriage)][Number(dealer)][win];
   const title = `${dealer ? "親" : "子"}の${win === "ron" ? "ロン" : "ツモ"}`;
 
   return (
@@ -74,7 +79,7 @@ export function ScoreTable() {
           </fieldset>
         </div>
         <p className="score-table-guide">
-          単位：点。本場・供託なし、切り上げ満貫なし。
+          単位：点。本場・供託なし、切り上げ満貫{kiriage ? "あり" : "なし"}。
           {win === "ron"
             ? "放銃者1人の支払いです。"
             : dealer

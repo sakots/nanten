@@ -271,6 +271,18 @@ p {
   line-height: 1.6;
   margin-top: 11px;
 }
+.rule-settings {
+  margin-top: 14px;
+}
+.kiriage-toggle {
+  font-size: 14px;
+  gap: 10px;
+}
+.rule-settings p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
 .progress-heading {
   display: flex;
   justify-content: space-between;

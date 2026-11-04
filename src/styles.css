@@ -407,17 +407,16 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 12px;
-  color: #c1d2b7;
-  font-size: 11px;
-}
-.table-stakes > span {
-  white-space: nowrap;
-}
-.table-stakes .honba-active {
   color: #fff8df;
   font-size: 20px;
   font-weight: 700;
   line-height: 28px;
+}
+.table-stakes > span {
+  white-space: nowrap;
+}
+.table-deposit {
+  display: inline-flex;
 }
 .table-surface {
   border-radius: 10px;
@@ -1307,12 +1306,13 @@ p {
   .table-stakes {
     display: grid;
     grid-template-columns: 64px minmax(0, 1fr);
-    align-items: center;
+    align-items: start;
     gap: 8px;
     min-height: 28px;
   }
-  .table-stakes > span:first-child {
-    line-height: 28px;
+  .table-deposit {
+    display: grid;
+    grid-template-rows: 28px 28px;
   }
   .hand-scroll {
     overflow: visible;

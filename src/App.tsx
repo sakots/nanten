@@ -80,11 +80,10 @@ function Hand({ problem }: { problem: Problem }) {
           </div>
         </dl>
         <div className="table-stakes">
-          <span className={problem.honba > 0 ? "honba-active" : undefined}>{problem.honba}本場</span>
-          <span>
-            {problem.riichiSticks > 0
-              ? `供託${problem.riichiSticks}本（${number(problem.riichiSticks * 1000)}点）`
-              : "供託なし"}
+          <span>{problem.honba}本場</span>
+          <span className="table-deposit">
+            <span>{problem.riichiSticks > 0 ? `供託${problem.riichiSticks}本` : "供託なし"}</span>
+            <span>{problem.riichiSticks > 0 ? `（${number(problem.riichiSticks * 1000)}点）` : ""}</span>
           </span>
         </div>
       </div>

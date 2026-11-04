@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSession, problems } from "./problems";
+import { baseProblems, createSession, problems } from "./problems";
 import { calculateScore, gradeAnswer } from "./scoring";
 import type { Problem, TileCode } from "./types";
 import { normalizeTile } from "./tiles";
@@ -446,6 +446,43 @@ describe("riichi practice", () => {
 
 describe("ten-question sessions", () => {
 
+  it.each(["all", "basic", "intermediate", "advanced"] as const)(
+    "samples the full honba and deposit bounds in %s sessions",
+    (level) => {
+      for (const [random, honba, nonRiichiSticks, riichiSticks] of [
+        [0, 0, 0, 1],
+        [1 - Number.EPSILON, 3, 3, 3],
+      ]) {
+        const session = createSession(level, () => random);
+        expect(session).toHaveLength(10);
+        for (const p of session) {
+          expect(p.honba, p.id).toBe(honba);
+          expect(p.riichiSticks, p.id).toBe(
+            p.yaku.some((yaku) => yaku.name === "立直") ? riichiSticks : nonRiichiSticks,
+          );
+        }
+      }
+    },
+  );
+
+  it("can combine every honba count with every deposit count", () => {
+    const pairs = new Set<string>();
+    for (let seed = 1; seed <= 30; seed++) {
+      let state = seed;
+      for (const p of createSession("all", () => {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        return state / 2 ** 32;
+      })) {
+        if (!p.yaku.some((yaku) => yaku.name === "立直")) {
+          pairs.add(`${p.honba}:${p.riichiSticks}`);
+        }
+      }
+    }
+    expect(pairs).toEqual(new Set(
+      Array.from({ length: 16 }, (_, index) => `${Math.floor(index / 4)}:${index % 4}`),
+    ));
+  });
+
   it.each(["basic", "intermediate", "advanced"] as const)(
     "varies the set of physical %s hands across repeated practice sessions",
     (level) => {
@@ -486,17 +523,16 @@ describe("ten-question sessions", () => {
   it.each(["all", "basic", "intermediate", "advanced"] as const)(
     "selects ten unique %s problems deterministically without mutation",
     (level) => {
-      const ids = problems.map((p) => p.id);
+      const catalog = JSON.stringify([baseProblems, problems]);
       const first = createSession(level, () => 0.375);
       expect(first).toHaveLength(10);
       expect(new Set(first.map((p) => p.id)).size).toBe(10);
+      const snapshot = JSON.stringify(first);
       expect(createSession(level, () => 0.375)).toEqual(first);
-      expect(problems.map((p) => p.id)).toEqual(ids);
-      expect(
-        first.every(
-          (p) => problems.includes(p) && (level === "all" || p.level === level),
-        ),
-      ).toBe(true);
+      createSession(level, () => 1 - Number.EPSILON);
+      expect(JSON.stringify(first)).toBe(snapshot);
+      expect(JSON.stringify([baseProblems, problems])).toBe(catalog);
+      expect(first.every((p) => level === "all" || p.level === level)).toBe(true);
     },
   );
 });

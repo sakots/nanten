@@ -82,7 +82,7 @@ describe("numbered red-five question catalog", () => {
     }
   });
 
-  it("returns catalog entries with stable numbers across difficulty and practice runs", () => {
+  it("keeps catalog numbers, hands and classification across difficulty and practice runs", () => {
     for (const level of ["all", "basic", "intermediate", "advanced"] as const) {
       for (let seed = 1; seed <= 30; seed++) {
         let state = seed;
@@ -92,7 +92,13 @@ describe("numbered red-five question catalog", () => {
         });
         expect(session).toHaveLength(10);
         for (const p of session) {
-          expect(problems).toContain(p);
+          const entry = problems.find((candidate) => candidate.id === p.id)!;
+          expect(entry, p.id).toBeDefined();
+          expect(p.patternNumber, p.id).toBe(entry.patternNumber);
+          expect(appearance(p), p.id).toBe(appearance(entry));
+          expect(p.level, p.id).toBe(entry.level);
+          expect(p.dealer, p.id).toBe(entry.dealer);
+          expect(p.seatWind, p.id).toBe(entry.seatWind);
           expect(level === "all" || p.level === level).toBe(true);
         }
       }

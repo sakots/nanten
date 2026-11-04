@@ -25,7 +25,42 @@ describe("four-player score payments", () => {
     const result = score(han, fu, dealer, win);
     expect(result.payments.map((payment) => payment.points)).toEqual(payments);
     expect(result.total).toBe(total);
+    expect(result.answers).toEqual(result.payments);
   });
+
+  it.each([
+    [1, 30, false, "ron", false, 2, 3, [1600], 4600, 240, null],
+    [1, 30, true, "ron", false, 2, 3, [2100], 5100, 240, null],
+    [2, 20, false, "tsumo", false, 2, 3, [600, 900], 5100, 320, null],
+    [2, 20, true, "tsumo", false, 2, 3, [900], 5700, 320, null],
+    [4, 30, false, "ron", false, 1, 0, [8000], 8000, 1920, null],
+    [4, 30, false, "ron", true, 1, 2, [8300], 10300, 2000, "満貫"],
+    [13, 30, true, "tsumo", true, 3, 1, [16300], 49900, 8000, "役満"],
+  ] as const)(
+    "settles %ihan %ifu dealer=%s %s kiriage=%s honba=%i deposits=%i",
+    (han, fu, dealer, win, kiriage, honba, riichiSticks, payments, total, basePoints, limit) => {
+      const result = calculateScore(
+        { han, fu, dealer, win, honba, riichiSticks },
+        kiriage,
+      );
+      expect(result.payments.map((payment) => payment.points)).toEqual(payments);
+      expect(result.depositPoints).toBe(riichiSticks * 1000);
+      expect(result.total).toBe(total);
+      expect(result.basePoints).toBe(basePoints);
+      expect(result.limit).toBe(limit);
+    },
+  );
+
+  it.each(["honba", "riichiSticks"] as const)(
+    "rejects invalid %s counts",
+    (field) => {
+      for (const count of [-1, 0.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+        expect(() =>
+          calculateScore({ han: 1, fu: 30, dealer: false, win: "ron", [field]: count }),
+        ).toThrow(RangeError);
+      }
+    },
+  );
 
   it.each([
     [3, 70, 2000, "満貫"],
@@ -141,4 +176,37 @@ describe("answer grading", () => {
     }
     expect(gradeAnswer(ron, [1300])).toBe(false);
   });
+
+  it.each([
+    [false, "ron", [1600, 3600]],
+    [true, "ron", [2100, 4100]],
+    [false, "tsumo", [600, 900, 4100]],
+    [true, "tsumo", [900, 4700]],
+  ] as const)(
+    "requires every payment and the deposited total for dealer=%s %s",
+    (dealer, win, expected) => {
+      const problem = {
+        ...problems[0],
+        han: win === "ron" ? 1 : 2,
+        fu: win === "ron" ? 30 : 20,
+        dealer,
+        win,
+        honba: 2,
+        riichiSticks: 2,
+      };
+      expect(gradeAnswer(problem, [...expected])).toBe(true);
+      const wrongPayment: number[] = [...expected];
+      wrongPayment[0] += 100;
+      const wrongTotal: number[] = [...expected];
+      wrongTotal[wrongTotal.length - 1] += 100;
+      for (const invalid of [
+        wrongPayment,
+        wrongTotal,
+        expected.slice(0, -1),
+        [...expected, 100],
+      ]) {
+        expect(gradeAnswer(problem, invalid)).toBe(false);
+      }
+    },
+  );
 });

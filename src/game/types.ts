@@ -29,6 +29,8 @@ export interface Problem {
   dealer: boolean;
   roundWind: Wind;
   seatWind: Wind;
+  honba: number;
+  riichiSticks: number;
   doraIndicators: TileCode[];
   han: number;
   fu: number;
@@ -41,10 +43,15 @@ export interface Problem {
 export interface Score {
   basePoints: number;
   limit: string | null;
+  /** Payer amounts include honba, but never the table's riichi deposits. */
   payments: { label: string; points: number }[];
+  /** Winner's full receipt, including all payer amounts and deposits. */
   total: number;
+  depositPoints: number;
+  /** Payer fields, followed by the receipt total only when deposits are present. */
+  answers: Score["payments"];
 }
 
-export type HandTemplate = Omit<Problem, "id" | "patternNumber" | "dealer" | "seatWind"> & {
+export type HandTemplate = Omit<Problem, "id" | "patternNumber" | "dealer" | "seatWind" | "honba" | "riichiSticks"> & {
   key: string;
 };

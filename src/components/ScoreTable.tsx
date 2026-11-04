@@ -87,6 +87,10 @@ export function ScoreTable({ kiriage }: { kiriage: boolean }) {
               : "上段は子1人、下段は親の支払いです。"}
           「—」は成立しない組み合わせです。
         </p>
+        <p className="score-table-guide">
+          出題ではこの支払いに1本場につきロン300点・ツモ各家100点を加算します。
+          供託は1本1,000点を和了者の受取合計だけに加え、他家の支払いには加えません。
+        </p>
         <table className="score-table-grid">
           <caption>{title} · 1〜4翻</caption>
           <thead>

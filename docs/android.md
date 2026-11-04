@@ -150,7 +150,7 @@ pnpm android:adfree:release
 | `pnpm android:ads:release` | `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` |
 | `pnpm android:adfree:release` | `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` |
 
-現在のversionCodeは1000、versionNameは0.10.0です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
+現在のversionCodeは1100、versionNameは0.11.0です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
 
 生成した `.aab` をPlay Consoleの内部テストなどのリリースへアップロードします。初回はPlay App Signingの登録手順に従い、作成した鍵をアップロード鍵として使用します。AABは直接端末にインストールするファイルではありません。Play経由のインストール・起動と公開前の確認を終えてから製品版へ進めてください。
 
@@ -203,3 +203,9 @@ Chromiumの既存PWAキャッシュがないオリジンで、Web本番版のv0.
 両AABは `jarsigner -verify` とGoogle公式bundletool 1.18.3の `validate` を通過しました。自己署名証明書・証明書チェーン・タイムスタンプなし・POSIX属性・JarFile/JarInputStream間の読み取り差の警告があります。GradleではflatDir、SDK XML形式、非推奨機能の警告も出ています。
 
 Web本番ビルドはChromiumでv0.10.0の表示、Service Worker制御、切り上げ満貫オフの子ロン7,700点とオンの満貫表示を確認しました。Android端末は接続されておらず、今回の実機確認とPlay Consoleへのアップロードは未実施です。GitHub Releaseの署名付きAABをPlay Consoleへアップロードし、実機確認・審査を経てストア公開してください。
+
+### v0.11.0のリリース確認
+
+2026/11/04に全154テスト、Web本番ビルド、Android広告あり・広告なしの署名付きAAB生成と両AABの `jarsigner -verify` が成功しました。自己署名証明書・証明書チェーン・タイムスタンプなし・POSIX属性・JarFile/JarInputStream読み取り差の警告があります。Android実機確認とPlay Consoleへの提出は未実施です。
+
+Web版はFTPSで公開し、既存PWAの「更新する」でv0.11.0へ更新されることを確認しました。公開画面で30符3翻・子ロン・3本場・供託2本の放銃者4,800点／受取合計6,800点が正解になることを確認しました。Web用ZIPと両AAB、SHA-256は [v0.11.0リリース](https://github.com/sakots/nanten/releases/tag/v0.11.0) で配布します。

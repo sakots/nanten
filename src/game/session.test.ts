@@ -31,6 +31,8 @@ const problem: Problem = {
   melds: [],
   win: "ron",
   dealer: false,
+  honba: 0,
+  riichiSticks: 0,
   roundWind: "東",
   seatWind: "南",
   doraIndicators: ["north"],
@@ -47,10 +49,10 @@ const problem: Problem = {
 describe("練習の進行", () => {
   it("回答するまで次に進めず、同じ問題への重複回答で成績が変わらない", () => {
     const state = createGame([problem, { ...problem, id: "second" }]);
-    expect(gameReducer(state, { type: "next" })).toBe(state);
+    expect(gameReducer(state, { type: "next" })).toEqual(state);
     const answered = gameReducer(state, { type: "answer", answers: [1000] });
     expect(answered.attempts[0].correct).toBe(true);
-    expect(gameReducer(answered, { type: "answer", answers: [2000] })).toBe(
+    expect(gameReducer(answered, { type: "answer", answers: [2000] })).toEqual(
       answered,
     );
     const next = gameReducer(answered, { type: "next" });
@@ -70,7 +72,7 @@ describe("練習の進行", () => {
       [Infinity],
       [1000, 1000],
     ]) {
-      expect(gameReducer(state, { type: "answer", answers })).toBe(state);
+      expect(gameReducer(state, { type: "answer", answers })).toEqual(state);
     }
   });
 
@@ -89,7 +91,7 @@ describe("練習の進行", () => {
     expect(state.finished).toBe(false);
     state = gameReducer(state, { type: "next" });
     expect(state.finished).toBe(true);
-    expect(gameReducer(state, { type: "answer", answers: [1000] })).toBe(state);
+    expect(gameReducer(state, { type: "answer", answers: [1000] })).toEqual(state);
     const restarted = gameReducer(state, {
       type: "restart",
       problems: [problem],
@@ -97,6 +99,50 @@ describe("練習の進行", () => {
     expect(restarted.attempts).toEqual([]);
     expect(restarted.finished).toBe(false);
     expect(restarted.index).toBe(0);
+  });
+
+  it("供託のある子ツモの3欄を記録し、次問と再挑戦で回答状態をリセットする", () => {
+    const tsumo: Problem = {
+      ...problem,
+      win: "tsumo",
+      han: 2,
+      fu: 20,
+      honba: 2,
+      riichiSticks: 2,
+    };
+    let state = createGame([tsumo, problem]);
+    for (const answers of [[600, 900], [600, 900, 4100, 100]]) {
+      expect(gameReducer(state, { type: "answer", answers })).toEqual(state);
+    }
+    state = gameReducer(state, { type: "hint" });
+    state = gameReducer(state, {
+      type: "answer",
+      answers: [600, 900, 4100],
+    });
+    expect(state.attempts).toEqual([
+      { problem: tsumo, answers: [600, 900, 4100], correct: true, hinted: true },
+    ]);
+    state = gameReducer(state, { type: "next" });
+    expect(state).toMatchObject({ index: 1, hintVisible: false, finished: false });
+    state = gameReducer(state, { type: "answer", answers: [1000] });
+    expect(state.attempts.map(({ answers }) => answers)).toEqual([
+      [600, 900, 4100],
+      [1000],
+    ]);
+    state = gameReducer(state, { type: "next" });
+    expect(state.finished).toBe(true);
+    state = gameReducer(state, { type: "restart", problems: [tsumo] });
+    expect(state).toMatchObject({
+      index: 0,
+      attempts: [],
+      hintVisible: false,
+      finished: false,
+    });
+    state = gameReducer(state, { type: "answer", answers: [600, 900, 4000] });
+    expect(state.attempts[0]).toMatchObject({
+      answers: [600, 900, 4000],
+      correct: false,
+    });
   });
 
   it("切り上げ満貫が有効なら8000点を正解、7700点を不正解にする", () => {

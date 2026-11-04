@@ -479,8 +479,8 @@ export const baseProblems: Problem[] = templates.flatMap(({ key, ...template }, 
   const concealed = sortTiles(template.concealed);
   const patternNumber = index + 1;
   return [
-    { ...template, concealed, patternNumber, id: `${key}-child`, dealer: false, seatWind: "南" as const },
-    { ...template, concealed, patternNumber, id: `${key}-dealer`, dealer: true, seatWind: "東" as const },
+    { ...template, concealed, patternNumber, id: `${key}-child`, dealer: false, seatWind: "南" as const, honba: 0, riichiSticks: 0 },
+    { ...template, concealed, patternNumber, id: `${key}-dealer`, dealer: true, seatWind: "東" as const, honba: 0, riichiSticks: 0 },
   ];
 });
 
@@ -558,7 +558,18 @@ export function createSession(
       ticket -= entry.weight;
     }
     if (level !== "all" && variant.level !== level) continue;
-    selected.push(variant);
+    const honbaValue = random();
+    if (!Number.isFinite(honbaValue) || honbaValue < 0 || honbaValue >= 1)
+      throw new RangeError("乱数は0以上1未満で指定してください。");
+    const depositValue = random();
+    if (!Number.isFinite(depositValue) || depositValue < 0 || depositValue >= 1)
+      throw new RangeError("乱数は0以上1未満で指定してください。");
+    const riichi = variant.yaku.some((yaku) => yaku.name === "立直");
+    selected.push({
+      ...variant,
+      honba: Math.floor(honbaValue * 4),
+      riichiSticks: riichi ? Math.floor(depositValue * 3) + 1 : Math.floor(depositValue * 4),
+    });
     if (selected.length === 10) break;
   }
   return selected;

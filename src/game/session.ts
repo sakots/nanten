@@ -47,7 +47,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
   }
   if (action.type === "answer") {
     const problem = state.problems[state.index];
-    const expected = calculateScore(problem, state.kiriage).payments.length;
+    const expected = calculateScore(problem, state.kiriage).answers.length;
     if (
       answered ||
       action.answers.length !== expected ||

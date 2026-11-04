@@ -31,11 +31,20 @@ function ProblemPattern({ problem }: { problem: Problem }) {
   );
 }
 
+function formatAnswers(score: Score, answers: number[]) {
+  return score.answers
+    .map((field, index) => `${field.label} ${number(answers[index])}点`)
+    .join(" / ");
+}
+
 function PaymentSummary({ score }: { score: Score }) {
   return (
     <div className="payment-summary">
-      {score.payments.map((payment) => (
-        <div key={payment.label}>
+      {score.answers.map((payment, index) => (
+        <div
+          key={payment.label}
+          className={index === score.payments.length ? "receipt-total" : undefined}
+        >
           <span>{payment.label}</span>
           <strong>
             {number(payment.points)}
@@ -70,7 +79,14 @@ function Hand({ problem }: { problem: Problem }) {
             <dd>{problem.seatWind}</dd>
           </div>
         </dl>
-        <span className="table-stakes">0本場 · 供託なし</span>
+        <div className="table-stakes">
+          <span>{problem.honba}本場</span>
+          <span>
+            {problem.riichiSticks > 0
+              ? `供託${problem.riichiSticks}本（${number(problem.riichiSticks * 1000)}点）`
+              : "供託なし"}
+          </span>
+        </div>
       </div>
       <div className="table-heading">
         <span>手牌</span>
@@ -217,6 +233,7 @@ function Breakdown({
 }) {
   const appliedKiriage = score.limit === "満貫" &&
     ((problem.fu === 30 && problem.han === 4) || (problem.fu === 60 && problem.han === 3));
+  const honbaPerPayer = problem.honba * (problem.win === "ron" ? 300 : 100);
   return (
     <div className="breakdown">
       <div className="breakdown-title">
@@ -249,9 +266,21 @@ function Breakdown({
           </dl>
         </div>
       </div>
+      {hint && (
+        <p className="explanation">
+          本場は1本につき{problem.win === "ron" ? "放銃者に300点" : "各家に100点"}を、
+          通常の支払いを100点単位に切り上げた後に加えます。
+          供託は1本1,000点を受取合計だけに加え、他家の支払いには含めません。
+        </p>
+      )}
       {!hint && (
         <>
           <HandSolution problem={problem} />
+          {(problem.honba > 0 || problem.riichiSticks > 0) && (
+            <p className="explanation">
+              以下の牌姿解説の点数は本場・供託の加算前です。今回の精算は下の「本場・供託の精算」で確認できます。
+            </p>
+          )}
           <p className="explanation">{problem.explanation}</p>
           {appliedKiriage && (
             <p className="explanation">
@@ -279,8 +308,35 @@ function Breakdown({
                   : "子は基本点 × 1、親は基本点 × 2 を支払い"}
             </small>
             <small>
-              支払いごとに100点単位で切り上げ · 合計 {number(score.total)}点
+              支払いごとに100点単位で切り上げてから、本場分を加えます。
             </small>
+          </div>
+          <div className="calculation">
+            <span>本場・供託の精算</span>
+            <small>
+              {problem.honba}本場：{problem.win === "ron" ? "放銃者" : "各家"}に
+              {problem.honba} × {problem.win === "ron" ? 300 : 100} ＝ {number(honbaPerPayer)}点を加算
+            </small>
+            {score.payments.map((payment) => (
+              <small key={payment.label}>
+                {payment.label}：通常{number(payment.points - honbaPerPayer)} ＋ 本場{number(honbaPerPayer)} ＝ {number(payment.points)}点
+              </small>
+            ))}
+            <small>
+              支払い合計：
+              {problem.win === "ron"
+                ? number(score.payments[0].points)
+                : problem.dealer
+                  ? `${number(score.payments[0].points)} × 3`
+                  : `${number(score.payments[0].points)} × 2 ＋ ${number(score.payments[1].points)}`}
+              {" ＝ "}{number(score.total - score.depositPoints)}点
+            </small>
+            <small>
+              供託{problem.riichiSticks}本 × 1,000 ＝ {number(score.depositPoints)}点は卓上から受け取ります。
+            </small>
+            <code>
+              受取合計 ＝ {number(score.total - score.depositPoints)} ＋ {number(score.depositPoints)} ＝ {number(score.total)}点
+            </code>
           </div>
         </>
       )}
@@ -302,7 +358,7 @@ export default function App() {
   );
   const sessionRef = useRef(state.problems);
   const [ads, setAds] = useState<typeof AndroidAds | null>(null);
-  const [answers, setAnswers] = useState<string[]>(["", ""]);
+  const [answers, setAnswers] = useState<string[]>(["", "", ""]);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const questionRef = useRef<HTMLDivElement>(null);
@@ -345,14 +401,14 @@ export default function App() {
     sessionRef.current = problems;
     setLevel(nextLevel);
     dispatch({ type: "restart", problems, kiriage });
-    setAnswers(["", ""]);
+    setAnswers(["", "", ""]);
     setError("");
   }
 
   function submit(event: FormEvent) {
     event.preventDefault();
     if (attempt) return;
-    const values = score.payments.map((_, index) => answers[index].trim());
+    const values = score.answers.map((_, index) => answers[index].trim());
     if (
       values.some(
         (value) =>
@@ -371,7 +427,7 @@ export default function App() {
 
   function next() {
     dispatch({ type: "next" });
-    setAnswers(["", ""]);
+    setAnswers(["", "", ""]);
     setError("");
     if (state.index < state.problems.length - 1) {
       requestAnimationFrame(() => {
@@ -513,9 +569,10 @@ export default function App() {
                 {state.attempts.some((item) => !item.correct) && (
                   <div className="review-list">
                     <h3>間違えた問題の振り返り</h3>
-                    {state.attempts.map(
-                      (item, index) =>
-                        !item.correct && (
+                    {state.attempts.map((item, index) => {
+                      if (item.correct) return null;
+                      const reviewScore = calculateScore(item.problem, state.kiriage);
+                      return (
                           <details key={item.problem.id}>
                             <summary>
                               <span>
@@ -532,19 +589,19 @@ export default function App() {
                               <Hand problem={item.problem} />
                               <p>
                                 あなたの回答：
-                                {item.answers.map(number).join(" / ")}点
+                                {formatAnswers(reviewScore, item.answers)}
                               </p>
                               <PaymentSummary
-                                score={calculateScore(item.problem, state.kiriage)}
+                                score={reviewScore}
                               />
                               <Breakdown
                                 problem={item.problem}
-                                score={calculateScore(item.problem, state.kiriage)}
+                                score={reviewScore}
                               />
                             </div>
                           </details>
-                        ),
-                    )}
+                      );
+                    })}
                   </div>
                 )}
               </section>
@@ -594,7 +651,7 @@ export default function App() {
                 {!attempt && (
                   <form onSubmit={submit} noValidate className="answer-form">
                     <div className="answer-heading">
-                      <h3>支払い点を入力</h3>
+                      <h3>{problem.riichiSticks > 0 ? "支払い点・受取合計" : "支払い点を入力"}</h3>
                       <button
                         className="text-button"
                         type="button"
@@ -611,11 +668,14 @@ export default function App() {
                         : problem.dealer
                           ? "子1人あたりが支払う点数を答えてください。"
                           : "子1人あたり・親が支払う点数をそれぞれ答えてください。"}
+                      {" "}支払いは本場分を含め、供託は含めません。
+                      {problem.riichiSticks > 0 && " 供託込みの受取合計も答えてください。"}
                     </p>
                     <div className="answer-inputs">
-                      {score.payments.map((payment, index) => (
+                      {score.answers.map((payment, index) => (
                         <label
                           key={`${problem.id}-${index}`}
+                          className={index === score.payments.length ? "receipt-total" : undefined}
                           htmlFor={`answer-${index}`}
                         >
                           <span>{payment.label}</span>
@@ -702,7 +762,7 @@ export default function App() {
                         <p>
                           {attempt.correct
                             ? "点数をしっかりつかめています。"
-                            : `あなたの回答：${attempt.answers.map(number).join(" / ")}点`}
+                            : `あなたの回答：${formatAnswers(score, attempt.answers)}`}
                           {attempt.hinted ? "（ヒント利用）" : ""}
                           {!attempt.correct && (
                             <span className="feedback-guidance">
@@ -768,7 +828,7 @@ export default function App() {
                   <span>02</span>
                   <div>
                     <strong>点数を答える</strong>
-                    <p>ロンは放銃者、ツモは各プレイヤーの支払い点を入力。</p>
+                    <p>本場込みの支払い点を入力。供託があれば、受取合計も答えます。</p>
                   </div>
                 </li>
                 <li>
@@ -802,6 +862,7 @@ export default function App() {
                 </strong>
                 。親のロンは6倍、子のロンは4倍。最後に100点単位で切り上げます。
               </p>
+              <p>点数表や以下の基本点・支払い例は、本場・供託の加算前です。</p>
               <details>
                 <summary>符計算の仕方</summary>
                 <ul>
@@ -898,12 +959,21 @@ export default function App() {
                   : "切り上げ満貫はオフです。30符4翻も60符3翻も満貫にせず、上の式で計算します。"}</p>
               </details>
               <details>
+                <summary>本場・供託の計算</summary>
+                <ul>
+                  <li>1本場につき、ロンは放銃者に300点、ツモは各家に100点ずつ加えます。通常の支払いを100点単位に切り上げた後に加算します。</li>
+                  <li>供託は1本1,000点を和了者が卓上から受け取ります。他家の支払いには加えません。</li>
+                  <li>供託がある問題は受取合計も回答します。子ツモは子2人分＋親1人分、親ツモは子3人分の支払いを合計し、最後に供託を加えます。</li>
+                  <li>表示する供託は自身の立直棒を含む全本数です。立直表示からさらに1本を加えたり、自分の立直棒を受取合計から差し引いたりしません。</li>
+                </ul>
+              </details>
+              <details>
                 <summary>採用ルールを確認</summary>
                 <ul>
                   <li>切り上げ満貫{state.kiriage ? "あり" : "なし"}</li>
                   <li>数え役満あり（13翻以上）</li>
                   <li>赤ドラ各色1枚あり</li>
-                  <li>本場・供託なし</li>
+                  <li>0〜3本場・供託0〜3本（立直済みは供託1〜3本）</li>
                   <li>ダブル役満・ローカル役なし</li>
                   <li>自由入力の手牌判定ではなく問題集形式</li>
                   <li>成績はリロードでリセット</li>

@@ -150,7 +150,7 @@ pnpm android:adfree:release
 | `pnpm android:ads:release` | `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab` |
 | `pnpm android:adfree:release` | `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` |
 
-現在のversionCodeは1101、versionNameは0.11.1です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
+現在のversionCodeは1102、versionNameは0.11.2です（`android/app/build.gradle`）。Google Playへの更新では、versionCodeを既にアップロード済みの値より大きくし、versionNameもリリースに合わせて更新してください。広告なし版は広告あり版と別のPlay Consoleアプリとして登録します。デバッグAPKを製品版として公開しないでください。
 
 生成した `.aab` をPlay Consoleの内部テストなどのリリースへアップロードします。初回はPlay App Signingの登録手順に従い、作成した鍵をアップロード鍵として使用します。AABは直接端末にインストールするファイルではありません。Play経由のインストール・起動と公開前の確認を終えてから製品版へ進めてください。
 
@@ -217,3 +217,11 @@ Web版はFTPSで公開し、既存PWAの「更新する」でv0.11.0へ更新さ
 WebをFTPSで公開し、既存PWAの「更新する」でv0.11.1へ更新できることを確認しました。幅320pxで本場0の11px表示・本場1以上の20px表示と供託0〜3本の位置固定を確認。100符12翻・子ロン・1本場・供託1本の支払い24,300点／受取25,300点が正解となり、次問へ進めました。
 
 Web用ZIP・両AAB・SHA-256は [v0.11.1リリース](https://github.com/sakots/nanten/releases/tag/v0.11.1) で配布します。旧ハッシュ付きWeb資産は削除していません。
+
+### v0.11.2のリリース確認
+
+2026/11/05に全143テスト、SSHビルド鍵・SSH agentなしのWeb本番ビルドとAndroid広告あり／なしの署名付きAAB生成が成功しました。両版の生成マニフェストはversionName 0.11.2・versionCode 1102です。両AABは `jarsigner -verify` を通過しました。自己署名証明書・証明書チェーン・タイムスタンプなし・POSIX属性・JarFile/JarInputStream読み取り差、およびGradleのflatDir・非推奨機能の警告があります。Android実機確認とPlay Consoleへの提出は未実施です。
+
+WebをFTPSで公開し、既存PWAの「更新する」でv0.11.2へ更新しました。公開画面で幅320px・PCの本場／供託本数／供託金額が20px太字であること、スマホで供託0〜3本による表示位置の変化がないことを確認しました。30符2翻・子ツモ・2本場・供託2本の子700点／親1,200点／受取合計4,600点が正解となり、次問へ進めました。
+
+Web用ZIP・両AAB・SHA-256は [v0.11.2リリース](https://github.com/sakots/nanten/releases/tag/v0.11.2) で配布します。旧ハッシュ付きWeb資産は維持しています。

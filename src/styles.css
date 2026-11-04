@@ -413,6 +413,12 @@ p {
 .table-stakes > span {
   white-space: nowrap;
 }
+.table-stakes .honba-active {
+  color: #fff8df;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+}
 .table-surface {
   border-radius: 10px;
   background: #205d4b;
@@ -1294,6 +1300,20 @@ p {
   }
 }
 @media (max-width: 820px) {
+  .table-context {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .table-stakes {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+  }
+  .table-stakes > span:first-child {
+    line-height: 28px;
+  }
   .hand-scroll {
     overflow: visible;
   }

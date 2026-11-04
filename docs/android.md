@@ -31,7 +31,7 @@ Google Playでパッケージ名 `nanten.myapp` を要求されるアプリに�
 - 広告なしデバッグAPK：`pnpm android:adfree`
 - Google Play用の署名付きAAB：`pnpm android:ads:release`／`pnpm android:adfree:release`
 
-いずれの本番Web資産ビルドにも、既存のSSH署名検証と `NANTEN_BUILD_SSH_KEY` が必要です。Androidアプリの署名鍵はSSH鍵とは別です。
+いずれのWeb資産ビルドにもビルド用SSH鍵は不要です。AndroidリリースAABには引き続きアプリ署名鍵が必要です。
 
 広告ありデバッグ版はGoogle公式のテスト用アプリIDとバナー・インタースティシャルIDを固定で使用します。実広告を開発中にクリックしないでください。広告ありリリース版では自身のAdMob IDを必須とし、未設定やGoogle公式テスト用IDではビルドを停止します。
 
@@ -77,9 +77,9 @@ AdMobの認定販売者を宣言するファイルを `public/app-ads.txt` に�
 
 ## 環境構築と設定
 
-1. Node.js 22.12以上、pnpm、OpenSSH、JDK 21、Android SDKを用意します。Android Studio 2025.2.1以降のSDK ManagerでAndroid SDK Platform 36とBuild Toolsをインストールし、`ANDROID_HOME` と必要なら `JAVA_HOME` を設定します。
+1. Node.js 22.12以上、pnpm、JDK 21、Android SDKを用意します。Android Studio 2025.2.1以降のSDK ManagerでAndroid SDK Platform 36とBuild Toolsをインストールし、`ANDROID_HOME` と必要なら `JAVA_HOME` を設定します。
 2. `pnpm install` を実行します。Androidプロジェクトは `android/` に含まれるため、`cap add` の再実行は不要です。
-3. `.env.example` を参考に `.env.local` へSSH鍵のパスを設定します。
+3. デバッグ版に鍵の設定は不要です。リリース版は以下の手順で `.env.local` にAndroid署名鍵と、広告あり版の場合はAdMob IDを設定します。
 4. デバッグ版は `pnpm android:ads` または `pnpm android:adfree` でビルドします。選択したWeb資産の生成・Capacitor同期・フレーバー別資産配置・GradleのAPK生成までを順に実行します。同じ作業ディレクトリで2つのコマンドを同時実行しないでください。
 
 WindowsのPowerShellからも同じコマンドを使用します。ビルドスクリプトは `gradlew.bat` を `cmd.exe /d /s /c` 経由で実行します。バッチファイルの直接起動による `spawnSync gradlew.bat EINVAL` を避けるための処理です。Gradleの作業ディレクトリを別途指定するため、プロジェクトのパスに空白が含まれていてもコマンド文字列へ埋め込みません。

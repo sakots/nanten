@@ -1,22 +1,14 @@
-import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import type { HtmlTagDescriptor } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
-import { verifyBuildKey } from "./build/verify-ssh-key";
 
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ mode }) => {
   if (mode.startsWith("android-") && !["android-ads", "android-adfree"].includes(mode)) {
     throw new Error(`未対応のAndroidビルドモードです: ${mode}`);
   }
   const isAndroid = mode === "android-ads" || mode === "android-adfree";
-  const env = loadEnv(mode, process.cwd(), ["SITE_URL", "NANTEN_BUILD_SSH_KEY"]);
-  if (command === "build") {
-    verifyBuildKey(
-      env.NANTEN_BUILD_SSH_KEY,
-      fileURLToPath(new URL("./build/allowed_signers", import.meta.url)),
-    );
-  }
+  const env = loadEnv(mode, process.cwd(), "SITE_URL");
   const configuredUrl = env.SITE_URL?.trim();
   const tags: HtmlTagDescriptor[] = [];
 

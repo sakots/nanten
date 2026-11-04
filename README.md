@@ -42,7 +42,7 @@ HTTPSで公開したサイトを開き、AndroidのChromeではメニューの�
 | `pnpm android:ads:release` | 広告あり署名付きAAB |
 | `pnpm android:adfree:release` | 広告なし署名付きAAB |
 
-Android SDK・JDK 21・SSHビルド鍵が必要です。リリース版にはAndroid署名鍵、広告ありリリース版には自身のAdMobアプリIDと2種類の広告ユニットIDも設定します。環境構築・生成先・公開前の確認は [Androidビルド手順](docs/android.md) を参照してください。
+Androidアプリの生成にはAndroid SDK・JDK 21が必要です。リリース版にはAndroid署名鍵、広告ありリリース版には自身のAdMobアプリIDと2種類の広告ユニットIDも設定します。環境構築・生成先・公開前の確認は [Androidビルド手順](docs/android.md) を参照してください。
 
 初回はAndroid用アップロード鍵を作成し、`.env.local` の `NANTEN_ANDROID_KEYSTORE`・`NANTEN_ANDROID_STORE_PASSWORD`・`NANTEN_ANDROID_KEY_ALIAS`・`NANTEN_ANDROID_KEY_PASSWORD` を設定してください。SSH鍵だけではAABを署名できません。具体的な作成コマンドは [初回のアップロード鍵作成](docs/android.md#初回のアップロード鍵作成) に記載しています。生成先は広告あり版が `android/app/build/outputs/bundle/adsRelease/app-ads-release.aab`、広告なし版が `android/app/build/outputs/bundle/adfreeRelease/app-adfree-release.aab` です。
 
@@ -64,9 +64,7 @@ pnpm build
 pnpm preview
 ```
 
-本番ビルドにはOpenSSH 8.2以降の `ssh-keygen` と、登録済み公開鍵に対応するEd25519秘密鍵が必要です。`.env.example` を参考に、Git管理対象外の `.env.local` に `NANTEN_BUILD_SSH_KEY=~/.ssh/id_ed25519` のように鍵ファイルのパスを設定してください。ビルドごとにランダムデータへ署名し、`build/allowed_signers` の公開鍵で検証します。鍵なし・未登録鍵・検証失敗では停止します。`pnpm dev`・`pnpm test`・`pnpm preview` には不要です。
-
-秘密鍵は手元またはCIだけに保管し、リポジトリや配布物には含めません。パスフレーズ付き鍵は `ssh-agent` も利用できます。従来の `NANTEN_BUILD_KEY` は使用しません。公開ソースを改変すればチェックは回避でき、App Store向けの署名・配布認証とは別の仕組みです。鍵の登録・交換・設定方法は [公開手順](docs/deployment.md#ビルドキー) を参照してください。
+Web／PWA版とAndroid向けWeb資産のビルドに、ビルド用SSH鍵・`ssh-keygen`・鍵用の環境変数は不要です。Node.jsとpnpmだけでビルドできます。AndroidのAPK／AAB生成には別途SDK・JDKが、リリースAABにはアプリ署名鍵が必要です。詳しくは [Androidビルド手順](docs/android.md) を参照してください。
 
 `pnpm test` は点数計算・問題集・理牌・回答用のメンツ分解と待ち・回答判定・練習の状態遷移を検証します。`pnpm build` はTypeScriptの型検査と本番ビルドを実行します。問題集には平和・断么九・役牌・七対子・一盃口・二盃口・三色同順・三色同刻・三槓子・混全帯么九・純全帯么九・混老頭・小三元・混一色・清一色・三暗刻・大三元・四暗刻・字一色・清老頭を含みます。初級では単一役、中級では高翻数の複合役・満貫以上、上級では1〜4翻の符計算を練習します。
 
@@ -85,6 +83,10 @@ SNSの共有画像を有効にするには、`.env.example` を参考に `.env.l
 牌の配色・配置は `images/pai.png` を見本にします。筒子は黒と赤、索子は緑を基調に五索の中央・七索の上段・九索の中央列を赤にします。二索は縦2本、六索は3列2段、七索は上段1本と下段3列2段、八索は左右の縦竹と中央の斜め竹を組み合わせます。一索は緑の尾羽を広げた鳥、白は無地とし、外部画像に依存しないSVGで描画します。
 
 ## 更新履歴
+
+### [2026/11/05] v0.11.0
+
+- 鍵を持たない環境でもビルドできるよう、ビルド用SSH鍵の必須チェック・許可鍵・関連設定とテストを削除。Androidリリース用のアプリ署名は維持（未リリース）。
 
 ### [2026/11/04] v0.11.0
 
